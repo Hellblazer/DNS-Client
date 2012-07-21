@@ -20,146 +20,154 @@ import org.xbill.DNS.utils.base16;
 
 public class NSEC3PARAMRecord extends Record {
 
-private static final long serialVersionUID = -8689038598776316533L;
+    private static final long serialVersionUID = -8689038598776316533L;
 
-private int hashAlg;
-private int flags;
-private int iterations;
-private byte salt[];
+    private int               hashAlg;
+    private int               flags;
+    private int               iterations;
+    private byte              salt[];
 
-NSEC3PARAMRecord() {}
+    /**
+     * Creates an NSEC3PARAM record from the given data.
+     * 
+     * @param name
+     *            The ownername of the NSEC3PARAM record (generally the zone
+     *            name).
+     * @param dclass
+     *            The class.
+     * @param ttl
+     *            The TTL.
+     * @param hashAlg
+     *            The hash algorithm.
+     * @param flags
+     *            The value of the flags field.
+     * @param iterations
+     *            The number of hash iterations.
+     * @param salt
+     *            The salt to use (may be null).
+     */
+    public NSEC3PARAMRecord(Name name, int dclass, long ttl, int hashAlg,
+                            int flags, int iterations, byte[] salt) {
+        super(name, Type.NSEC3PARAM, dclass, ttl);
+        this.hashAlg = checkU8("hashAlg", hashAlg);
+        this.flags = checkU8("flags", flags);
+        this.iterations = checkU16("iterations", iterations);
 
-Record getObject() {
-	return new NSEC3PARAMRecord();
-}
+        if (salt != null) {
+            if (salt.length > 255) {
+                throw new IllegalArgumentException("Invalid salt " + "length");
+            }
+            if (salt.length > 0) {
+                this.salt = new byte[salt.length];
+                System.arraycopy(salt, 0, this.salt, 0, salt.length);
+            }
+        }
+    }
 
-/**
- * Creates an NSEC3PARAM record from the given data.
- * 
- * @param name The ownername of the NSEC3PARAM record (generally the zone name).
- * @param dclass The class.
- * @param ttl The TTL.
- * @param hashAlg The hash algorithm.
- * @param flags The value of the flags field.
- * @param iterations The number of hash iterations.
- * @param salt The salt to use (may be null).
- */
-public NSEC3PARAMRecord(Name name, int dclass, long ttl, int hashAlg, 
-			int flags, int iterations, byte [] salt)
-{
-	super(name, Type.NSEC3PARAM, dclass, ttl);
-	this.hashAlg = checkU8("hashAlg", hashAlg);
-	this.flags = checkU8("flags", flags);
-	this.iterations = checkU16("iterations", iterations);
+    NSEC3PARAMRecord() {
+    }
 
-	if (salt != null) {
-		if (salt.length > 255)
-			throw new IllegalArgumentException("Invalid salt " +
-							   "length");
-		if (salt.length > 0) {
-			this.salt = new byte[salt.length];
-			System.arraycopy(salt, 0, this.salt, 0, salt.length);
-		}
-	}
-}
+    /** Returns the flags */
+    public int getFlags() {
+        return flags;
+    }
 
-void
-rrFromWire(DNSInput in) throws IOException {
-	hashAlg = in.readU8();
-	flags = in.readU8();
-	iterations = in.readU16();
+    /** Returns the hash algorithm */
+    public int getHashAlgorithm() {
+        return hashAlg;
+    }
 
-	int salt_length = in.readU8();
-	if (salt_length > 0)
-		salt = in.readByteArray(salt_length);
-	else
-		salt = null;
-}
+    /** Returns the number of iterations */
+    public int getIterations() {
+        return iterations;
+    }
 
-void
-rrToWire(DNSOutput out, Compression c, boolean canonical) {
-	out.writeU8(hashAlg);
-	out.writeU8(flags);
-	out.writeU16(iterations);
+    /** Returns the salt */
+    public byte[] getSalt() {
+        return salt;
+    }
 
-	if (salt != null) {
-		out.writeU8(salt.length);
-		out.writeByteArray(salt);
-	} else
-		out.writeU8(0);
-}
+    /**
+     * Hashes a name with the parameters of this NSEC3PARAM record.
+     * 
+     * @param name
+     *            The name to hash
+     * @return The hashed version of the name
+     * @throws NoSuchAlgorithmException
+     *             The hash algorithm is unknown.
+     */
+    public byte[] hashName(Name name) throws NoSuchAlgorithmException {
+        return NSEC3Record.hashName(name, hashAlg, iterations, salt);
+    }
 
-void
-rdataFromString(Tokenizer st, Name origin) throws IOException
-{
-	hashAlg = st.getUInt8();
-	flags = st.getUInt8();
-	iterations = st.getUInt16();
+    @Override
+    Record getObject() {
+        return new NSEC3PARAMRecord();
+    }
 
-	String s = st.getString();
-	if (s.equals("-"))
-		salt = null;
-	else {
-		st.unget();
-		salt = st.getHexString();
-		if (salt.length > 255)
-			throw st.exception("salt value too long");
-	}
-}
+    @Override
+    void rdataFromString(Tokenizer st, Name origin) throws IOException {
+        hashAlg = st.getUInt8();
+        flags = st.getUInt8();
+        iterations = st.getUInt16();
 
-/** Converts rdata to a String */
-String
-rrToString() {
-	StringBuffer sb = new StringBuffer();
-	sb.append(hashAlg);
-	sb.append(' ');
-	sb.append(flags);
-	sb.append(' ');
-	sb.append(iterations);
-	sb.append(' ');
-	if (salt == null)
-		sb.append('-');
-	else
-		sb.append(base16.toString(salt));
+        String s = st.getString();
+        if (s.equals("-")) {
+            salt = null;
+        } else {
+            st.unget();
+            salt = st.getHexString();
+            if (salt.length > 255) {
+                throw st.exception("salt value too long");
+            }
+        }
+    }
 
-	return sb.toString();
-}
+    @Override
+    void rrFromWire(DNSInput in) throws IOException {
+        hashAlg = in.readU8();
+        flags = in.readU8();
+        iterations = in.readU16();
 
-/** Returns the hash algorithm */
-public int
-getHashAlgorithm() {
-	return hashAlg;
-}
+        int salt_length = in.readU8();
+        if (salt_length > 0) {
+            salt = in.readByteArray(salt_length);
+        } else {
+            salt = null;
+        }
+    }
 
-/** Returns the flags */
-public int
-getFlags() {
-	return flags;
-}
-  
-/** Returns the number of iterations */
-public int
-getIterations() {
-	return iterations;
-}
+    /** Converts rdata to a String */
+    @Override
+    String rrToString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(hashAlg);
+        sb.append(' ');
+        sb.append(flags);
+        sb.append(' ');
+        sb.append(iterations);
+        sb.append(' ');
+        if (salt == null) {
+            sb.append('-');
+        } else {
+            sb.append(base16.toString(salt));
+        }
 
-/** Returns the salt */
-public byte []
-getSalt()
-{
-	return salt;
-}
+        return sb.toString();
+    }
 
-/**
- * Hashes a name with the parameters of this NSEC3PARAM record.
- * @param name The name to hash
- * @return The hashed version of the name
- * @throws NoSuchAlgorithmException The hash algorithm is unknown.
- */
-public byte []
-hashName(Name name) throws NoSuchAlgorithmException
-{
-	return NSEC3Record.hashName(name, hashAlg, iterations, salt);
-}
+    @Override
+    void rrToWire(DNSOutput out, Compression c, boolean canonical) {
+        out.writeU8(hashAlg);
+        out.writeU8(flags);
+        out.writeU16(iterations);
+
+        if (salt != null) {
+            out.writeU8(salt.length);
+            out.writeByteArray(salt);
+        } else {
+            out.writeU8(0);
+        }
+    }
 
 }

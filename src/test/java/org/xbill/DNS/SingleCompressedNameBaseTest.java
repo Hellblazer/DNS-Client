@@ -34,76 +34,81 @@
 //
 package org.xbill.DNS;
 
-import	java.io.IOException;
-import	junit.framework.TestCase;
+import java.io.IOException;
 
-public class SingleCompressedNameBaseTest extends TestCase
-{
-    private void assertEquals( byte[] exp, byte[] act )
-    {
-	assertTrue(java.util.Arrays.equals(exp, act));
+import junit.framework.TestCase;
+
+public class SingleCompressedNameBaseTest extends TestCase {
+    private static class TestClass extends SingleCompressedNameBase {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public TestClass() {
+        }
+
+        public TestClass(Name name, int type, int dclass, long ttl,
+                         Name singleName, String desc) {
+            super(name, type, dclass, ttl, singleName, desc);
+        }
+
+        @Override
+        public Record getObject() {
+            return null;
+        }
+
+        @Override
+        public Name getSingleName() {
+            return super.getSingleName();
+        }
     }
 
-    private static class TestClass extends SingleCompressedNameBase
-    {
-	public TestClass(){}
+    public void test_ctor() throws TextParseException {
+        TestClass tc = new TestClass();
+        assertNull(tc.getSingleName());
 
-	public TestClass(Name name, int type, int dclass, long ttl, Name singleName, String desc )
-	{
-	    super(name, type, dclass, ttl, singleName, desc);
-	}
-	
-	public Name getSingleName()
-	{
-	    return super.getSingleName();
-	}
+        Name n = Name.fromString("my.name.");
+        Name sn = Name.fromString("my.single.name.");
 
-	public Record getObject()
-	{
-	    return null;
-	}
+        tc = new TestClass(n, Type.A, DClass.IN, 100L, sn, "The Description");
+
+        assertSame(n, tc.getName());
+        assertEquals(Type.A, tc.getType());
+        assertEquals(DClass.IN, tc.getDClass());
+        assertEquals(100L, tc.getTTL());
+        assertSame(sn, tc.getSingleName());
     }
 
-    public void test_ctor() throws TextParseException
-    {
-	TestClass tc = new TestClass();
-	assertNull(tc.getSingleName());
+    public void test_rrToWire() throws IOException, TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name sn = Name.fromString("My.Single.Name.");
 
-	Name n = Name.fromString("my.name.");
-	Name sn = Name.fromString("my.single.name.");
+        // non-canonical (case sensitive)
+        TestClass tc = new TestClass(n, Type.A, DClass.IN, 100L, sn,
+                                     "The Description");
+        byte[] exp = new byte[] { 2, 'M', 'y', 6, 'S', 'i', 'n', 'g', 'l', 'e',
+                4, 'N', 'a', 'm', 'e', 0 };
 
-	tc = new TestClass(n, Type.A, DClass.IN, 100L, sn, "The Description");
+        DNSOutput dout = new DNSOutput();
+        tc.rrToWire(dout, null, false);
 
-	assertSame(n, tc.getName());
-	assertEquals(Type.A, tc.getType());
-	assertEquals(DClass.IN, tc.getDClass());
-	assertEquals(100L, tc.getTTL());
-	assertSame(sn, tc.getSingleName());
+        byte[] out = dout.toByteArray();
+        assertEquals(exp, out);
+
+        // canonical (lowercase)
+        tc = new TestClass(n, Type.A, DClass.IN, 100L, sn, "The Description");
+        exp = new byte[] { 2, 'm', 'y', 6, 's', 'i', 'n', 'g', 'l', 'e', 4,
+                'n', 'a', 'm', 'e', 0 };
+
+        dout = new DNSOutput();
+        tc.rrToWire(dout, null, true);
+
+        out = dout.toByteArray();
+        assertEquals(exp, out);
     }
 
-    public void test_rrToWire() throws IOException, TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name sn = Name.fromString("My.Single.Name.");
-
-	// non-canonical (case sensitive)
-	TestClass tc = new TestClass(n, Type.A, DClass.IN, 100L, sn, "The Description");
-	byte[] exp = new byte[] { 2, 'M', 'y', 6, 'S', 'i', 'n', 'g', 'l', 'e', 4, 'N', 'a', 'm', 'e', 0 };
-
-	DNSOutput dout = new DNSOutput();
-	tc.rrToWire(dout, null, false);
-	
-	byte[] out = dout.toByteArray();
-	assertEquals(exp, out);
-
-	// canonical (lowercase)
-	tc = new TestClass(n, Type.A, DClass.IN, 100L, sn, "The Description");
-	exp = new byte[] { 2, 'm', 'y', 6, 's', 'i', 'n', 'g', 'l', 'e', 4, 'n', 'a', 'm', 'e', 0 };
-
-	dout = new DNSOutput();
-	tc.rrToWire(dout, null, true);
-	
-	out = dout.toByteArray();
-	assertEquals(exp, out);
+    private void assertEquals(byte[] exp, byte[] act) {
+        assertTrue(java.util.Arrays.equals(exp, act));
     }
 }

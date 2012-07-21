@@ -36,47 +36,42 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class ExtendedFlagsTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("do", ExtendedFlags.string(ExtendedFlags.DO));
+public class ExtendedFlagsTest extends TestCase {
+    public void test_string() {
+        // a regular one
+        assertEquals("do", ExtendedFlags.string(ExtendedFlags.DO));
 
-	// one that doesn't exist
-	assertTrue(ExtendedFlags.string(1).startsWith("flag"));
+        // one that doesn't exist
+        assertTrue(ExtendedFlags.string(1).startsWith("flag"));
 
-	try {
-	    ExtendedFlags.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xFFFF)
-	try {
-	    ExtendedFlags.string(0x10000);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            ExtendedFlags.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+
+        //  (max is 0xFFFF)
+        try {
+            ExtendedFlags.string(0x10000);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(ExtendedFlags.DO, ExtendedFlags.value("do"));
+    public void test_value() {
+        // regular one
+        assertEquals(ExtendedFlags.DO, ExtendedFlags.value("do"));
 
-	// one thats undefined but within range
-	assertEquals(16, ExtendedFlags.value("FLAG16"));
+        // one thats undefined but within range
+        assertEquals(16, ExtendedFlags.value("FLAG16"));
 
-	// one thats undefined but out of range
-	assertEquals(-1, ExtendedFlags.value("FLAG" + 0x10000));
+        // one thats undefined but out of range
+        assertEquals(-1, ExtendedFlags.value("FLAG" + 0x10000));
 
-	// something that unknown
-	assertEquals(-1, ExtendedFlags.value("THIS IS DEFINITELY UNKNOWN"));
+        // something that unknown
+        assertEquals(-1, ExtendedFlags.value("THIS IS DEFINITELY UNKNOWN"));
 
-	// empty string
-	assertEquals(-1, ExtendedFlags.value(""));
+        // empty string
+        assertEquals(-1, ExtendedFlags.value(""));
     }
 }

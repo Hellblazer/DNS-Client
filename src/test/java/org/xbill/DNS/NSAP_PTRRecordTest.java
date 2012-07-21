@@ -32,36 +32,32 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class NSAP_PTRRecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	NSAP_PTRRecord d = new NSAP_PTRRecord();
-	assertNull(d.getName());
-	assertNull(d.getTarget());
+public class NSAP_PTRRecordTest extends TestCase {
+    public void test_ctor_0arg() {
+        NSAP_PTRRecord d = new NSAP_PTRRecord();
+        assertNull(d.getName());
+        assertNull(d.getTarget());
     }
 
-    public void test_ctor_4arg() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name a = Name.fromString("my.alias.");
+    public void test_ctor_4arg() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name a = Name.fromString("my.alias.");
 
-	NSAP_PTRRecord d = new NSAP_PTRRecord(n, DClass.IN, 0xABCDEL, a);
-	assertEquals(n, d.getName());
-	assertEquals(Type.NSAP_PTR, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(a, d.getTarget());
+        NSAP_PTRRecord d = new NSAP_PTRRecord(n, DClass.IN, 0xABCDEL, a);
+        assertEquals(n, d.getName());
+        assertEquals(Type.NSAP_PTR, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(a, d.getTarget());
     }
 
-    public void test_getObject()
-    {
-	NSAP_PTRRecord d = new NSAP_PTRRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof NSAP_PTRRecord);
+    public void test_getObject() {
+        NSAP_PTRRecord d = new NSAP_PTRRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof NSAP_PTRRecord);
     }
 }

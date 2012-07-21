@@ -32,31 +32,27 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	java.util.Arrays;
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class RTRecordTest extends TestCase
-{
-    public void test_getObject()
-    {
-	RTRecord d = new RTRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof RTRecord);
+public class RTRecordTest extends TestCase {
+    public void test_ctor_5arg() throws TextParseException {
+        Name n = Name.fromString("My.Name.");
+        Name m = Name.fromString("My.OtherName.");
+
+        RTRecord d = new RTRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
+        assertEquals(n, d.getName());
+        assertEquals(Type.RT, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(0xF1, d.getPreference());
+        assertEquals(m, d.getIntermediateHost());
     }
 
-    public void test_ctor_5arg() throws TextParseException
-    {
-	Name n = Name.fromString("My.Name.");
-	Name m = Name.fromString("My.OtherName.");
-
-	RTRecord d = new RTRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
-	assertEquals(n, d.getName());
-	assertEquals(Type.RT, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(0xF1, d.getPreference());
-	assertEquals(m, d.getIntermediateHost());
+    public void test_getObject() {
+        RTRecord d = new RTRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof RTRecord);
     }
 }

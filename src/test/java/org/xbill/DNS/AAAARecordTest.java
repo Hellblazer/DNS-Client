@@ -32,123 +32,116 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	java.io.IOException;
-import	java.net.InetAddress;
-import	java.net.UnknownHostException;
-import	java.util.Arrays;
-import	junit.framework.TestCase;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
 
-public class AAAARecordTest extends TestCase
-{
-    Name m_an, m_rn;
+import junit.framework.TestCase;
+
+public class AAAARecordTest extends TestCase {
+    Name        m_an, m_rn;
     InetAddress m_addr;
-    String m_addr_string;
-    byte[] m_addr_bytes;
-    long m_ttl;
+    String      m_addr_string;
+    byte[]      m_addr_bytes;
+    long        m_ttl;
 
-    protected void setUp() throws TextParseException,
-				  UnknownHostException
-    {
-	m_an = Name.fromString("My.Absolute.Name.");
-	m_rn = Name.fromString("My.Relative.Name");
-	m_addr_string = "2001:db8:85a3:8d3:1319:8a2e:370:7334";
-	m_addr = InetAddress.getByName(m_addr_string);
-	m_addr_bytes = m_addr.getAddress();
-	m_ttl = 0x13579;
+    public void test_ctor_0arg() throws UnknownHostException {
+        AAAARecord ar = new AAAARecord();
+        assertNull(ar.getName());
+        assertEquals(0, ar.getType());
+        assertEquals(0, ar.getDClass());
+        assertEquals(0, ar.getTTL());
+        assertNull(ar.getAddress());
     }
 
-    public void test_ctor_0arg() throws UnknownHostException
-    {
-	AAAARecord ar = new AAAARecord();
-	assertNull(ar.getName());
-	assertEquals(0, ar.getType());
-	assertEquals(0, ar.getDClass());
-	assertEquals(0, ar.getTTL());
-	assertNull(ar.getAddress());
+    public void test_ctor_4arg() {
+        AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
+        assertEquals(m_an, ar.getName());
+        assertEquals(Type.AAAA, ar.getType());
+        assertEquals(DClass.IN, ar.getDClass());
+        assertEquals(m_ttl, ar.getTTL());
+        assertEquals(m_addr, ar.getAddress());
+
+        // a relative name
+        try {
+            new AAAARecord(m_rn, DClass.IN, m_ttl, m_addr);
+            fail("RelativeNameException not thrown");
+        } catch (RelativeNameException e) {
+        }
+
+        // an IPv4 address
+        try {
+            new AAAARecord(m_an, DClass.IN, m_ttl,
+                           InetAddress.getByName("192.168.0.1"));
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        } catch (UnknownHostException e) {
+            fail(e.getMessage());
+        }
     }
 
-    public void test_getObject()
-    {
-	AAAARecord ar = new AAAARecord();
-	Record r = ar.getObject();
-	assertTrue(r instanceof AAAARecord);
+    public void test_getObject() {
+        AAAARecord ar = new AAAARecord();
+        Record r = ar.getObject();
+        assertTrue(r instanceof AAAARecord);
     }
 
-    public void test_ctor_4arg()
-    {
-	AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
-	assertEquals(m_an, ar.getName());
-	assertEquals(Type.AAAA, ar.getType());
-	assertEquals(DClass.IN, ar.getDClass());
-	assertEquals(m_ttl, ar.getTTL());
-	assertEquals(m_addr, ar.getAddress());
+    public void test_rdataFromString() throws IOException {
+        Tokenizer t = new Tokenizer(m_addr_string);
+        AAAARecord ar = new AAAARecord();
 
-	// a relative name
-	try {
-	    new AAAARecord(m_rn, DClass.IN, m_ttl, m_addr);
-	    fail("RelativeNameException not thrown");
-	}
-	catch( RelativeNameException e ){}
+        ar.rdataFromString(t, null);
 
-	// an IPv4 address
-	try {
-	    new AAAARecord(m_an, DClass.IN, m_ttl,
-			InetAddress.getByName("192.168.0.1"));
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){}
-	catch( UnknownHostException e ){ fail(e.getMessage()); }
+        assertEquals(m_addr, ar.getAddress());
+
+        // invalid address
+        t = new Tokenizer("193.160.232.1");
+        ar = new AAAARecord();
+        try {
+            ar.rdataFromString(t, null);
+            fail("TextParseException not thrown");
+        } catch (TextParseException e) {
+        }
     }
 
-    public void test_rrFromWire() throws IOException
-    {
-	DNSInput di = new DNSInput(m_addr_bytes);
-	AAAARecord ar = new AAAARecord();
+    public void test_rrFromWire() throws IOException {
+        DNSInput di = new DNSInput(m_addr_bytes);
+        AAAARecord ar = new AAAARecord();
 
-	ar.rrFromWire(di);
-	
-	assertEquals(m_addr, ar.getAddress());
+        ar.rrFromWire(di);
+
+        assertEquals(m_addr, ar.getAddress());
     }
 
-    public void test_rdataFromString() throws IOException
-    {
-	Tokenizer t = new Tokenizer(m_addr_string);
-	AAAARecord ar = new AAAARecord();
-
-	ar.rdataFromString(t, null);
-
-	assertEquals(m_addr, ar.getAddress());
-
-	// invalid address
-	t = new Tokenizer("193.160.232.1");
-	ar = new AAAARecord();
-	try {
-	    ar.rdataFromString(t, null);
-	    fail("TextParseException not thrown");
-	}
-	catch( TextParseException e ){}
+    public void test_rrToString() {
+        AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
+        assertEquals(m_addr_string, ar.rrToString());
     }
 
-    public void test_rrToString()
-    {
-	AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
-	assertEquals(m_addr_string, ar.rrToString());
+    public void test_rrToWire() {
+        AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
+
+        // canonical
+        DNSOutput dout = new DNSOutput();
+        ar.rrToWire(dout, null, true);
+        assertTrue(Arrays.equals(m_addr_bytes, dout.toByteArray()));
+
+        // case sensitive
+        dout = new DNSOutput();
+        ar.rrToWire(dout, null, false);
+        assertTrue(Arrays.equals(m_addr_bytes, dout.toByteArray()));
     }
 
-    public void test_rrToWire()
-    {
-	AAAARecord ar = new AAAARecord(m_an, DClass.IN, m_ttl, m_addr);
-
-	// canonical
-	DNSOutput dout = new DNSOutput();
-	ar.rrToWire(dout, null, true);
-	assertTrue(Arrays.equals(m_addr_bytes, dout.toByteArray()));
-
-	// case sensitive
-	dout = new DNSOutput();
-	ar.rrToWire(dout, null, false);
-	assertTrue(Arrays.equals(m_addr_bytes, dout.toByteArray()));
+    @Override
+    protected void setUp() throws TextParseException, UnknownHostException {
+        m_an = Name.fromString("My.Absolute.Name.");
+        m_rn = Name.fromString("My.Relative.Name");
+        m_addr_string = "2001:db8:85a3:8d3:1319:8a2e:370:7334";
+        m_addr = InetAddress.getByName(m_addr_string);
+        m_addr_bytes = m_addr.getAddress();
+        m_ttl = 0x13579;
     }
 }

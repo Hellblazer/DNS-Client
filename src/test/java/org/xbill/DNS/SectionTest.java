@@ -36,54 +36,60 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class SectionTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("au", Section.string(Section.AUTHORITY));
+public class SectionTest extends TestCase {
+    public void test_longString() {
+        assertEquals("ADDITIONAL RECORDS",
+                     Section.longString(Section.ADDITIONAL));
 
-	try {
-	    Section.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 3)
-	try {
-	    Section.string(4);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            Section.longString(-1);
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Section.longString(4);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(Section.ADDITIONAL, Section.value("ad"));
+    public void test_string() {
+        // a regular one
+        assertEquals("au", Section.string(Section.AUTHORITY));
 
-	// something that unknown
-	assertEquals(-1, Section.value("THIS IS DEFINITELY UNKNOWN"));
+        try {
+            Section.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
 
-	// empty string
-	assertEquals(-1, Section.value(""));
+        //  (max is 3)
+        try {
+            Section.string(4);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_longString()
-    {
-	assertEquals("ADDITIONAL RECORDS", Section.longString(Section.ADDITIONAL));
-	
-	try {Section.longString(-1);} catch( IllegalArgumentException e ){}
-	try {Section.longString(4);} catch( IllegalArgumentException e ){}
+    public void test_updString() {
+        assertEquals("ZONE", Section.updString(Section.ZONE));
+
+        try {
+            Section.longString(-1);
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Section.longString(4);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_updString()
-    {
-	assertEquals("ZONE", Section.updString(Section.ZONE));
-	
-	try {Section.longString(-1);} catch( IllegalArgumentException e ){}
-	try {Section.longString(4);} catch( IllegalArgumentException e ){}
+    public void test_value() {
+        // regular one
+        assertEquals(Section.ADDITIONAL, Section.value("ad"));
+
+        // something that unknown
+        assertEquals(-1, Section.value("THIS IS DEFINITELY UNKNOWN"));
+
+        // empty string
+        assertEquals(-1, Section.value(""));
     }
 }

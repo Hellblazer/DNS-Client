@@ -36,47 +36,42 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class OpcodeTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("IQUERY", Opcode.string(Opcode.IQUERY));
+public class OpcodeTest extends TestCase {
+    public void test_string() {
+        // a regular one
+        assertEquals("IQUERY", Opcode.string(Opcode.IQUERY));
 
-	// one that doesn't exist
-	assertTrue(Opcode.string(6).startsWith("RESERVED"));
+        // one that doesn't exist
+        assertTrue(Opcode.string(6).startsWith("RESERVED"));
 
-	try {
-	    Opcode.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xF)
-	try {
-	    Opcode.string(0x10);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            Opcode.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+
+        //  (max is 0xF)
+        try {
+            Opcode.string(0x10);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(Opcode.STATUS, Opcode.value("STATUS"));
+    public void test_value() {
+        // regular one
+        assertEquals(Opcode.STATUS, Opcode.value("STATUS"));
 
-	// one thats undefined but within range
-	assertEquals(6, Opcode.value("RESERVED6"));
+        // one thats undefined but within range
+        assertEquals(6, Opcode.value("RESERVED6"));
 
-	// one thats undefined but out of range
-	assertEquals(-1, Opcode.value("RESERVED" + 0x10));
+        // one thats undefined but out of range
+        assertEquals(-1, Opcode.value("RESERVED" + 0x10));
 
-	// something that unknown
-	assertEquals(-1, Opcode.value("THIS IS DEFINITELY UNKNOWN"));
+        // something that unknown
+        assertEquals(-1, Opcode.value("THIS IS DEFINITELY UNKNOWN"));
 
-	// empty string
-	assertEquals(-1, Opcode.value(""));
+        // empty string
+        assertEquals(-1, Opcode.value(""));
     }
 }

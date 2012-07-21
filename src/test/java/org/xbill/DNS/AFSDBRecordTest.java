@@ -32,31 +32,27 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	java.util.Arrays;
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class AFSDBRecordTest extends TestCase
-{
-    public void test_getObject()
-    {
-	AFSDBRecord d = new AFSDBRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof AFSDBRecord);
+public class AFSDBRecordTest extends TestCase {
+    public void test_ctor_5arg() throws TextParseException {
+        Name n = Name.fromString("My.Name.");
+        Name m = Name.fromString("My.OtherName.");
+
+        AFSDBRecord d = new AFSDBRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
+        assertEquals(n, d.getName());
+        assertEquals(Type.AFSDB, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(0xF1, d.getSubtype());
+        assertEquals(m, d.getHost());
     }
 
-    public void test_ctor_5arg() throws TextParseException
-    {
-	Name n = Name.fromString("My.Name.");
-	Name m = Name.fromString("My.OtherName.");
-
-	AFSDBRecord d = new AFSDBRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
-	assertEquals(n, d.getName());
-	assertEquals(Type.AFSDB, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(0xF1, d.getSubtype());
-	assertEquals(m, d.getHost());
+    public void test_getObject() {
+        AFSDBRecord d = new AFSDBRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof AFSDBRecord);
     }
 }

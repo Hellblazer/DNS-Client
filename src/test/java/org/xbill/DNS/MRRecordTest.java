@@ -32,36 +32,32 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class MRRecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	MRRecord d = new MRRecord();
-	assertNull(d.getName());
-	assertNull(d.getNewName());
+public class MRRecordTest extends TestCase {
+    public void test_ctor_0arg() {
+        MRRecord d = new MRRecord();
+        assertNull(d.getName());
+        assertNull(d.getNewName());
     }
 
-    public void test_ctor_4arg() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name a = Name.fromString("my.alias.");
+    public void test_ctor_4arg() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name a = Name.fromString("my.alias.");
 
-	MRRecord d = new MRRecord(n, DClass.IN, 0xABCDEL, a);
-	assertEquals(n, d.getName());
-	assertEquals(Type.MR, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(a, d.getNewName());
+        MRRecord d = new MRRecord(n, DClass.IN, 0xABCDEL, a);
+        assertEquals(n, d.getName());
+        assertEquals(Type.MR, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(a, d.getNewName());
     }
 
-    public void test_getObject()
-    {
-	MRRecord d = new MRRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof MRRecord);
+    public void test_getObject() {
+        MRRecord d = new MRRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof MRRecord);
     }
 }

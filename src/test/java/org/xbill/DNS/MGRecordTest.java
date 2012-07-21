@@ -32,36 +32,32 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class MGRecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	MGRecord d = new MGRecord();
-	assertNull(d.getName());
-	assertNull(d.getMailbox());
+public class MGRecordTest extends TestCase {
+    public void test_ctor_0arg() {
+        MGRecord d = new MGRecord();
+        assertNull(d.getName());
+        assertNull(d.getMailbox());
     }
 
-    public void test_ctor_4arg() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name a = Name.fromString("my.alias.");
+    public void test_ctor_4arg() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name a = Name.fromString("my.alias.");
 
-	MGRecord d = new MGRecord(n, DClass.IN, 0xABCDEL, a);
-	assertEquals(n, d.getName());
-	assertEquals(Type.MG, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(a, d.getMailbox());
+        MGRecord d = new MGRecord(n, DClass.IN, 0xABCDEL, a);
+        assertEquals(n, d.getName());
+        assertEquals(Type.MG, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(a, d.getMailbox());
     }
 
-    public void test_getObject()
-    {
-	MGRecord d = new MGRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof MGRecord);
+    public void test_getObject() {
+        MGRecord d = new MGRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof MGRecord);
     }
 }

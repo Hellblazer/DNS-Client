@@ -1,205 +1,222 @@
 // Copyright (c) 1999-2004 Brian Wellington (bwelling@xbill.org)
 
-import java.io.*;
-import java.net.*;
-import org.xbill.DNS.*;
+import java.io.IOException;
+import java.net.InetAddress;
+
+import org.xbill.DNS.DClass;
+import org.xbill.DNS.ExtendedFlags;
+import org.xbill.DNS.Message;
+import org.xbill.DNS.Name;
+import org.xbill.DNS.Rcode;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.ReverseMap;
+import org.xbill.DNS.Section;
+import org.xbill.DNS.SimpleResolver;
+import org.xbill.DNS.TSIG;
+import org.xbill.DNS.Type;
 
 /** @author Brian Wellington &lt;bwelling@xbill.org&gt; */
 
 public class dig {
 
-static Name name = null;
-static int type = Type.A, dclass = DClass.IN;
+    static Name name = null;
+    static int  type = Type.A, dclass = DClass.IN;
 
-static void
-usage() {
-	System.out.println("Usage: dig [@server] name [<type>] [<class>] " +
-			   "[options]");
-	System.exit(0);
-}
+    public static void main(String argv[]) throws IOException {
+        String server = null;
+        int arg;
+        Message query, response;
+        Record rec;
+        SimpleResolver res = null;
+        boolean printQuery = false;
+        long startTime, endTime;
 
-static void
-doQuery(Message response, long ms) throws IOException {
-	System.out.println("; java dig 0.0");
-	System.out.println(response);
-	System.out.println(";; Query time: " + ms + " ms");
-}
+        if (argv.length < 1) {
+            usage();
+        }
 
-static void
-doAXFR(Message response) throws IOException {
-	System.out.println("; java dig 0.0 <> " + name + " axfr");
-	if (response.isSigned()) {
-		System.out.print(";; TSIG ");
-		if (response.isVerified())
-			System.out.println("ok");
-		else
-			System.out.println("failed");
-	}
+        try {
+            arg = 0;
+            if (argv[arg].startsWith("@")) {
+                server = argv[arg++].substring(1);
+            }
 
-	if (response.getRcode() != Rcode.NOERROR) {
-		System.out.println(response);
-		return;
-	}
+            if (server != null) {
+                res = new SimpleResolver(server);
+            } else {
+                res = new SimpleResolver();
+            }
 
-	Record [] records = response.getSectionArray(Section.ANSWER);
-	for (int i = 0; i < records.length; i++)
-		System.out.println(records[i]);
+            String nameString = argv[arg++];
+            if (nameString.equals("-x")) {
+                name = ReverseMap.fromAddress(argv[arg++]);
+                type = Type.PTR;
+                dclass = DClass.IN;
+            } else {
+                name = Name.fromString(nameString, Name.root);
+                type = Type.value(argv[arg]);
+                if (type < 0) {
+                    type = Type.A;
+                } else {
+                    arg++;
+                }
 
-	System.out.print(";; done (");
-	System.out.print(response.getHeader().getCount(Section.ANSWER));
-	System.out.print(" records, ");
-	System.out.print(response.getHeader().getCount(Section.ADDITIONAL));
-	System.out.println(" additional)");
-}
+                dclass = DClass.value(argv[arg]);
+                if (dclass < 0) {
+                    dclass = DClass.IN;
+                } else {
+                    arg++;
+                }
+            }
 
-public static void
-main(String argv[]) throws IOException {
-	String server = null;
-	int arg;
-	Message query, response;
-	Record rec;
-	SimpleResolver res = null;
-	boolean printQuery = false;
-	long startTime, endTime;
+            while (argv[arg].startsWith("-") && argv[arg].length() > 1) {
+                switch (argv[arg].charAt(1)) {
+                    case 'p':
+                        String portStr;
+                        int port;
+                        if (argv[arg].length() > 2) {
+                            portStr = argv[arg].substring(2);
+                        } else {
+                            portStr = argv[++arg];
+                        }
+                        port = Integer.parseInt(portStr);
+                        if (port < 0 || port > 65536) {
+                            System.out.println("Invalid port");
+                            return;
+                        }
+                        res.setPort(port);
+                        break;
 
-	if (argv.length < 1) {
-		usage();
-	}
+                    case 'b':
+                        String addrStr;
+                        if (argv[arg].length() > 2) {
+                            addrStr = argv[arg].substring(2);
+                        } else {
+                            addrStr = argv[++arg];
+                        }
+                        InetAddress addr;
+                        try {
+                            addr = InetAddress.getByName(addrStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid address");
+                            return;
+                        }
+                        res.setLocalAddress(addr);
+                        break;
 
-	try {
-		arg = 0;
-		if (argv[arg].startsWith("@"))
-			server = argv[arg++].substring(1);
+                    case 'k':
+                        String key;
+                        if (argv[arg].length() > 2) {
+                            key = argv[arg].substring(2);
+                        } else {
+                            key = argv[++arg];
+                        }
+                        res.setTSIGKey(TSIG.fromString(key));
+                        break;
 
-		if (server != null)
-			res = new SimpleResolver(server);
-		else
-			res = new SimpleResolver();
+                    case 't':
+                        res.setTCP(true);
+                        break;
 
-		String nameString = argv[arg++];
-		if (nameString.equals("-x")) {
-			name = ReverseMap.fromAddress(argv[arg++]);
-			type = Type.PTR;
-			dclass = DClass.IN;
-		}
-		else {
-			name = Name.fromString(nameString, Name.root);
-			type = Type.value(argv[arg]);
-			if (type < 0)
-				type = Type.A;
-			else
-				arg++;
+                    case 'i':
+                        res.setIgnoreTruncation(true);
+                        break;
 
-			dclass = DClass.value(argv[arg]);
-			if (dclass < 0)
-				dclass = DClass.IN;
-			else
-				arg++;
-		}
+                    case 'e':
+                        String ednsStr;
+                        int edns;
+                        if (argv[arg].length() > 2) {
+                            ednsStr = argv[arg].substring(2);
+                        } else {
+                            ednsStr = argv[++arg];
+                        }
+                        edns = Integer.parseInt(ednsStr);
+                        if (edns < 0 || edns > 1) {
+                            System.out.println("Unsupported " + "EDNS level: "
+                                               + edns);
+                            return;
+                        }
+                        res.setEDNS(edns);
+                        break;
 
-		while (argv[arg].startsWith("-") && argv[arg].length() > 1) {
-			switch (argv[arg].charAt(1)) {
-			case 'p':
-				String portStr;
-				int port;
-				if (argv[arg].length() > 2)
-					portStr = argv[arg].substring(2);
-				else
-					portStr = argv[++arg];
-				port = Integer.parseInt(portStr);
-				if (port < 0 || port > 65536) {
-					System.out.println("Invalid port");
-					return;
-				}
-				res.setPort(port);
-				break;
+                    case 'd':
+                        res.setEDNS(0, 0, ExtendedFlags.DO, null);
+                        break;
 
-			case 'b':
-				String addrStr;
-				if (argv[arg].length() > 2)
-					addrStr = argv[arg].substring(2);
-				else
-					addrStr = argv[++arg];
-				InetAddress addr;
-				try {
-					addr = InetAddress.getByName(addrStr);
-				}
-				catch (Exception e) {
-					System.out.println("Invalid address");
-					return;
-				}
-				res.setLocalAddress(addr);
-				break;
+                    case 'q':
+                        printQuery = true;
+                        break;
 
-			case 'k':
-				String key;
-				if (argv[arg].length() > 2)
-					key = argv[arg].substring(2);
-				else
-					key = argv[++arg];
-				res.setTSIGKey(TSIG.fromString(key));
-				break;
+                    default:
+                        System.out.print("Invalid option: ");
+                        System.out.println(argv[arg]);
+                }
+                arg++;
+            }
 
-			case 't':
-				res.setTCP(true);
-				break;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            if (name == null) {
+                usage();
+            }
+        }
+        if (res == null) {
+            res = new SimpleResolver();
+        }
 
-			case 'i':
-				res.setIgnoreTruncation(true);
-				break;
+        rec = Record.newRecord(name, type, dclass);
+        query = Message.newQuery(rec);
+        if (printQuery) {
+            System.out.println(query);
+        }
+        startTime = System.currentTimeMillis();
+        response = res.send(query);
+        endTime = System.currentTimeMillis();
 
-			case 'e':
-				String ednsStr;
-				int edns;
-				if (argv[arg].length() > 2)
-					ednsStr = argv[arg].substring(2);
-				else
-					ednsStr = argv[++arg];
-				edns = Integer.parseInt(ednsStr);
-				if (edns < 0 || edns > 1) {
-					System.out.println("Unsupported " +
-							   "EDNS level: " +
-							   edns);
-					return;
-				}
-				res.setEDNS(edns);
-				break;
+        if (type == Type.AXFR) {
+            doAXFR(response);
+        } else {
+            doQuery(response, endTime - startTime);
+        }
+    }
 
-			case 'd':
-				res.setEDNS(0, 0, ExtendedFlags.DO, null);
-				break;
+    static void doAXFR(Message response) throws IOException {
+        System.out.println("; java dig 0.0 <> " + name + " axfr");
+        if (response.isSigned()) {
+            System.out.print(";; TSIG ");
+            if (response.isVerified()) {
+                System.out.println("ok");
+            } else {
+                System.out.println("failed");
+            }
+        }
 
-			case 'q':
-			    	printQuery = true;
-				break;
+        if (response.getRcode() != Rcode.NOERROR) {
+            System.out.println(response);
+            return;
+        }
 
-			default:
-				System.out.print("Invalid option: ");
-				System.out.println(argv[arg]);
-			}
-			arg++;
-		}
+        Record[] records = response.getSectionArray(Section.ANSWER);
+        for (Record record : records) {
+            System.out.println(record);
+        }
 
-	}
-	catch (ArrayIndexOutOfBoundsException e) {
-		if (name == null)
-			usage();
-	}
-	if (res == null)
-		res = new SimpleResolver();
+        System.out.print(";; done (");
+        System.out.print(response.getHeader().getCount(Section.ANSWER));
+        System.out.print(" records, ");
+        System.out.print(response.getHeader().getCount(Section.ADDITIONAL));
+        System.out.println(" additional)");
+    }
 
-	rec = Record.newRecord(name, type, dclass);
-	query = Message.newQuery(rec);
-	if (printQuery)
-		System.out.println(query);
-	startTime = System.currentTimeMillis();
-	response = res.send(query);
-	endTime = System.currentTimeMillis();
+    static void doQuery(Message response, long ms) throws IOException {
+        System.out.println("; java dig 0.0");
+        System.out.println(response);
+        System.out.println(";; Query time: " + ms + " ms");
+    }
 
-	if (type == Type.AXFR)
-		doAXFR(response);
-	else
-		doQuery(response, endTime - startTime);
-}
+    static void usage() {
+        System.out.println("Usage: dig [@server] name [<type>] [<class>] "
+                           + "[options]");
+        System.exit(0);
+    }
 
 }

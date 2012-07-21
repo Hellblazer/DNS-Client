@@ -34,58 +34,54 @@
 //
 package org.xbill.DNS;
 
-import	java.util.Date;
-import	java.util.Calendar;
-import	java.util.GregorianCalendar;
-import	java.util.TimeZone;
-import	junit.framework.TestCase;
-import	org.xbill.DNS.FormattedTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
-public class FormattedTimeTest extends TestCase
-{
-    public void test_format()
-    {
-	GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-	cal.set(2005, 2, 19, 4, 4, 5);
-	String out = FormattedTime.format(cal.getTime());
-	assertEquals("20050319040405", out);
+import junit.framework.TestCase;
+
+public class FormattedTimeTest extends TestCase {
+    public void test_format() {
+        GregorianCalendar cal = new GregorianCalendar(
+                                                      TimeZone.getTimeZone("UTC"));
+        cal.set(2005, 2, 19, 4, 4, 5);
+        String out = FormattedTime.format(cal.getTime());
+        assertEquals("20050319040405", out);
     }
 
-    public void test_parse() throws TextParseException
-    {
-	// have to make sure to clear out the milliseconds since there
-	// is occasionally a difference between when cal and cal2 are
-	// instantiated.
-	GregorianCalendar cal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-	cal.set(2005, 2, 19, 4, 4, 5);
-	cal.set(Calendar.MILLISECOND, 0);
-	
-	Date out = FormattedTime.parse("20050319040405");
-	GregorianCalendar cal2 = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-	cal2.setTimeInMillis(out.getTime());
-	cal2.set(Calendar.MILLISECOND, 0);
-	assertEquals(cal, cal2);
+    public void test_parse() throws TextParseException {
+        // have to make sure to clear out the milliseconds since there
+        // is occasionally a difference between when cal and cal2 are
+        // instantiated.
+        GregorianCalendar cal = new GregorianCalendar(
+                                                      TimeZone.getTimeZone("UTC"));
+        cal.set(2005, 2, 19, 4, 4, 5);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date out = FormattedTime.parse("20050319040405");
+        GregorianCalendar cal2 = new GregorianCalendar(
+                                                       TimeZone.getTimeZone("UTC"));
+        cal2.setTimeInMillis(out.getTime());
+        cal2.set(Calendar.MILLISECOND, 0);
+        assertEquals(cal, cal2);
     }
 
-    public void test_parse_invalid()
-    {
-	try {
-	    FormattedTime.parse("2004010101010");
-	    fail("TextParseException not thrown");
-	}
-	catch( TextParseException e ){
-	}
-	try {
-	    FormattedTime.parse("200401010101010");
-	    fail("TextParseException not thrown");
-	}
-	catch( TextParseException e ){
-	}
-	try {
-	    FormattedTime.parse("2004010101010A");
-	    fail("TextParseException not thrown");
-	}
-	catch( TextParseException e ){
-	}
+    public void test_parse_invalid() {
+        try {
+            FormattedTime.parse("2004010101010");
+            fail("TextParseException not thrown");
+        } catch (TextParseException e) {
+        }
+        try {
+            FormattedTime.parse("200401010101010");
+            fail("TextParseException not thrown");
+        } catch (TextParseException e) {
+        }
+        try {
+            FormattedTime.parse("2004010101010A");
+            fail("TextParseException not thrown");
+        } catch (TextParseException e) {
+        }
     }
 }

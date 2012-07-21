@@ -32,32 +32,28 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	java.util.Arrays;
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class KXRecordTest extends TestCase
-{
-    public void test_getObject()
-    {
-	KXRecord d = new KXRecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof KXRecord);
+public class KXRecordTest extends TestCase {
+    public void test_ctor_5arg() throws TextParseException {
+        Name n = Name.fromString("My.Name.");
+        Name m = Name.fromString("My.OtherName.");
+
+        KXRecord d = new KXRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
+        assertEquals(n, d.getName());
+        assertEquals(Type.KX, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(0xF1, d.getPreference());
+        assertEquals(m, d.getTarget());
+        assertEquals(m, d.getAdditionalName());
     }
 
-    public void test_ctor_5arg() throws TextParseException
-    {
-	Name n = Name.fromString("My.Name.");
-	Name m = Name.fromString("My.OtherName.");
-
-	KXRecord d = new KXRecord(n, DClass.IN, 0xABCDEL, 0xF1, m);
-	assertEquals(n, d.getName());
-	assertEquals(Type.KX, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(0xF1, d.getPreference());
-	assertEquals(m, d.getTarget());
-	assertEquals(m, d.getAdditionalName());
+    public void test_getObject() {
+        KXRecord d = new KXRecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof KXRecord);
     }
 }

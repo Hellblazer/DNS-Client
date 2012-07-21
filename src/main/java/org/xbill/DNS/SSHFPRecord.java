@@ -2,107 +2,111 @@
 
 package org.xbill.DNS;
 
-import java.io.*;
-import org.xbill.DNS.utils.*;
+import java.io.IOException;
+
+import org.xbill.DNS.utils.base16;
 
 /**
  * SSH Fingerprint - stores the fingerprint of an SSH host key.
- *
+ * 
  * @author Brian Wellington
  */
 
 public class SSHFPRecord extends Record {
 
-private static final long serialVersionUID = -8104701402654687025L;
+    public static class Algorithm {
+        public static final int RSA = 1;
 
-public static class Algorithm {
-	private Algorithm() {}
+        public static final int DSS = 2;
 
-	public static final int RSA = 1;
-	public static final int DSS = 2;
-}
+        private Algorithm() {
+        }
+    }
 
-public static class Digest {
-	private Digest() {}
+    public static class Digest {
+        public static final int SHA1 = 1;
 
-	public static final int SHA1 = 1;
-}
+        private Digest() {
+        }
+    }
 
-private int alg;
-private int digestType;
-private byte [] fingerprint;
+    private static final long serialVersionUID = -8104701402654687025L;
 
-SSHFPRecord() {} 
+    private int               alg;
+    private int               digestType;
+    private byte[]            fingerprint;
 
-Record
-getObject() {
-	return new SSHFPRecord();
-}
+    /**
+     * Creates an SSHFP Record from the given data.
+     * 
+     * @param alg
+     *            The public key's algorithm.
+     * @param digestType
+     *            The public key's digest type.
+     * @param fingerprint
+     *            The public key's fingerprint.
+     */
+    public SSHFPRecord(Name name, int dclass, long ttl, int alg,
+                       int digestType, byte[] fingerprint) {
+        super(name, Type.SSHFP, dclass, ttl);
+        this.alg = checkU8("alg", alg);
+        this.digestType = checkU8("digestType", digestType);
+        this.fingerprint = fingerprint;
+    }
 
-/**
- * Creates an SSHFP Record from the given data.
- * @param alg The public key's algorithm.
- * @param digestType The public key's digest type.
- * @param fingerprint The public key's fingerprint.
- */
-public
-SSHFPRecord(Name name, int dclass, long ttl, int alg, int digestType,
-	    byte [] fingerprint)
-{
-	super(name, Type.SSHFP, dclass, ttl);
-	this.alg = checkU8("alg", alg);
-	this.digestType = checkU8("digestType", digestType);
-	this.fingerprint = fingerprint;
-}
+    SSHFPRecord() {
+    }
 
-void
-rrFromWire(DNSInput in) throws IOException {
-	alg = in.readU8();
-	digestType = in.readU8();
-	fingerprint = in.readByteArray();
-}
+    /** Returns the public key's algorithm. */
+    public int getAlgorithm() {
+        return alg;
+    }
 
-void
-rdataFromString(Tokenizer st, Name origin) throws IOException {
-	alg = st.getUInt8();
-	digestType = st.getUInt8();
-	fingerprint = st.getHex(true);
-}
+    /** Returns the public key's digest type. */
+    public int getDigestType() {
+        return digestType;
+    }
 
-String
-rrToString() {
-	StringBuffer sb = new StringBuffer();
-	sb.append(alg);
-	sb.append(" ");
-	sb.append(digestType);
-	sb.append(" ");
-	sb.append(base16.toString(fingerprint));
-	return sb.toString();
-}
+    /** Returns the fingerprint */
+    public byte[] getFingerPrint() {
+        return fingerprint;
+    }
 
-/** Returns the public key's algorithm. */
-public int
-getAlgorithm() {
-	return alg;
-}
+    @Override
+    Record getObject() {
+        return new SSHFPRecord();
+    }
 
-/** Returns the public key's digest type. */
-public int
-getDigestType() {
-	return digestType;
-}
+    @Override
+    void rdataFromString(Tokenizer st, Name origin) throws IOException {
+        alg = st.getUInt8();
+        digestType = st.getUInt8();
+        fingerprint = st.getHex(true);
+    }
 
-/** Returns the fingerprint */
-public byte []
-getFingerPrint() {
-	return fingerprint;
-}
+    @Override
+    void rrFromWire(DNSInput in) throws IOException {
+        alg = in.readU8();
+        digestType = in.readU8();
+        fingerprint = in.readByteArray();
+    }
 
-void
-rrToWire(DNSOutput out, Compression c, boolean canonical) {
-	out.writeU8(alg);
-	out.writeU8(digestType);
-	out.writeByteArray(fingerprint);
-}
+    @Override
+    String rrToString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(alg);
+        sb.append(" ");
+        sb.append(digestType);
+        sb.append(" ");
+        sb.append(base16.toString(fingerprint));
+        return sb.toString();
+    }
+
+    @Override
+    void rrToWire(DNSOutput out, Compression c, boolean canonical) {
+        out.writeU8(alg);
+        out.writeU8(digestType);
+        out.writeByteArray(fingerprint);
+    }
 
 }

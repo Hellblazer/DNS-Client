@@ -32,38 +32,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class DNAMERecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	DNAMERecord d = new DNAMERecord();
-	assertNull(d.getName());
-	assertNull(d.getTarget());
-	assertNull(d.getAlias());
+public class DNAMERecordTest extends TestCase {
+    public void test_ctor_0arg() {
+        DNAMERecord d = new DNAMERecord();
+        assertNull(d.getName());
+        assertNull(d.getTarget());
+        assertNull(d.getAlias());
     }
 
-    public void test_ctor_4arg() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name a = Name.fromString("my.alias.");
+    public void test_ctor_4arg() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name a = Name.fromString("my.alias.");
 
-	DNAMERecord d = new DNAMERecord(n, DClass.IN, 0xABCDEL, a);
-	assertEquals(n, d.getName());
-	assertEquals(Type.DNAME, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(a, d.getTarget());
-	assertEquals(a, d.getAlias());
+        DNAMERecord d = new DNAMERecord(n, DClass.IN, 0xABCDEL, a);
+        assertEquals(n, d.getName());
+        assertEquals(Type.DNAME, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(a, d.getTarget());
+        assertEquals(a, d.getAlias());
     }
 
-    public void test_getObject()
-    {
-	DNAMERecord d = new DNAMERecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof DNAMERecord);
+    public void test_getObject() {
+        DNAMERecord d = new DNAMERecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof DNAMERecord);
     }
 }

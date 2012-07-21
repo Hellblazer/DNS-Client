@@ -4,20 +4,23 @@ package org.xbill.DNS;
 
 /**
  * An exception thrown when a zone transfer fails.
- *
+ * 
  * @author Brian Wellington
  */
 
 public class ZoneTransferException extends Exception {
 
-public
-ZoneTransferException() {
-	super();
-}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-public
-ZoneTransferException(String s) {
-	super(s);
-}
+    public ZoneTransferException() {
+        super();
+    }
+
+    public ZoneTransferException(String s) {
+        super(s);
+    }
 
 }

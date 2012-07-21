@@ -36,78 +36,70 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class RcodeTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("NXDOMAIN", Rcode.string(Rcode.NXDOMAIN));
+public class RcodeTest extends TestCase {
+    public void test_string() {
+        // a regular one
+        assertEquals("NXDOMAIN", Rcode.string(Rcode.NXDOMAIN));
 
-	// one with an alias
-	assertEquals("NOTIMP", Rcode.string(Rcode.NOTIMP));
+        // one with an alias
+        assertEquals("NOTIMP", Rcode.string(Rcode.NOTIMP));
 
-	// one that doesn't exist
-	assertTrue(Rcode.string(20).startsWith("RESERVED"));
+        // one that doesn't exist
+        assertTrue(Rcode.string(20).startsWith("RESERVED"));
 
-	try {
-	    Rcode.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xFFF)
-	try {
-	    Rcode.string(0x1000);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            Rcode.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+
+        //  (max is 0xFFF)
+        try {
+            Rcode.string(0x1000);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_TSIGstring()
-    {
-	// a regular one
-	assertEquals("BADSIG", Rcode.TSIGstring(Rcode.BADSIG));
+    public void test_TSIGstring() {
+        // a regular one
+        assertEquals("BADSIG", Rcode.TSIGstring(Rcode.BADSIG));
 
-	// one that doesn't exist
-	assertTrue(Rcode.TSIGstring(20).startsWith("RESERVED"));
+        // one that doesn't exist
+        assertTrue(Rcode.TSIGstring(20).startsWith("RESERVED"));
 
-	try {
-	    Rcode.TSIGstring(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xFFFF)
-	try {
-	    Rcode.string(0x10000);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            Rcode.TSIGstring(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+
+        //  (max is 0xFFFF)
+        try {
+            Rcode.string(0x10000);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(Rcode.FORMERR, Rcode.value("FORMERR"));
+    public void test_value() {
+        // regular one
+        assertEquals(Rcode.FORMERR, Rcode.value("FORMERR"));
 
-	// one with alias
-	assertEquals(Rcode.NOTIMP, Rcode.value("NOTIMP"));
-	assertEquals(Rcode.NOTIMP, Rcode.value("NOTIMPL"));
+        // one with alias
+        assertEquals(Rcode.NOTIMP, Rcode.value("NOTIMP"));
+        assertEquals(Rcode.NOTIMP, Rcode.value("NOTIMPL"));
 
-	// one thats undefined but within range
-	assertEquals(35, Rcode.value("RESERVED35"));
+        // one thats undefined but within range
+        assertEquals(35, Rcode.value("RESERVED35"));
 
-	// one thats undefined but out of range
-	assertEquals(-1, Rcode.value("RESERVED" + 0x1000));
+        // one thats undefined but out of range
+        assertEquals(-1, Rcode.value("RESERVED" + 0x1000));
 
-	// something that unknown
-	assertEquals(-1, Rcode.value("THIS IS DEFINITELY UNKNOWN"));
+        // something that unknown
+        assertEquals(-1, Rcode.value("THIS IS DEFINITELY UNKNOWN"));
 
-	// empty string
-	assertEquals(-1, Rcode.value(""));
+        // empty string
+        assertEquals(-1, Rcode.value(""));
     }
 }

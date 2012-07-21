@@ -4,54 +4,55 @@ package org.xbill.DNS;
 
 /**
  * Mail Exchange - specifies where mail to a domain is sent
- *
+ * 
  * @author Brian Wellington
  */
 
 public class MXRecord extends U16NameBase {
 
-private static final long serialVersionUID = 2914841027584208546L;
+    private static final long serialVersionUID = 2914841027584208546L;
 
-MXRecord() {}
+    /**
+     * Creates an MX Record from the given data
+     * 
+     * @param priority
+     *            The priority of this MX. Records with lower priority are
+     *            preferred.
+     * @param target
+     *            The host that mail is sent to
+     */
+    public MXRecord(Name name, int dclass, long ttl, int priority, Name target) {
+        super(name, Type.MX, dclass, ttl, priority, "priority", target,
+              "target");
+    }
 
-Record
-getObject() {
-	return new MXRecord();
-}
+    MXRecord() {
+    }
 
-/**
- * Creates an MX Record from the given data
- * @param priority The priority of this MX.  Records with lower priority
- * are preferred.
- * @param target The host that mail is sent to
- */
-public
-MXRecord(Name name, int dclass, long ttl, int priority, Name target) {
-	super(name, Type.MX, dclass, ttl, priority, "priority",
-	      target, "target");
-}
+    @Override
+    public Name getAdditionalName() {
+        return getNameField();
+    }
 
-/** Returns the target of the MX record */
-public Name
-getTarget() {
-	return getNameField();
-}
+    /** Returns the priority of this MX record */
+    public int getPriority() {
+        return getU16Field();
+    }
 
-/** Returns the priority of this MX record */
-public int
-getPriority() {
-	return getU16Field();
-}
+    /** Returns the target of the MX record */
+    public Name getTarget() {
+        return getNameField();
+    }
 
-void
-rrToWire(DNSOutput out, Compression c, boolean canonical) {
-	out.writeU16(u16Field);
-	nameField.toWire(out, c, canonical);
-}
+    @Override
+    Record getObject() {
+        return new MXRecord();
+    }
 
-public Name
-getAdditionalName() {
-	return getNameField();
-}
+    @Override
+    void rrToWire(DNSOutput out, Compression c, boolean canonical) {
+        out.writeU16(u16Field);
+        nameField.toWire(out, c, canonical);
+    }
 
 }

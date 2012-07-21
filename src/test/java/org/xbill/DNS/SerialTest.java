@@ -34,131 +34,112 @@
 //
 package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class SerialTest extends TestCase
-{
-    public void test_compare_NegativeArg1()
-    {
-	long arg1 = -1;
-	long arg2 = 1;
-	try {
-	    Serial.compare( arg1, arg2 );
-	    fail( "compare accepted negative argument 1" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+public class SerialTest extends TestCase {
+    public void test_compare_Arg1Greater() {
+        long arg1 = 10;
+        long arg2 = 9;
+        int ret = Serial.compare(arg1, arg2);
+        assertTrue(ret > 0);
     }
 
-    public void test_compare_OOBArg1()
-    {
-	long arg1 = 0xFFFFFFFFL + 1;
-	long arg2 = 1;
-	try {
-	    Serial.compare( arg1, arg2 );
-	    fail( "compare accepted out-of-bounds argument 1" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+    public void test_compare_Arg2Greater() {
+        long arg1 = 9;
+        long arg2 = 10;
+        int ret = Serial.compare(arg1, arg2);
+        assertTrue(ret < 0);
     }
 
-    public void test_compare_NegativeArg2()
-    {
-	long arg1 = 1;
-	long arg2 = -1;
-	try {
-	    Serial.compare( arg1, arg2 );
-	    fail( "compare accepted negative argument 2" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+    public void test_compare_ArgsEqual() {
+        long arg1 = 10;
+        long arg2 = 10;
+        int ret = Serial.compare(arg1, arg2);
+        assertEquals(ret, 0);
     }
 
-    public void test_compare_OOBArg2()
-    {
-	long arg1 = 1;
-	long arg2 = 0xFFFFFFFFL + 1;
-	try {
-	    Serial.compare( arg1, arg2 );
-	    fail( "compare accepted out-of-bounds argument 1" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+    public void test_compare_boundary() {
+        long arg1 = 0xFFFFFFFFL;
+        long arg2 = 0;
+        int ret = Serial.compare(arg1, arg2);
+        assertEquals(-1, ret);
+        ret = Serial.compare(arg2, arg1);
+        assertEquals(1, ret);
     }
 
-    public void test_compare_Arg1Greater()
-    {
-	long arg1 = 10;
-	long arg2 = 9;
-	int ret = Serial.compare( arg1, arg2 );
-	assertTrue( ret > 0 );
+    public void test_compare_NegativeArg1() {
+        long arg1 = -1;
+        long arg2 = 1;
+        try {
+            Serial.compare(arg1, arg2);
+            fail("compare accepted negative argument 1");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_compare_Arg2Greater()
-    {
-	long arg1 = 9;
-	long arg2 = 10;
-	int ret = Serial.compare( arg1, arg2 );
-	assertTrue( ret < 0 );
+    public void test_compare_NegativeArg2() {
+        long arg1 = 1;
+        long arg2 = -1;
+        try {
+            Serial.compare(arg1, arg2);
+            fail("compare accepted negative argument 2");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_compare_ArgsEqual()
-    {
-	long arg1 = 10;
-	long arg2 = 10;
-	int ret = Serial.compare( arg1, arg2 );
-	assertEquals( ret, 0 );
+    public void test_compare_OOBArg1() {
+        long arg1 = 0xFFFFFFFFL + 1;
+        long arg2 = 1;
+        try {
+            Serial.compare(arg1, arg2);
+            fail("compare accepted out-of-bounds argument 1");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_compare_boundary()
-    {
-	long arg1 = 0xFFFFFFFFL;
-	long arg2 = 0;
-	int ret = Serial.compare( arg1, arg2 );
-	assertEquals( -1, ret );
-	ret = Serial.compare( arg2, arg1 );
-	assertEquals( 1, ret );
+    public void test_compare_OOBArg2() {
+        long arg1 = 1;
+        long arg2 = 0xFFFFFFFFL + 1;
+        try {
+            Serial.compare(arg1, arg2);
+            fail("compare accepted out-of-bounds argument 1");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_increment_NegativeArg()
-    {
-	long arg = -1;
-	try {
-	    Serial.increment( arg );
-	    fail( "increment accepted negative argument" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+    public void test_increment_NegativeArg() {
+        long arg = -1;
+        try {
+            Serial.increment(arg);
+            fail("increment accepted negative argument");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_increment_OOBArg()
-    {
-	long arg = 0xFFFFFFFFL + 1;
-	try {
-	    Serial.increment( arg );
-	    fail( "increment accepted out-of-bounds argument" );
-	}
-	catch( IllegalArgumentException e ){
-	    // pass
-	}
+    public void test_increment_normal() {
+        long arg = 10;
+        long ret = Serial.increment(arg);
+        assertEquals(arg + 1, ret);
     }
 
-    public void test_increment_reset()
-    {
-	long arg = 0xFFFFFFFFL;
-	long ret = Serial.increment( arg );
-	assertEquals( 0, ret );
+    public void test_increment_OOBArg() {
+        long arg = 0xFFFFFFFFL + 1;
+        try {
+            Serial.increment(arg);
+            fail("increment accepted out-of-bounds argument");
+        } catch (IllegalArgumentException e) {
+            // pass
+        }
     }
 
-    public void test_increment_normal()
-    {
-	long arg = 10;
-	long ret = Serial.increment( arg );
-	assertEquals( arg+1, ret );
+    public void test_increment_reset() {
+        long arg = 0xFFFFFFFFL;
+        long ret = Serial.increment(arg);
+        assertEquals(0, ret);
     }
 }

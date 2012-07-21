@@ -34,207 +34,191 @@
 //
 package org.xbill.DNS;
 
-import	java.io.IOException;
-import	java.util.Arrays;
-import	junit.framework.Test;
-import	junit.framework.TestCase;
-import	junit.framework.TestSuite;
+import java.io.IOException;
+import java.util.Arrays;
 
-public class DSRecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	DSRecord dr = new DSRecord();
-	assertNull(dr.getName());
-	assertEquals(0, dr.getType());
-	assertEquals(0, dr.getDClass());
-	assertEquals(0, dr.getTTL());
-	assertEquals(0, dr.getAlgorithm());
-	assertEquals(0, dr.getDigestID());
-	assertNull(dr.getDigest());
-	assertEquals(0, dr.getFootprint());
-    }
-    
-    public void test_getObject()
-    {
-	DSRecord dr = new DSRecord();
-	Record r = dr.getObject();
-	assertTrue(r instanceof DSRecord);
-    }
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
-    public static class Test_Ctor_7arg extends TestCase
-    {
-	private Name	m_n;
-	private long	m_ttl;
-	private int	m_footprint;
-	private int	m_algorithm;
-	private int	m_digestid;
-	private byte[]	m_digest;	
+public class DSRecordTest extends TestCase {
+    public static class Test_Ctor_7arg extends TestCase {
+        private Name   m_n;
+        private long   m_ttl;
+        private int    m_footprint;
+        private int    m_algorithm;
+        private int    m_digestid;
+        private byte[] m_digest;
 
-	protected void setUp() throws TextParseException
-	{
-	    m_n = Name.fromString("The.Name.");
-	    m_ttl = 0xABCDL;
-	    m_footprint = 0xEF01;
-	    m_algorithm = 0x23;
-	    m_digestid = 0x45;
-	    m_digest = new byte[] { (byte)0x67, (byte)0x89, (byte)0xAB, (byte)0xCD, (byte)0xEF };
-	}
-	
-	public void test_basic() throws TextParseException
-	{
-	    DSRecord dr = new DSRecord(m_n, DClass.IN, m_ttl,
-				       m_footprint, m_algorithm, m_digestid, m_digest);
-	    assertEquals(m_n, dr.getName());
-	    assertEquals(DClass.IN, dr.getDClass());
-	    assertEquals(Type.DS, dr.getType());
-	    assertEquals(m_ttl, dr.getTTL());
-	    assertEquals(m_footprint, dr.getFootprint());
-	    assertEquals(m_algorithm, dr.getAlgorithm());
-	    assertEquals(m_digestid, dr.getDigestID());
-	    assertTrue(Arrays.equals(m_digest, dr.getDigest()));
-	}
+        public void test_basic() throws TextParseException {
+            DSRecord dr = new DSRecord(m_n, DClass.IN, m_ttl, m_footprint,
+                                       m_algorithm, m_digestid, m_digest);
+            assertEquals(m_n, dr.getName());
+            assertEquals(DClass.IN, dr.getDClass());
+            assertEquals(Type.DS, dr.getType());
+            assertEquals(m_ttl, dr.getTTL());
+            assertEquals(m_footprint, dr.getFootprint());
+            assertEquals(m_algorithm, dr.getAlgorithm());
+            assertEquals(m_digestid, dr.getDigestID());
+            assertTrue(Arrays.equals(m_digest, dr.getDigest()));
+        }
 
-	public void test_toosmall_footprint() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     -1, m_algorithm, m_digestid, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_null_digest() {
+            DSRecord dr = new DSRecord(m_n, DClass.IN, m_ttl, m_footprint,
+                                       m_algorithm, m_digestid, null);
+            assertEquals(m_n, dr.getName());
+            assertEquals(DClass.IN, dr.getDClass());
+            assertEquals(Type.DS, dr.getType());
+            assertEquals(m_ttl, dr.getTTL());
+            assertEquals(m_footprint, dr.getFootprint());
+            assertEquals(m_algorithm, dr.getAlgorithm());
+            assertEquals(m_digestid, dr.getDigestID());
+            assertNull(dr.getDigest());
+        }
 
-	public void test_toobig_footprint() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     0x10000, m_algorithm, m_digestid, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_toobig_algorithm() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, m_footprint, 0x10000,
+                             m_digestid, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
 
-	public void test_toosmall_algorithm() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     m_footprint, -1, m_digestid, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_toobig_digestid() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, m_footprint, m_algorithm,
+                             0x10000, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
 
-	public void test_toobig_algorithm() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     m_footprint, 0x10000, m_digestid, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_toobig_footprint() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, 0x10000, m_algorithm,
+                             m_digestid, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
 
-	public void test_toosmall_digestid() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     m_footprint, m_algorithm, -1, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_toosmall_algorithm() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, m_footprint, -1,
+                             m_digestid, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
 
-	public void test_toobig_digestid() throws TextParseException
-	{
-	    try {
-		new DSRecord(m_n, DClass.IN, m_ttl,
-			     m_footprint, m_algorithm, 0x10000, m_digest);
-		fail("IllegalArgumentException not thrown");
-	    }
-	    catch(IllegalArgumentException e){}
-	}
+        public void test_toosmall_digestid() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, m_footprint, m_algorithm,
+                             -1, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
 
-	public void test_null_digest()
-	{
-	    DSRecord dr = new DSRecord(m_n, DClass.IN, m_ttl,
-				       m_footprint, m_algorithm, m_digestid, null);
-	    assertEquals(m_n, dr.getName());
-	    assertEquals(DClass.IN, dr.getDClass());
-	    assertEquals(Type.DS, dr.getType());
-	    assertEquals(m_ttl, dr.getTTL());
-	    assertEquals(m_footprint, dr.getFootprint());
-	    assertEquals(m_algorithm, dr.getAlgorithm());
-	    assertEquals(m_digestid, dr.getDigestID());
-	    assertNull(dr.getDigest());
-	}
+        public void test_toosmall_footprint() throws TextParseException {
+            try {
+                new DSRecord(m_n, DClass.IN, m_ttl, -1, m_algorithm,
+                             m_digestid, m_digest);
+                fail("IllegalArgumentException not thrown");
+            } catch (IllegalArgumentException e) {
+            }
+        }
+
+        @Override
+        protected void setUp() throws TextParseException {
+            m_n = Name.fromString("The.Name.");
+            m_ttl = 0xABCDL;
+            m_footprint = 0xEF01;
+            m_algorithm = 0x23;
+            m_digestid = 0x45;
+            m_digest = new byte[] { (byte) 0x67, (byte) 0x89, (byte) 0xAB,
+                    (byte) 0xCD, (byte) 0xEF };
+        }
     }
 
-    public void test_rrFromWire() throws IOException
-    {
-	byte[] raw = new byte[] { (byte)0xAB, (byte)0xCD, (byte)0xEF, 
-				  (byte)0x01, (byte)0x23, (byte)0x45,
-				  (byte)0x67, (byte)0x89 };
-	DNSInput in = new DNSInput(raw);
-
-	DSRecord dr = new DSRecord();
-	dr.rrFromWire(in);
-	assertEquals(0xABCD, dr.getFootprint());
-	assertEquals(0xEF, dr.getAlgorithm());
-	assertEquals(0x01, dr.getDigestID());
-	assertTrue(Arrays.equals(new byte[] { (byte)0x23, (byte)0x45, (byte)0x67, (byte)0x89 },
-				 dr.getDigest()));
+    public static Test suite() {
+        TestSuite s = new TestSuite();
+        s.addTestSuite(Test_Ctor_7arg.class);
+        s.addTestSuite(DSRecordTest.class);
+        return s;
     }
 
-    public void test_rdataFromString() throws IOException
-    {
-	byte[] raw = new byte[] { (byte)0xAB, (byte)0xCD, (byte)0xEF, 
-				  (byte)0x01, (byte)0x23, (byte)0x45,
-				  (byte)0x67, (byte)0x89 };
-	Tokenizer t = new Tokenizer(0xABCD + " " + 0xEF + " " + 0x01 + " 23456789AB");
-
-	DSRecord dr = new DSRecord();
-	dr.rdataFromString(t, null);
-	assertEquals(0xABCD, dr.getFootprint());
-	assertEquals(0xEF, dr.getAlgorithm());
-	assertEquals(0x01, dr.getDigestID());
-	assertTrue(Arrays.equals(new byte[] { (byte)0x23, (byte)0x45, (byte)0x67, (byte)0x89, (byte)0xAB },
-				 dr.getDigest()));
+    public void test_ctor_0arg() {
+        DSRecord dr = new DSRecord();
+        assertNull(dr.getName());
+        assertEquals(0, dr.getType());
+        assertEquals(0, dr.getDClass());
+        assertEquals(0, dr.getTTL());
+        assertEquals(0, dr.getAlgorithm());
+        assertEquals(0, dr.getDigestID());
+        assertNull(dr.getDigest());
+        assertEquals(0, dr.getFootprint());
     }
 
-    public void test_rrToString() throws TextParseException
-    {
-	String exp = 0xABCD + " " + 0xEF + " " + 0x01 + " 23456789AB";
-
-	DSRecord dr = new DSRecord(Name.fromString("The.Name."), DClass.IN, 0x123,
-				   0xABCD, 0xEF, 0x01,
-				   new byte[] { (byte)0x23, (byte)0x45, (byte)0x67,
-						(byte)0x89, (byte)0xAB });
-	assertEquals(exp, dr.rrToString());
+    public void test_getObject() {
+        DSRecord dr = new DSRecord();
+        Record r = dr.getObject();
+        assertTrue(r instanceof DSRecord);
     }
 
-    public void test_rrToWire() throws TextParseException
-    {
-	DSRecord dr = new DSRecord(Name.fromString("The.Name."), DClass.IN, 0x123,
-				   0xABCD, 0xEF, 0x01,
-				   new byte[] { (byte)0x23, (byte)0x45, (byte)0x67,
-						(byte)0x89, (byte)0xAB });
+    public void test_rdataFromString() throws IOException {
+        Tokenizer t = new Tokenizer(0xABCD + " " + 0xEF + " " + 0x01
+                                    + " 23456789AB");
 
-	byte[] exp = new byte[] { (byte)0xAB, (byte)0xCD, (byte)0xEF, 
-				  (byte)0x01, (byte)0x23, (byte)0x45,
-				  (byte)0x67, (byte)0x89, (byte)0xAB };
-
-	DNSOutput out = new DNSOutput();
-	dr.rrToWire(out, null, true);
-
-	assertTrue(Arrays.equals(exp, out.toByteArray()));
+        DSRecord dr = new DSRecord();
+        dr.rdataFromString(t, null);
+        assertEquals(0xABCD, dr.getFootprint());
+        assertEquals(0xEF, dr.getAlgorithm());
+        assertEquals(0x01, dr.getDigestID());
+        assertTrue(Arrays.equals(new byte[] { (byte) 0x23, (byte) 0x45,
+                (byte) 0x67, (byte) 0x89, (byte) 0xAB }, dr.getDigest()));
     }
 
-    public static Test suite()
-    {
-	TestSuite s = new TestSuite();
-	s.addTestSuite(Test_Ctor_7arg.class);
-	s.addTestSuite(DSRecordTest.class);
-	return s;
+    public void test_rrFromWire() throws IOException {
+        byte[] raw = new byte[] { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF,
+                (byte) 0x01, (byte) 0x23, (byte) 0x45, (byte) 0x67, (byte) 0x89 };
+        DNSInput in = new DNSInput(raw);
+
+        DSRecord dr = new DSRecord();
+        dr.rrFromWire(in);
+        assertEquals(0xABCD, dr.getFootprint());
+        assertEquals(0xEF, dr.getAlgorithm());
+        assertEquals(0x01, dr.getDigestID());
+        assertTrue(Arrays.equals(new byte[] { (byte) 0x23, (byte) 0x45,
+                (byte) 0x67, (byte) 0x89 }, dr.getDigest()));
+    }
+
+    public void test_rrToString() throws TextParseException {
+        String exp = 0xABCD + " " + 0xEF + " " + 0x01 + " 23456789AB";
+
+        DSRecord dr = new DSRecord(Name.fromString("The.Name."), DClass.IN,
+                                   0x123, 0xABCD, 0xEF, 0x01, new byte[] {
+                                           (byte) 0x23, (byte) 0x45,
+                                           (byte) 0x67, (byte) 0x89,
+                                           (byte) 0xAB });
+        assertEquals(exp, dr.rrToString());
+    }
+
+    public void test_rrToWire() throws TextParseException {
+        DSRecord dr = new DSRecord(Name.fromString("The.Name."), DClass.IN,
+                                   0x123, 0xABCD, 0xEF, 0x01, new byte[] {
+                                           (byte) 0x23, (byte) 0x45,
+                                           (byte) 0x67, (byte) 0x89,
+                                           (byte) 0xAB });
+
+        byte[] exp = new byte[] { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF,
+                (byte) 0x01, (byte) 0x23, (byte) 0x45, (byte) 0x67,
+                (byte) 0x89, (byte) 0xAB };
+
+        DNSOutput out = new DNSOutput();
+        dr.rrToWire(out, null, true);
+
+        assertTrue(Arrays.equals(exp, out.toByteArray()));
     }
 }

@@ -36,51 +36,46 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class DClassTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("IN", DClass.string(DClass.IN));
+public class DClassTest extends TestCase {
+    public void test_string() {
+        // a regular one
+        assertEquals("IN", DClass.string(DClass.IN));
 
-	// one with an alias
-	assertEquals("CH", DClass.string(DClass.CH));
+        // one with an alias
+        assertEquals("CH", DClass.string(DClass.CH));
 
-	// one that doesn't exist
-	assertTrue(DClass.string(20).startsWith("CLASS"));
+        // one that doesn't exist
+        assertTrue(DClass.string(20).startsWith("CLASS"));
 
-	try {
-	    DClass.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xFFFF)
-	try {
-	    DClass.string(0x10000);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+        try {
+            DClass.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+
+        //  (max is 0xFFFF)
+        try {
+            DClass.string(0x10000);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(DClass.NONE, DClass.value("NONE"));
+    public void test_value() {
+        // regular one
+        assertEquals(DClass.NONE, DClass.value("NONE"));
 
-	// one with alias
-	assertEquals(DClass.HS, DClass.value("HS"));
-	assertEquals(DClass.HS, DClass.value("HESIOD"));
+        // one with alias
+        assertEquals(DClass.HS, DClass.value("HS"));
+        assertEquals(DClass.HS, DClass.value("HESIOD"));
 
-	// one thats undefined but within range
-	assertEquals(21, DClass.value("CLASS21"));
+        // one thats undefined but within range
+        assertEquals(21, DClass.value("CLASS21"));
 
-	// something that unknown
-	assertEquals(-1, DClass.value("THIS IS DEFINITELY UNKNOWN"));
+        // something that unknown
+        assertEquals(-1, DClass.value("THIS IS DEFINITELY UNKNOWN"));
 
-	// empty string
-	assertEquals(-1, DClass.value(""));
+        // empty string
+        assertEquals(-1, DClass.value(""));
     }
 }

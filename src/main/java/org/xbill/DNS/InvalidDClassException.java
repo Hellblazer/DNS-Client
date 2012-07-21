@@ -4,15 +4,19 @@ package org.xbill.DNS;
 
 /**
  * An exception thrown when an invalid dclass code is specified.
- *
+ * 
  * @author Brian Wellington
  */
 
 public class InvalidDClassException extends IllegalArgumentException {
 
-public
-InvalidDClassException(int dclass) {
-	super("Invalid DNS class: " + dclass);
-}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    public InvalidDClassException(int dclass) {
+        super("Invalid DNS class: " + dclass);
+    }
 
 }

@@ -3,40 +3,41 @@
 package org.xbill.DNS;
 
 /**
- * Mailbox Record  - specifies a host containing a mailbox.
- *
+ * Mailbox Record - specifies a host containing a mailbox.
+ * 
  * @author Brian Wellington
  */
 
 public class MBRecord extends SingleNameBase {
 
-private static final long serialVersionUID = 532349543479150419L;
+    private static final long serialVersionUID = 532349543479150419L;
 
-MBRecord() {}
+    /**
+     * Creates a new MB Record with the given data
+     * 
+     * @param mailbox
+     *            The host containing the mailbox for the domain.
+     */
+    public MBRecord(Name name, int dclass, long ttl, Name mailbox) {
+        super(name, Type.MB, dclass, ttl, mailbox, "mailbox");
+    }
 
-Record
-getObject() {
-	return new MBRecord();
-}
+    MBRecord() {
+    }
 
-/** 
- * Creates a new MB Record with the given data
- * @param mailbox The host containing the mailbox for the domain.
- */
-public
-MBRecord(Name name, int dclass, long ttl, Name mailbox) {
-	super(name, Type.MB, dclass, ttl, mailbox, "mailbox");
-}
+    @Override
+    public Name getAdditionalName() {
+        return getSingleName();
+    }
 
-/** Gets the mailbox for the domain */
-public Name
-getMailbox() {
-	return getSingleName();
-}
+    /** Gets the mailbox for the domain */
+    public Name getMailbox() {
+        return getSingleName();
+    }
 
-public Name
-getAdditionalName() {
-	return getSingleName();
-}
+    @Override
+    Record getObject() {
+        return new MBRecord();
+    }
 
 }

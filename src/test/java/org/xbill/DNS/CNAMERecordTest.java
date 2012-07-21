@@ -32,38 +32,34 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-package	org.xbill.DNS;
+package org.xbill.DNS;
 
-import	junit.framework.TestCase;
+import junit.framework.TestCase;
 
-public class CNAMERecordTest extends TestCase
-{
-    public void test_ctor_0arg()
-    {
-	CNAMERecord d = new CNAMERecord();
-	assertNull(d.getName());
-	assertNull(d.getTarget());
-	assertNull(d.getAlias());
+public class CNAMERecordTest extends TestCase {
+    public void test_ctor_0arg() {
+        CNAMERecord d = new CNAMERecord();
+        assertNull(d.getName());
+        assertNull(d.getTarget());
+        assertNull(d.getAlias());
     }
 
-    public void test_ctor_4arg() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	Name a = Name.fromString("my.alias.");
+    public void test_ctor_4arg() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        Name a = Name.fromString("my.alias.");
 
-	CNAMERecord d = new CNAMERecord(n, DClass.IN, 0xABCDEL, a);
-	assertEquals(n, d.getName());
-	assertEquals(Type.CNAME, d.getType());
-	assertEquals(DClass.IN, d.getDClass());
-	assertEquals(0xABCDEL, d.getTTL());
-	assertEquals(a, d.getTarget());
-	assertEquals(a, d.getAlias());
+        CNAMERecord d = new CNAMERecord(n, DClass.IN, 0xABCDEL, a);
+        assertEquals(n, d.getName());
+        assertEquals(Type.CNAME, d.getType());
+        assertEquals(DClass.IN, d.getDClass());
+        assertEquals(0xABCDEL, d.getTTL());
+        assertEquals(a, d.getTarget());
+        assertEquals(a, d.getAlias());
     }
 
-    public void test_getObject()
-    {
-	CNAMERecord d = new CNAMERecord();
-	Record r = d.getObject();
-	assertTrue(r instanceof CNAMERecord);
+    public void test_getObject() {
+        CNAMERecord d = new CNAMERecord();
+        Record r = d.getObject();
+        assertTrue(r instanceof CNAMERecord);
     }
 }

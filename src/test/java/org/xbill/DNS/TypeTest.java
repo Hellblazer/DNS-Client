@@ -36,47 +36,41 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class TypeTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("CNAME", Type.string(Type.CNAME));
-
-	// one that doesn't exist
-	assertTrue(Type.string(256).startsWith("TYPE"));
-
-	try {
-	    Type.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+public class TypeTest extends TestCase {
+    public void test_isRR() {
+        assertTrue(Type.isRR(Type.CNAME));
+        assertFalse(Type.isRR(Type.IXFR));
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(Type.MAILB, Type.value("MAILB"));
+    public void test_string() {
+        // a regular one
+        assertEquals("CNAME", Type.string(Type.CNAME));
 
-	// one thats undefined but within range
-	assertEquals(300, Type.value("TYPE300"));
+        // one that doesn't exist
+        assertTrue(Type.string(256).startsWith("TYPE"));
 
-	// something that unknown
-	assertEquals(-1, Type.value("THIS IS DEFINITELY UNKNOWN"));
-
-	// empty string
-	assertEquals(-1, Type.value(""));
+        try {
+            Type.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value_2arg()
-    {
-	assertEquals(301, Type.value("301", true));
+    public void test_value() {
+        // regular one
+        assertEquals(Type.MAILB, Type.value("MAILB"));
+
+        // one thats undefined but within range
+        assertEquals(300, Type.value("TYPE300"));
+
+        // something that unknown
+        assertEquals(-1, Type.value("THIS IS DEFINITELY UNKNOWN"));
+
+        // empty string
+        assertEquals(-1, Type.value(""));
     }
 
-    public void test_isRR()
-    {
-	assertTrue(Type.isRR(Type.CNAME));
-	assertFalse(Type.isRR(Type.IXFR));
+    public void test_value_2arg() {
+        assertEquals(301, Type.value("301", true));
     }
 }

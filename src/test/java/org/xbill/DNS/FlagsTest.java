@@ -36,79 +36,71 @@ package org.xbill.DNS;
 
 import junit.framework.TestCase;
 
-public class FlagsTest extends TestCase
-{
-    public void test_string()
-    {
-	// a regular one
-	assertEquals("aa", Flags.string(Flags.AA));
-
-	// one that doesn't exist
-	assertTrue(Flags.string(12).startsWith("flag"));
-
-	try {
-	    Flags.string(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	
-	//  (max is 0xF)
-	try {
-	    Flags.string(0x10);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+public class FlagsTest extends TestCase {
+    public void test_isFlag() {
+        try {
+            Flags.isFlag(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
+        assertTrue(Flags.isFlag(0));
+        assertFalse(Flags.isFlag(1)); // opcode
+        assertFalse(Flags.isFlag(2));
+        assertFalse(Flags.isFlag(3));
+        assertFalse(Flags.isFlag(4));
+        assertTrue(Flags.isFlag(5));
+        assertTrue(Flags.isFlag(6));
+        assertTrue(Flags.isFlag(7));
+        assertTrue(Flags.isFlag(8));
+        assertTrue(Flags.isFlag(9));
+        assertTrue(Flags.isFlag(10));
+        assertTrue(Flags.isFlag(11));
+        assertFalse(Flags.isFlag(12));
+        assertFalse(Flags.isFlag(13));
+        assertFalse(Flags.isFlag(14));
+        assertFalse(Flags.isFlag(14));
+        try {
+            Flags.isFlag(16);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_value()
-    {
-	// regular one
-	assertEquals(Flags.CD, Flags.value("cd"));
+    public void test_string() {
+        // a regular one
+        assertEquals("aa", Flags.string(Flags.AA));
 
-	// one thats undefined but within range
-	assertEquals(13, Flags.value("FLAG13"));
+        // one that doesn't exist
+        assertTrue(Flags.string(12).startsWith("flag"));
 
-	// one thats undefined but out of range
-	assertEquals(-1, Flags.value("FLAG" + 0x10));
+        try {
+            Flags.string(-1);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
 
-	// something that unknown
-	assertEquals(-1, Flags.value("THIS IS DEFINITELY UNKNOWN"));
-
-	// empty string
-	assertEquals(-1, Flags.value(""));
+        //  (max is 0xF)
+        try {
+            Flags.string(0x10);
+            fail("IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+        }
     }
 
-    public void test_isFlag()
-    {
-	try {
-	    Flags.isFlag(-1);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
-	assertTrue(Flags.isFlag(0));
-	assertFalse(Flags.isFlag(1)); // opcode
-	assertFalse(Flags.isFlag(2));
-	assertFalse(Flags.isFlag(3));
-	assertFalse(Flags.isFlag(4));
-	assertTrue(Flags.isFlag(5));
-	assertTrue(Flags.isFlag(6));
-	assertTrue(Flags.isFlag(7));
-	assertTrue(Flags.isFlag(8));
-	assertTrue(Flags.isFlag(9));
-	assertTrue(Flags.isFlag(10));
-	assertTrue(Flags.isFlag(11));
-	assertFalse(Flags.isFlag(12));
-	assertFalse(Flags.isFlag(13));
-	assertFalse(Flags.isFlag(14));
-	assertFalse(Flags.isFlag(14));
-	try {
-	    Flags.isFlag(16);
-	    fail("IllegalArgumentException not thrown");
-	}
-	catch( IllegalArgumentException e ){
-	}
+    public void test_value() {
+        // regular one
+        assertEquals(Flags.CD, Flags.value("cd"));
+
+        // one thats undefined but within range
+        assertEquals(13, Flags.value("FLAG13"));
+
+        // one thats undefined but out of range
+        assertEquals(-1, Flags.value("FLAG" + 0x10));
+
+        // something that unknown
+        assertEquals(-1, Flags.value("THIS IS DEFINITELY UNKNOWN"));
+
+        // empty string
+        assertEquals(-1, Flags.value(""));
     }
 }

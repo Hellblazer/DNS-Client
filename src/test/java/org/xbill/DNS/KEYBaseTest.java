@@ -34,154 +34,161 @@
 //
 package org.xbill.DNS;
 
-import	java.io.IOException;
-import	java.util.Arrays;
-import	junit.framework.TestCase;
-import	org.xbill.DNS.utils.base64;
+import java.io.IOException;
+import java.util.Arrays;
 
-public class KEYBaseTest extends TestCase
-{
-    private static class TestClass extends KEYBase
-    {
-	public TestClass(){}
+import junit.framework.TestCase;
 
-	public TestClass(Name name, int type, int dclass, long ttl,
-			 int flags, int proto, int alg, byte[] key )
-	{
-	    super(name, type, dclass, ttl, flags, proto, alg, key);
-	}
-	
-	public Record getObject()
-	{
-	    return null;
-	}
+import org.xbill.DNS.utils.base64;
 
-	void rdataFromString(Tokenizer st, Name origin) throws IOException
-	{
-	}
+public class KEYBaseTest extends TestCase {
+    private static class TestClass extends KEYBase {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
+        public TestClass() {
+        }
+
+        public TestClass(Name name, int type, int dclass, long ttl, int flags,
+                         int proto, int alg, byte[] key) {
+            super(name, type, dclass, ttl, flags, proto, alg, key);
+        }
+
+        @Override
+        public Record getObject() {
+            return null;
+        }
+
+        @Override
+        void rdataFromString(Tokenizer st, Name origin) throws IOException {
+        }
     }
 
-    public void test_ctor() throws TextParseException
-    {
-	TestClass tc = new TestClass();
-	assertEquals(0, tc.getFlags());
-	assertEquals(0, tc.getProtocol());
-	assertEquals(0, tc.getAlgorithm());
-	assertNull(tc.getKey());
+    public void test_ctor() throws TextParseException {
+        TestClass tc = new TestClass();
+        assertEquals(0, tc.getFlags());
+        assertEquals(0, tc.getProtocol());
+        assertEquals(0, tc.getAlgorithm());
+        assertNull(tc.getKey());
 
-	Name n = Name.fromString("my.name.");
-	byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
-				  0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+        Name n = Name.fromString("my.name.");
+        byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8,
+                0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
 
-	tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, 0xE, key);
+        tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, 0xE, key);
 
-	assertSame(n, tc.getName());
-	assertEquals(Type.KEY, tc.getType());
-	assertEquals(DClass.IN, tc.getDClass());
-	assertEquals(100L, tc.getTTL());
-	assertEquals(0xFF, tc.getFlags());
-	assertEquals(0xF, tc.getProtocol());
-	assertEquals(0xE, tc.getAlgorithm());
-	assertTrue(Arrays.equals(key, tc.getKey()));
+        assertSame(n, tc.getName());
+        assertEquals(Type.KEY, tc.getType());
+        assertEquals(DClass.IN, tc.getDClass());
+        assertEquals(100L, tc.getTTL());
+        assertEquals(0xFF, tc.getFlags());
+        assertEquals(0xF, tc.getProtocol());
+        assertEquals(0xE, tc.getAlgorithm());
+        assertTrue(Arrays.equals(key, tc.getKey()));
     }
 
-    public void test_rrFromWire() throws IOException
-    {
-	byte[] raw = new byte[] { (byte)0xAB, (byte)0xCD, (byte)0xEF, (byte)0x19, 1, 2, 3, 4, 5 };
-	DNSInput in = new DNSInput(raw);
-	
-	TestClass tc = new TestClass();
-	tc.rrFromWire(in);
+    public void test_getFootprint() throws TextParseException {
+        Name n = Name.fromString("my.name.");
+        byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8,
+                0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
 
-	assertEquals(0xABCD, tc.getFlags());
-	assertEquals(0xEF, tc.getProtocol());
-	assertEquals(0x19, tc.getAlgorithm());
-	assertTrue(Arrays.equals(new byte[] { 1, 2, 3, 4, 5 }, tc.getKey()));
+        TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF,
+                                     DNSSEC.Algorithm.RSAMD5, key);
 
+        int foot = tc.getFootprint();
+        // second-to-last and third-to-last bytes of key for RSAMD5
+        assertEquals(0xD0E, foot);
+        assertEquals(foot, tc.getFootprint());
 
-	raw = new byte[] { (byte)0xBA, (byte)0xDA, (byte)0xFF, (byte)0x28 };
-	in = new DNSInput(raw);
-	
-	tc = new TestClass();
-	tc.rrFromWire(in);
+        // key with an odd number of bytes
+        tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0x89AB, 0xCD, 0xEF,
+                           new byte[] { 0x12, 0x34, 0x56 });
 
-	assertEquals(0xBADA, tc.getFlags());
-	assertEquals(0xFF, tc.getProtocol());
-	assertEquals(0x28, tc.getAlgorithm());
-	assertNull(tc.getKey());
+        // rrToWire gives: { 0x89, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56 }
+        // 89AB + CDEF + 1234 + 5600 = 1BCFE
+        // 1BFCE + 1 = 1BFCF & FFFF = BFCF
+        foot = tc.getFootprint();
+        assertEquals(0xBFCF, foot);
+        assertEquals(foot, tc.getFootprint());
+
+        // empty
+        tc = new TestClass();
+        assertEquals(0, tc.getFootprint());
     }
 
-    public void test_rrToString() throws IOException, TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
-				  0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+    public void test_rrFromWire() throws IOException {
+        byte[] raw = new byte[] { (byte) 0xAB, (byte) 0xCD, (byte) 0xEF,
+                (byte) 0x19, 1, 2, 3, 4, 5 };
+        DNSInput in = new DNSInput(raw);
 
-	TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, 0xE, null);
+        TestClass tc = new TestClass();
+        tc.rrFromWire(in);
 
-	String out = tc.rrToString();
+        assertEquals(0xABCD, tc.getFlags());
+        assertEquals(0xEF, tc.getProtocol());
+        assertEquals(0x19, tc.getAlgorithm());
+        assertTrue(Arrays.equals(new byte[] { 1, 2, 3, 4, 5 }, tc.getKey()));
 
-	assertEquals("255 15 14", out);
+        raw = new byte[] { (byte) 0xBA, (byte) 0xDA, (byte) 0xFF, (byte) 0x28 };
+        in = new DNSInput(raw);
 
-	tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, 0xE, key);
-	out = tc.rrToString();
+        tc = new TestClass();
+        tc.rrFromWire(in);
 
-	assertEquals("255 15 14 " + base64.toString(key), out);
-
-	Options.set("multiline");
-	out = tc.rrToString();
-	assertEquals("255 15 14 (\n\t" + base64.toString(key) + " ) ; key_tag = 18509", out);
-
-	Options.unset("multiline");
+        assertEquals(0xBADA, tc.getFlags());
+        assertEquals(0xFF, tc.getProtocol());
+        assertEquals(0x28, tc.getAlgorithm());
+        assertNull(tc.getKey());
     }
 
-    public void test_getFootprint() throws TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
-				  0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+    public void test_rrToString() throws IOException, TextParseException {
+        Name n = Name.fromString("my.name.");
+        byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8,
+                0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
 
-	TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, DNSSEC.Algorithm.RSAMD5, key);
-	
-	int foot = tc.getFootprint();
-	// second-to-last and third-to-last bytes of key for RSAMD5
-	assertEquals(0xD0E, foot);
-	assertEquals(foot, tc.getFootprint());
+        TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF,
+                                     0xE, null);
 
-	// key with an odd number of bytes
-	tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0x89AB, 0xCD, 0xEF, new byte [] { 0x12, 0x34, 0x56 } );
+        String out = tc.rrToString();
 
-	// rrToWire gives: { 0x89, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56 }
-	// 89AB + CDEF + 1234 + 5600 = 1BCFE
-	// 1BFCE + 1 = 1BFCF & FFFF = BFCF
-	foot = tc.getFootprint();
-	assertEquals(0xBFCF, foot);
-	assertEquals(foot, tc.getFootprint());
+        assertEquals("255 15 14", out);
 
-	// empty
-	tc = new TestClass();
-	assertEquals(0, tc.getFootprint());
+        tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0xFF, 0xF, 0xE, key);
+        out = tc.rrToString();
+
+        assertEquals("255 15 14 " + base64.toString(key), out);
+
+        Options.set("multiline");
+        out = tc.rrToString();
+        assertEquals("255 15 14 (\n\t" + base64.toString(key)
+                     + " ) ; key_tag = 18509", out);
+
+        Options.unset("multiline");
     }
 
-    public void test_rrToWire() throws IOException, TextParseException
-    {
-	Name n = Name.fromString("my.name.");
-	byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
-				  0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+    public void test_rrToWire() throws IOException, TextParseException {
+        Name n = Name.fromString("my.name.");
+        byte[] key = new byte[] { 0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8,
+                0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
 
-	TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0x7689, 0xAB, 0xCD, key);
-       
-	byte[] exp = new byte[] { (byte)0x76, (byte)0x89, (byte)0xAB, (byte)0xCD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        TestClass tc = new TestClass(n, Type.KEY, DClass.IN, 100L, 0x7689,
+                                     0xAB, 0xCD, key);
 
-	DNSOutput o = new DNSOutput();
+        byte[] exp = new byte[] { (byte) 0x76, (byte) 0x89, (byte) 0xAB,
+                (byte) 0xCD, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+                15 };
 
-	// canonical
-	tc.rrToWire(o, null, true);
-	assertTrue(Arrays.equals(exp, o.toByteArray()));
+        DNSOutput o = new DNSOutput();
 
-	// not canonical
-	o = new DNSOutput();
-	tc.rrToWire(o, null, false);
-	assertTrue(Arrays.equals(exp, o.toByteArray()));
+        // canonical
+        tc.rrToWire(o, null, true);
+        assertTrue(Arrays.equals(exp, o.toByteArray()));
+
+        // not canonical
+        o = new DNSOutput();
+        tc.rrToWire(o, null, false);
+        assertTrue(Arrays.equals(exp, o.toByteArray()));
     }
 }

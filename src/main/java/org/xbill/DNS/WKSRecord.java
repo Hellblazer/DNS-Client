@@ -656,7 +656,7 @@ public class WKSRecord extends Record {
             throw st.exception("Invalid IP protocol: " + s);
         }
 
-        List list = new ArrayList();
+        List<Integer> list = new ArrayList<Integer>();
         while (true) {
             Tokenizer.Token t = st.get();
             if (!t.isString()) {
@@ -680,7 +680,7 @@ public class WKSRecord extends Record {
         address = in.readByteArray(4);
         protocol = in.readU8();
         byte[] array = in.readByteArray();
-        List list = new ArrayList();
+        List<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < array.length; i++) {
             for (int j = 0; j < 8; j++) {
                 int octet = array[i] & 0xFF;

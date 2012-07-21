@@ -22,7 +22,7 @@ public class TXTRecord extends TXTBase {
      * @throws IllegalArgumentException
      *             One of the strings has invalid escapes
      */
-    public TXTRecord(Name name, int dclass, long ttl, List strings) {
+    public TXTRecord(Name name, int dclass, long ttl, List<?> strings) {
         super(name, Type.TXT, dclass, ttl, strings);
     }
 

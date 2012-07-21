@@ -33,7 +33,7 @@ public class Message implements Cloneable {
     }
 
     private Header          header;
-    private List[]          sections;
+    private List<Record>[]  sections;
     private int             size;
     private TSIG            tsigkey;
     private TSIGRecord      querytsig;
@@ -111,6 +111,7 @@ public class Message implements Cloneable {
         this(new Header(id));
     }
 
+    @SuppressWarnings("unchecked")
     private Message(Header header) {
         sections = new List[4];
         this.header = header;
@@ -124,7 +125,7 @@ public class Message implements Cloneable {
             for (int i = 0; i < 4; i++) {
                 int count = header.getCount(i);
                 if (count > 0) {
-                    sections[i] = new ArrayList(count);
+                    sections[i] = new ArrayList<Record>(count);
                 }
                 for (int j = 0; j < count; j++) {
                     int pos = in.current();
@@ -155,7 +156,7 @@ public class Message implements Cloneable {
      */
     public void addRecord(Record r, int section) {
         if (sections[section] == null) {
-            sections[section] = new LinkedList();
+            sections[section] = new LinkedList<Record>();
         }
         header.incCount(section);
         sections[section].add(r);
@@ -174,7 +175,7 @@ public class Message implements Cloneable {
         Message m = new Message();
         for (int i = 0; i < sections.length; i++) {
             if (sections[i] != null) {
-                m.sections[i] = new LinkedList(sections[i]);
+                m.sections[i] = new LinkedList<Record>(sections[i]);
             }
         }
         m.header = (Header) header.clone();
@@ -272,7 +273,7 @@ public class Message implements Cloneable {
      * @see Section
      */
     public Record getQuestion() {
-        List l = sections[Section.QUESTION];
+        List<?> l = sections[Section.QUESTION];
         if (l == null || l.size() == 0) {
             return null;
         }
@@ -303,7 +304,7 @@ public class Message implements Cloneable {
         if (sections[section] == null) {
             return emptyRecordArray;
         }
-        List l = sections[section];
+        List<?> l = sections[section];
         return (Record[]) l.toArray(new Record[l.size()]);
     }
 
@@ -318,9 +319,9 @@ public class Message implements Cloneable {
         if (sections[section] == null) {
             return emptyRRsetArray;
         }
-        List sets = new LinkedList();
+        List<RRset> sets = new LinkedList<RRset>();
         Record[] recs = getSectionArray(section);
-        Set hash = new HashSet();
+        Set<Name> hash = new HashSet<Name>();
         for (Record rec : recs) {
             Name name = rec.getName();
             boolean newset = true;
@@ -357,7 +358,7 @@ public class Message implements Cloneable {
         if (count == 0) {
             return null;
         }
-        List l = sections[Section.ADDITIONAL];
+        List<?> l = sections[Section.ADDITIONAL];
         Record rec = (Record) l.get(count - 1);
         if (rec.type != Type.TSIG) {
             return null;

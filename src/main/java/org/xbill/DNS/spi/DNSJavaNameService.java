@@ -107,7 +107,7 @@ public class DNSJavaNameService implements InvocationHandler {
             } else if (method.getName().equals("lookupAllHostAddr")) {
                 InetAddress[] addresses;
                 addresses = lookupAllHostAddr((String) args[0]);
-                Class returnType = method.getReturnType();
+                Class<?> returnType = method.getReturnType();
                 if (returnType.equals(InetAddress[].class)) {
                     // method for Java >= 1.6
                     return addresses;

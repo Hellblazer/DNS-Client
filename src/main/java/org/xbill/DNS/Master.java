@@ -32,7 +32,7 @@ public class Master {
     private boolean   needSOATTL;
 
     private Generator generator;
-    private List      generators;
+    private List<Generator>      generators;
     private boolean   noExpandGenerate;
 
     /**
@@ -258,7 +258,8 @@ public class Master {
      * 
      * @see Generator
      */
-    public Iterator generators() {
+    @SuppressWarnings("unchecked")
+    public Iterator<Generator> generators() {
         if (generators != null) {
             return Collections.unmodifiableList(generators).iterator();
         } else {
@@ -433,7 +434,7 @@ public class Master {
         generator = new Generator(start, end, step, nameSpec, currentType,
                                   currentDClass, currentTTL, rdataSpec, origin);
         if (generators == null) {
-            generators = new ArrayList(1);
+            generators = new ArrayList<Generator>(1);
         }
         generators.add(generator);
     }

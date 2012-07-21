@@ -68,7 +68,7 @@ public interface Resolver {
      *             An invalid field was specified.
      * @see OPTRecord
      */
-    void setEDNS(int level, int payloadSize, int flags, List<?> options);
+    void setEDNS(int level, int payloadSize, int flags, List<EDNSOption> options);
 
     /**
      * Sets whether truncated responses will be ignored. If not, a truncated

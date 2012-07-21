@@ -27,7 +27,7 @@ public class OPTRecord extends Record {
 
     private static final long serialVersionUID = -6254521894809367938L;
 
-    private List              options;
+    private List<EDNSOption>  options;
 
     /**
      * Creates an OPT Record with no data. This is normally called by
@@ -79,7 +79,7 @@ public class OPTRecord extends Record {
      * @see ExtendedFlags
      */
     public OPTRecord(int payloadSize, int xrcode, int version, int flags,
-                     List options) {
+                     List<EDNSOption> options) {
         super(Name.root, Type.OPT, payloadSize, 0);
         checkU16("payloadSize", payloadSize);
         checkU8("xrcode", xrcode);
@@ -87,7 +87,7 @@ public class OPTRecord extends Record {
         checkU16("flags", flags);
         ttl = ((long) xrcode << 24) + ((long) version << 16) + flags;
         if (options != null) {
-            this.options = new ArrayList(options);
+            this.options = new ArrayList<EDNSOption>(options);
         }
     }
 
@@ -111,9 +111,10 @@ public class OPTRecord extends Record {
     /**
      * Gets all options in the OPTRecord. This returns a list of EDNSOptions.
      */
-    public List getOptions() {
+    @SuppressWarnings("unchecked")
+    public List<EDNSOption> getOptions() {
         if (options == null) {
-            return Collections.EMPTY_LIST;
+            return (List<EDNSOption>) Collections.EMPTY_LIST;
         }
         return Collections.unmodifiableList(options);
     }
@@ -122,16 +123,17 @@ public class OPTRecord extends Record {
      * Gets all options in the OPTRecord with a specific code. This returns a
      * list of EDNSOptions.
      */
-    public List getOptions(int code) {
+    @SuppressWarnings("unchecked")
+    public List<EDNSOption> getOptions(int code) {
         if (options == null) {
-            return Collections.EMPTY_LIST;
+            return (List<EDNSOption>) Collections.EMPTY_LIST;
         }
-        List list = Collections.EMPTY_LIST;
-        for (Iterator it = options.iterator(); it.hasNext();) {
+        List<EDNSOption> list = (List<EDNSOption>) Collections.EMPTY_LIST;
+        for (Iterator<EDNSOption> it = options.iterator(); it.hasNext();) {
             EDNSOption opt = (EDNSOption) it.next();
             if (opt.getCode() == code) {
                 if (list == Collections.EMPTY_LIST) {
-                    list = new ArrayList();
+                    list = new ArrayList<EDNSOption>();
                 }
                 list.add(opt);
             }
@@ -162,7 +164,7 @@ public class OPTRecord extends Record {
     @Override
     void rrFromWire(DNSInput in) throws IOException {
         if (in.remaining() > 0) {
-            options = new ArrayList();
+            options = new ArrayList<EDNSOption>();
         }
         while (in.remaining() > 0) {
             EDNSOption option = EDNSOption.fromWire(in);
@@ -194,7 +196,7 @@ public class OPTRecord extends Record {
         if (options == null) {
             return;
         }
-        Iterator it = options.iterator();
+        Iterator<EDNSOption> it = options.iterator();
         while (it.hasNext()) {
             EDNSOption option = (EDNSOption) it.next();
             option.toWire(out);

@@ -34,8 +34,6 @@ import java.net.UnknownHostException;
  */
 public class ClientSubnetOption extends EDNSOption {
 
-    private static final long serialVersionUID = -3868158449890266347L;
-
     private static int checkMaskLength(String field, int family, int val) {
         int max = Address.addressLength(family) * 8;
         if (val < 0 || val > max) {

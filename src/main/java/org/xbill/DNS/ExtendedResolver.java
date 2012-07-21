@@ -33,7 +33,7 @@ public class ExtendedResolver implements Resolver {
         ResolverListener listener;
 
         public Resolution(ExtendedResolver eres, Message query) {
-            List l = eres.resolvers;
+            List<Resolver> l = eres.resolvers;
             resolvers = (Resolver[]) l.toArray(new Resolver[l.size()]);
             if (eres.loadBalance) {
                 int nresolvers = resolvers.length;
@@ -244,7 +244,7 @@ public class ExtendedResolver implements Resolver {
 
     private static final int quantum     = 5;
 
-    private List             resolvers;
+    private List<Resolver>   resolvers;
     private boolean          loadBalance = false;
     private int              lbStart     = 0;
     private int              retries     = 3;
@@ -372,7 +372,8 @@ public class ExtendedResolver implements Resolver {
         }
     }
 
-    public void setEDNS(int level, int payloadSize, int flags, List options) {
+    public void setEDNS(int level, int payloadSize, int flags,
+                        List<EDNSOption> options) {
         for (int i = 0; i < resolvers.size(); i++) {
             ((Resolver) resolvers.get(i)).setEDNS(level, payloadSize, flags,
                                                   options);
@@ -430,7 +431,7 @@ public class ExtendedResolver implements Resolver {
     }
 
     private void init() {
-        resolvers = new ArrayList();
+        resolvers = new ArrayList<Resolver>();
     }
 
 }

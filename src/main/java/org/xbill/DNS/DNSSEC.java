@@ -155,9 +155,6 @@ public class DNSSEC {
      * 
      */
         private static final long serialVersionUID = 1L;
-        private KEYBase           key;
-        private SIGBase           sig;
-
         KeyMismatchException(KEYBase key, SIGBase sig) {
             super("key " + key.getName() + "/"
                   + DNSSEC.Algorithm.string(key.getAlgorithm()) + "/"
@@ -352,7 +349,7 @@ public class DNSSEC {
         int size = rrset.size();
         Record[] records = new Record[size];
 
-        Iterator it = rrset.rrs();
+        Iterator<?> it = rrset.rrs();
         Name name = rrset.getName();
         Name wild = null;
         int sigLabels = rrsig.getLabels() + 1; // Add the root label back.

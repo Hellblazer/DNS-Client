@@ -112,7 +112,7 @@ public class SetResponse {
         if (type != SUCCESSFUL) {
             return null;
         }
-        List l = (List) data;
+        List<?> l = (List<?>) data;
         return (RRset[]) l.toArray(new RRset[l.size()]);
     }
 
@@ -197,9 +197,10 @@ public class SetResponse {
 
     void addRRset(RRset rrset) {
         if (data == null) {
-            data = new ArrayList();
+            data = new ArrayList<Object>();
         }
-        List l = (List) data;
+        @SuppressWarnings("unchecked")
+        List<RRset> l = (List<RRset>) data;
         l.add(rrset);
     }
 

@@ -221,7 +221,7 @@ public class SimpleResolver implements Resolver {
         setEDNS(level, 0, 0, null);
     }
 
-    public void setEDNS(int level, int payloadSize, int flags, List options) {
+    public void setEDNS(int level, int payloadSize, int flags, List<EDNSOption> options) {
         if (level != 0 && level != -1) {
             throw new IllegalArgumentException("invalid EDNS level - "
                                                + "must be 0 or -1");
@@ -317,12 +317,12 @@ public class SimpleResolver implements Resolver {
         } catch (ZoneTransferException e) {
             throw new WireParseException(e.getMessage());
         }
-        List records = xfrin.getAXFR();
+        List<?> records = xfrin.getAXFR();
         Message response = new Message(query.getHeader().getID());
         response.getHeader().setFlag(Flags.AA);
         response.getHeader().setFlag(Flags.QR);
         response.addRecord(query.getQuestion(), Section.QUESTION);
-        Iterator it = records.iterator();
+        Iterator<?> it = records.iterator();
         while (it.hasNext()) {
             response.addRecord((Record) it.next(), Section.ANSWER);
         }

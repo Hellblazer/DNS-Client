@@ -40,8 +40,8 @@ class Mnemonic {
         return new Integer(val);
     }
 
-    private HashMap strings;
-    private HashMap values;
+    private HashMap<String, Integer> strings;
+    private HashMap<Integer, String> values;
     private String  description;
     private int     wordcase;
     private String  prefix;
@@ -61,8 +61,8 @@ class Mnemonic {
     public Mnemonic(String description, int wordcase) {
         this.description = description;
         this.wordcase = wordcase;
-        strings = new HashMap();
-        values = new HashMap();
+        strings = new HashMap<String, Integer>();
+        values = new HashMap<Integer, String>();
         max = Integer.MAX_VALUE;
     }
 

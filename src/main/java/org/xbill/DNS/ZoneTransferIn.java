@@ -51,14 +51,14 @@ public class ZoneTransferIn {
         public long end;
 
         /** A list of records added between the start and end versions */
-        public List adds;
+        public List<Object> adds;
 
         /** A list of records deleted between the start and end versions */
-        public List deletes;
+        public List<Object> deletes;
 
         private Delta() {
-            adds = new ArrayList();
-            deletes = new ArrayList();
+            adds = new ArrayList<Object>();
+            deletes = new ArrayList<Object>();
         }
     }
 
@@ -103,11 +103,11 @@ public class ZoneTransferIn {
     }
 
     private static class BasicHandler implements ZoneTransferHandler {
-        private List axfr;
-        private List ixfr;
+        private List<Object> axfr;
+        private List<Object> ixfr;
 
         public void handleRecord(Record r) {
-            List list;
+            List<Object> list;
             if (ixfr != null) {
                 Delta delta = (Delta) ixfr.get(ixfr.size() - 1);
                 if (delta.adds.size() > 0) {
@@ -122,11 +122,11 @@ public class ZoneTransferIn {
         }
 
         public void startAXFR() {
-            axfr = new ArrayList();
+            axfr = new ArrayList<Object>();
         }
 
         public void startIXFR() {
-            ixfr = new ArrayList();
+            ixfr = new ArrayList<Object>();
         }
 
         public void startIXFRAdds(Record soa) {
@@ -358,7 +358,7 @@ public class ZoneTransferIn {
      *             The transfer used the callback interface, so the response was
      *             not stored.
      */
-    public List getAXFR() {
+    public List<Object> getAXFR() {
         BasicHandler handler = getBasicHandler();
         return handler.axfr;
     }
@@ -370,7 +370,7 @@ public class ZoneTransferIn {
      *             The transfer used the callback interface, so the response was
      *             not stored.
      */
-    public List getIXFR() {
+    public List<Object> getIXFR() {
         BasicHandler handler = getBasicHandler();
         return handler.ixfr;
     }
@@ -433,7 +433,7 @@ public class ZoneTransferIn {
      *             The zone transfer failed to due a problem with the zone
      *             transfer itself.
      */
-    public List run() throws IOException, ZoneTransferException {
+    public List<Object> run() throws IOException, ZoneTransferException {
         BasicHandler handler = new BasicHandler();
         run(handler);
         if (handler.axfr != null) {

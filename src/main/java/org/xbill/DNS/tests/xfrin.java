@@ -78,27 +78,27 @@ public class xfrin {
             xfrin = ZoneTransferIn.newAXFR(zname, server, port, key);
         }
 
-        List response = xfrin.run();
+        List<?> response = xfrin.run();
         if (xfrin.isAXFR()) {
             if (ixfr_serial >= 0) {
                 System.out.println("AXFR-like IXFR response");
             } else {
                 System.out.println("AXFR response");
             }
-            Iterator it = response.iterator();
+            Iterator<?> it = response.iterator();
             while (it.hasNext()) {
                 System.out.println(it.next());
             }
         } else if (xfrin.isIXFR()) {
             System.out.println("IXFR response");
-            Iterator it = response.iterator();
+            Iterator<?> it = response.iterator();
             while (it.hasNext()) {
                 ZoneTransferIn.Delta delta;
                 delta = (ZoneTransferIn.Delta) it.next();
                 System.out.println("delta from " + delta.start + " to "
                                    + delta.end);
                 System.out.println("deletes");
-                Iterator it2 = delta.deletes.iterator();
+                Iterator<?> it2 = delta.deletes.iterator();
                 while (it2.hasNext()) {
                     System.out.println(it2.next());
                 }

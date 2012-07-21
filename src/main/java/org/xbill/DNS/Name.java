@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
  * @author Brian Wellington
  */
 
-public class Name implements Comparable, Serializable {
+public class Name implements Comparable<Object>, Serializable {
 
     private static final long serialVersionUID  = -7257019940971525644L;
 

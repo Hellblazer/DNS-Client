@@ -19,7 +19,7 @@ abstract class TXTBase extends Record {
 
     private static final long serialVersionUID = -4319510507246305931L;
 
-    protected List            strings;
+    protected List<byte[]>    strings;
 
     protected TXTBase() {
     }
@@ -28,13 +28,13 @@ abstract class TXTBase extends Record {
         super(name, type, dclass, ttl);
     }
 
-    protected TXTBase(Name name, int type, int dclass, long ttl, List strings) {
+    protected TXTBase(Name name, int type, int dclass, long ttl, List<?> strings) {
         super(name, type, dclass, ttl);
         if (strings == null) {
             throw new IllegalArgumentException("strings must not be null");
         }
-        this.strings = new ArrayList(strings.size());
-        Iterator it = strings.iterator();
+        this.strings = new ArrayList<byte[]>(strings.size());
+        Iterator<?> it = strings.iterator();
         try {
             while (it.hasNext()) {
                 String s = (String) it.next();
@@ -54,8 +54,8 @@ abstract class TXTBase extends Record {
      * 
      * @return A list of Strings corresponding to the text strings.
      */
-    public List getStrings() {
-        List list = new ArrayList(strings.size());
+    public List<String> getStrings() {
+        List<String> list = new ArrayList<String>(strings.size());
         for (int i = 0; i < strings.size(); i++) {
             list.add(byteArrayToString((byte[]) strings.get(i), false));
         }
@@ -67,13 +67,13 @@ abstract class TXTBase extends Record {
      * 
      * @return A list of byte arrays corresponding to the text strings.
      */
-    public List getStringsAsByteArrays() {
+    public List<byte[]> getStringsAsByteArrays() {
         return strings;
     }
 
     @Override
     void rdataFromString(Tokenizer st, Name origin) throws IOException {
-        strings = new ArrayList(2);
+        strings = new ArrayList<byte[]>(2);
         while (true) {
             Tokenizer.Token t = st.get();
             if (!t.isString()) {
@@ -91,7 +91,7 @@ abstract class TXTBase extends Record {
 
     @Override
     void rrFromWire(DNSInput in) throws IOException {
-        strings = new ArrayList(2);
+        strings = new ArrayList<byte[]>(2);
         while (in.remaining() > 0) {
             byte[] b = in.readCountedString();
             strings.add(b);
@@ -102,7 +102,7 @@ abstract class TXTBase extends Record {
     @Override
     String rrToString() {
         StringBuffer sb = new StringBuffer();
-        Iterator it = strings.iterator();
+        Iterator<byte[]> it = strings.iterator();
         while (it.hasNext()) {
             byte[] array = (byte[]) it.next();
             sb.append(byteArrayToString(array, true));
@@ -115,7 +115,7 @@ abstract class TXTBase extends Record {
 
     @Override
     void rrToWire(DNSOutput out, Compression c, boolean canonical) {
-        Iterator it = strings.iterator();
+        Iterator<byte[]> it = strings.iterator();
         while (it.hasNext()) {
             byte[] b = (byte[]) it.next();
             out.writeCountedString(b);

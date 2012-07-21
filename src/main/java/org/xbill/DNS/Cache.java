@@ -39,7 +39,7 @@ public class Cache {
         }
 
         @Override
-        protected boolean removeEldestEntry(Map.Entry eldest) {
+        protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
             return maxsize >= 0 && size() > maxsize;
         }
 

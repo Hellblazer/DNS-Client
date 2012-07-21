@@ -37,12 +37,12 @@ public class primary {
         Zone zone = new Zone(origin, file);
         long end = System.currentTimeMillis();
         if (axfr) {
-            Iterator it = zone.AXFR();
+            Iterator<?> it = zone.AXFR();
             while (it.hasNext()) {
                 System.out.println(it.next());
             }
         } else if (iterator) {
-            Iterator it = zone.iterator();
+            Iterator<?> it = zone.iterator();
             while (it.hasNext()) {
                 System.out.println(it.next());
             }

@@ -19,7 +19,13 @@ import org.xbill.DNS.utils.base16;
 
 public abstract class Record implements Cloneable, Comparable<Object>, Serializable {
 
+    private static final DecimalFormat byteFormat = new DecimalFormat();
+
     private static final long serialVersionUID = 2694906050116005466L;
+
+    static {
+        byteFormat.setMinimumIntegerDigits(3);
+    }
 
     /**
      * Builds a new Record from its textual representation
@@ -167,6 +173,86 @@ public abstract class Record implements Cloneable, Comparable<Object>, Serializa
     public static Record newRecord(Name name, int type, int dclass, long ttl,
                                    byte[] data) {
         return newRecord(name, type, dclass, ttl, data.length, data);
+    }
+
+    /**
+     * Creates a new record, with the given parameters.
+     * 
+     * @param name
+     *            The owner name of the record.
+     * @param type
+     *            The record's type.
+     * @param dclass
+     *            The record's class.
+     * @param ttl
+     *            The record's time to live.
+     * @param length
+     *            The length of the record's data.
+     * @param data
+     *            The rdata of the record, in uncompressed DNS wire format. Only
+     *            the first length bytes are used.
+     */
+    public static Record newRecord(Name name, int type, int dclass, long ttl,
+                                   int length, byte[] data) {
+        if (!name.isAbsolute()) {
+            throw new RelativeNameException(name);
+        }
+        Type.check(type);
+        DClass.check(dclass);
+        TTL.check(ttl);
+
+        DNSInput in;
+        if (data != null) {
+            in = new DNSInput(data);
+        } else {
+            in = null;
+        }
+        try {
+            return newRecord(name, type, dclass, ttl, length, in);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static final Record getEmptyRecord(Name name, int type, int dclass,
+                                               long ttl, boolean hasData) {
+        Record proto, rec;
+
+        if (hasData) {
+            proto = Type.getProto(type);
+            if (proto != null) {
+                rec = proto.getObject();
+            } else {
+                rec = new UNKRecord();
+            }
+        } else {
+            rec = new EmptyRecord();
+        }
+        rec.name = name;
+        rec.type = type;
+        rec.dclass = dclass;
+        rec.ttl = ttl;
+        return rec;
+    }
+
+    private static Record newRecord(Name name, int type, int dclass, long ttl,
+                                    int length, DNSInput in) throws IOException {
+        Record rec;
+        rec = getEmptyRecord(name, type, dclass, ttl, in != null);
+        if (in != null) {
+            if (in.remaining() < length) {
+                throw new WireParseException("truncated record");
+            }
+            in.setActive(length);
+
+            rec.rrFromWire(in);
+
+            if (in.remaining() > 0) {
+                throw new WireParseException("invalid record length");
+            }
+            in.clearActive();
+        }
+        return rec;
     }
 
     /**
@@ -352,95 +438,9 @@ public abstract class Record implements Cloneable, Comparable<Object>, Serializa
 
     protected Name                     name;
 
-    protected int                      type, dclass;
-
     protected long                     ttl;
 
-    private static final DecimalFormat byteFormat = new DecimalFormat();
-
-    static {
-        byteFormat.setMinimumIntegerDigits(3);
-    }
-
-    /**
-     * Creates a new record, with the given parameters.
-     * 
-     * @param name
-     *            The owner name of the record.
-     * @param type
-     *            The record's type.
-     * @param dclass
-     *            The record's class.
-     * @param ttl
-     *            The record's time to live.
-     * @param length
-     *            The length of the record's data.
-     * @param data
-     *            The rdata of the record, in uncompressed DNS wire format. Only
-     *            the first length bytes are used.
-     */
-    public static Record newRecord(Name name, int type, int dclass, long ttl,
-                                   int length, byte[] data) {
-        if (!name.isAbsolute()) {
-            throw new RelativeNameException(name);
-        }
-        Type.check(type);
-        DClass.check(dclass);
-        TTL.check(ttl);
-
-        DNSInput in;
-        if (data != null) {
-            in = new DNSInput(data);
-        } else {
-            in = null;
-        }
-        try {
-            return newRecord(name, type, dclass, ttl, length, in);
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    private static final Record getEmptyRecord(Name name, int type, int dclass,
-                                               long ttl, boolean hasData) {
-        Record proto, rec;
-
-        if (hasData) {
-            proto = Type.getProto(type);
-            if (proto != null) {
-                rec = proto.getObject();
-            } else {
-                rec = new UNKRecord();
-            }
-        } else {
-            rec = new EmptyRecord();
-        }
-        rec.name = name;
-        rec.type = type;
-        rec.dclass = dclass;
-        rec.ttl = ttl;
-        return rec;
-    }
-
-    private static Record newRecord(Name name, int type, int dclass, long ttl,
-                                    int length, DNSInput in) throws IOException {
-        Record rec;
-        rec = getEmptyRecord(name, type, dclass, ttl, in != null);
-        if (in != null) {
-            if (in.remaining() < length) {
-                throw new WireParseException("truncated record");
-            }
-            in.setActive(length);
-
-            rec.rrFromWire(in);
-
-            if (in.remaining() > 0) {
-                throw new WireParseException("invalid record length");
-            }
-            in.clearActive();
-        }
-        return rec;
-    }
+    protected int                      type, dclass;
 
     protected Record() {
     }

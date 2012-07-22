@@ -39,8 +39,8 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 public class DNSInputTest extends TestCase {
-    private byte[]   m_raw;
     private DNSInput m_di;
+    private byte[]   m_raw;
 
     @Override
     public void setUp() {

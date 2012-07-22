@@ -26,11 +26,11 @@ public class IPSECKEYRecord extends Record {
     }
 
     public static class Gateway {
-        public static final int None = 0;
-
         public static final int IPv4 = 1;
+
         public static final int IPv6 = 2;
         public static final int Name = 3;
+        public static final int None = 0;
 
         private Gateway() {
         }
@@ -38,11 +38,11 @@ public class IPSECKEYRecord extends Record {
 
     private static final long serialVersionUID = 3050449702765909687L;
 
-    private int               precedence;
-    private int               gatewayType;
     private int               algorithmType;
     private Object            gateway;
+    private int               gatewayType;
     private byte[]            key;
+    private int               precedence;
 
     /**
      * Creates an IPSECKEY Record from the given data.

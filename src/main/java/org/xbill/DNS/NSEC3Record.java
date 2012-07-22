@@ -48,6 +48,9 @@ public class NSEC3Record extends Record {
 
     public static final int   SHA1_DIGEST_ID   = Digest.SHA1;
 
+    private static final base32 b32 = new base32(base32.Alphabet.BASE32HEX,
+                                                 false, false);
+
     private static final long serialVersionUID = -7123504635968932855L;
 
     static byte[] hashName(Name name, int hashAlg, int iterations, byte[] salt)
@@ -76,17 +79,14 @@ public class NSEC3Record extends Record {
         }
         return hash;
     }
-
-    private int                 hashAlg;
     private int                 flags;
+    private int                 hashAlg;
     private int                 iterations;
-    private byte[]              salt;
     private byte[]              next;
 
-    private TypeBitmap          types;
+    private byte[]              salt;
 
-    private static final base32 b32 = new base32(base32.Alphabet.BASE32HEX,
-                                                 false, false);
+    private TypeBitmap          types;
 
     /**
      * Creates an NSEC3 record from the given data.

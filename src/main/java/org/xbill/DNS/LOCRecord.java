@@ -18,6 +18,14 @@ public class LOCRecord extends Record {
 
     private static NumberFormat w2, w3;
 
+    static {
+        w2 = new DecimalFormat();
+        w2.setMinimumIntegerDigits(2);
+
+        w3 = new DecimalFormat();
+        w3.setMinimumIntegerDigits(3);
+    }
+
     private static long parseLOCformat(int b) throws WireParseException {
         long out = b >> 4;
         int exp = b & 0xF;
@@ -30,17 +38,9 @@ public class LOCRecord extends Record {
         return out;
     }
 
-    private long size, hPrecision, vPrecision;
-
     private long latitude, longitude, altitude;
 
-    static {
-        w2 = new DecimalFormat();
-        w2.setMinimumIntegerDigits(2);
-
-        w3 = new DecimalFormat();
-        w3.setMinimumIntegerDigits(3);
-    }
+    private long size, hPrecision, vPrecision;
 
     /**
      * Creates an LOC Record from the given data

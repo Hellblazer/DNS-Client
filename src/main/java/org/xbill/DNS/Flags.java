@@ -10,23 +10,8 @@ package org.xbill.DNS;
 
 public final class Flags {
 
-    private static Mnemonic  flags = new Mnemonic("DNS Header Flag",
-                                                  Mnemonic.CASE_LOWER);
-
-    /** query/response */
-    public static final byte QR    = 0;
-
     /** authoritative answer */
     public static final byte AA    = 5;
-
-    /** truncated */
-    public static final byte TC    = 6;
-
-    /** recursion desired */
-    public static final byte RD    = 7;
-
-    /** recursion available */
-    public static final byte RA    = 8;
 
     /** authenticated data */
     public static final byte AD    = 10;
@@ -36,6 +21,21 @@ public final class Flags {
 
     /** dnssec ok (extended) */
     public static final int  DO    = ExtendedFlags.DO;
+
+    /** query/response */
+    public static final byte QR    = 0;
+
+    /** recursion available */
+    public static final byte RA    = 8;
+
+    /** recursion desired */
+    public static final byte RD    = 7;
+
+    /** truncated */
+    public static final byte TC    = 6;
+
+    private static Mnemonic  flags = new Mnemonic("DNS Header Flag",
+                                                  Mnemonic.CASE_LOWER);
 
     static {
         flags.setMaximum(0xF);

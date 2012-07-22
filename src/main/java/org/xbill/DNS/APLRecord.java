@@ -24,10 +24,10 @@ import org.xbill.DNS.utils.base16;
 public class APLRecord extends Record {
 
     public static class Element {
+        public final Object  address;
         public final int     family;
         public final boolean negative;
         public final int     prefixLength;
-        public final Object  address;
 
         /**
          * Creates an APL element corresponding to an IPv4 or IPv6 prefix.

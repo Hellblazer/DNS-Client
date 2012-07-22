@@ -104,10 +104,10 @@ public class Cache {
     }
 
     private static class NegativeElement implements Element {
-        int  type;
-        Name name;
         int  credibility;
         int  expire;
+        Name name;
+        int  type;
 
         public NegativeElement(Name name, int type, SOARecord soa, int cred,
                                long maxttl) {
@@ -148,6 +148,8 @@ public class Cache {
         }
     }
 
+    private static final int defaultMaxEntries = 50000;
+
     private static int limitExpire(long ttl, long maxttl) {
         if (maxttl >= 0 && maxttl < ttl) {
             ttl = maxttl;
@@ -174,14 +176,12 @@ public class Cache {
             }
         }
     }
-
     private CacheMap         data;
-    private int              maxncache         = -1;
-    private int              maxcache          = -1;
-
     private int              dclass;
 
-    private static final int defaultMaxEntries = 50000;
+    private int              maxcache          = -1;
+
+    private int              maxncache         = -1;
 
     /**
      * Creates an empty Cache for class IN.

@@ -17,13 +17,13 @@ abstract class SIGBase extends Record {
 
     private static final long serialVersionUID = -3738444391533812369L;
 
-    protected int             covered;
     protected int             alg, labels;
-    protected long            origttl;
+    protected int             covered;
     protected Date            expire, timeSigned;
     protected int             footprint;
-    protected Name            signer;
+    protected long            origttl;
     protected byte[]          signature;
+    protected Name            signer;
 
     public SIGBase(Name name, int type, int dclass, long ttl, int covered,
                    int alg, long origttl, Date expire, Date timeSigned,

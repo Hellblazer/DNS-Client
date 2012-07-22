@@ -43,12 +43,12 @@ import junit.framework.TestSuite;
 
 public class DSRecordTest extends TestCase {
     public static class Test_Ctor_7arg extends TestCase {
+        private int    m_algorithm;
+        private byte[] m_digest;
+        private int    m_digestid;
+        private int    m_footprint;
         private Name   m_n;
         private long   m_ttl;
-        private int    m_footprint;
-        private int    m_algorithm;
-        private int    m_digestid;
-        private byte[] m_digest;
 
         public void test_basic() throws TextParseException {
             DSRecord dr = new DSRecord(m_n, DClass.IN, m_ttl, m_footprint,

@@ -18,29 +18,29 @@ import org.xbill.DNS.utils.base64;
 
 public class TKEYRecord extends Record {
 
-    private static final long serialVersionUID = 8828458121926391756L;
-
-    private Name              alg;
-    private Date              timeInception;
-    private Date              timeExpire;
-    private int               mode, error;
-    private byte[]            key;
-    private byte[]            other;
-
-    /** The key is assigned by the server (unimplemented) */
-    public static final int   SERVERASSIGNED   = 1;
+    /** The key should be deleted */
+    public static final int   DELETE           = 5;
 
     /** The key is computed using a Diffie-Hellman key exchange */
     public static final int   DIFFIEHELLMAN    = 2;
-
     /** The key is computed using GSS_API (unimplemented) */
     public static final int   GSSAPI           = 3;
-
     /** The key is assigned by the resolver (unimplemented) */
     public static final int   RESOLVERASSIGNED = 4;
+    /** The key is assigned by the server (unimplemented) */
+    public static final int   SERVERASSIGNED   = 1;
+    private static final long serialVersionUID = 8828458121926391756L;
+    private Name              alg;
 
-    /** The key should be deleted */
-    public static final int   DELETE           = 5;
+    private byte[]            key;
+
+    private int               mode, error;
+
+    private byte[]            other;
+
+    private Date              timeExpire;
+
+    private Date              timeInception;
 
     /**
      * Creates a TKEY Record from the given data.

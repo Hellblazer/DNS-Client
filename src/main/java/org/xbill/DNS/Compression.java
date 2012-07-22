@@ -15,12 +15,12 @@ public class Compression {
 
     private static class Entry {
         Name  name;
-        int   pos;
         Entry next;
+        int   pos;
     }
 
-    private static final int TABLE_SIZE  = 17;
     private static final int MAX_POINTER = 0x3FFF;
+    private static final int TABLE_SIZE  = 17;
     private Entry[]          table;
     private boolean          verbose     = Options.check("verbosecompression");
 

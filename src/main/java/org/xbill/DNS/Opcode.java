@@ -10,20 +10,20 @@ package org.xbill.DNS;
 
 public final class Opcode {
 
-    /** A standard query */
-    public static final int QUERY   = 0;
-
     /** An inverse query (deprecated) */
     public static final int IQUERY  = 1;
-
-    /** A server status request (not used) */
-    public static final int STATUS  = 2;
 
     /**
      * A message from a primary to a secondary server to initiate a zone
      * transfer
      */
     public static final int NOTIFY  = 4;
+
+    /** A standard query */
+    public static final int QUERY   = 0;
+
+    /** A server status request (not used) */
+    public static final int STATUS  = 2;
 
     /** A dynamic update message */
     public static final int UPDATE  = 5;

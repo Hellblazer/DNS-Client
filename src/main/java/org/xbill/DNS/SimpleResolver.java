@@ -22,28 +22,28 @@ import java.util.List;
 
 public class SimpleResolver implements Resolver {
 
-    /** The default port to send queries to */
-    public static final int    DEFAULT_PORT             = 53;
-
     /** The default EDNS payload size */
     public static final int    DEFAULT_EDNS_PAYLOADSIZE = 1280;
 
-    private InetSocketAddress  address;
-    private InetSocketAddress  localAddress;
-    private boolean            useTCP, ignoreTruncation;
-    private OPTRecord          queryOPT;
-    private TSIG               tsig;
-    private long               timeoutValue             = 10 * 1000;
+    /** The default port to send queries to */
+    public static final int    DEFAULT_PORT             = 53;
 
     private static final short DEFAULT_UDPSIZE          = 512;
-
     private static String      defaultResolver          = "localhost";
     private static int         uniqueID                 = 0;
-
     /** Sets the default host (initially localhost) to query */
     public static void setDefaultResolver(String hostname) {
         defaultResolver = hostname;
     }
+    private InetSocketAddress  address;
+    private InetSocketAddress  localAddress;
+
+    private OPTRecord          queryOPT;
+
+    private long               timeoutValue             = 10 * 1000;
+    private TSIG               tsig;
+
+    private boolean            useTCP, ignoreTruncation;
 
     /**
      * Creates a SimpleResolver. The host to query is either found by using

@@ -34,6 +34,7 @@
 //
 package org.xbill.DNS;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -83,8 +84,13 @@ public class AddressTest extends TestCase {
 
     public void test_getAllByName_invalid() throws UnknownHostException {
         try {
-            Address.getAllByName("bogushost.com");
-            fail("UnknownHostException not thrown");
+            InetAddress[] addresses = Address.getAllByName("bogushost.com"); 
+            // Handle OpenDns' bogus idea to redirect names to this address
+            if (addresses.length != 1
+                || !Arrays.equals(addresses[0].getAddress(),
+                                  Inet4Address.getByName("67.215.66.132").getAddress())) {
+                fail("UnknownHostException not thrown");
+            }
         } catch (UnknownHostException e) {
         }
         try {
@@ -105,8 +111,12 @@ public class AddressTest extends TestCase {
 
     public void test_getByName_invalid() throws UnknownHostException {
         try {
-            Address.getByName("bogushost.com");
-            fail("UnknownHostException not thrown");
+            InetAddress address = Address.getByName("bogushost.com");
+            // Handle OpenDns' bogus idea to redirect names to this address
+            if (!Arrays.equals(address.getAddress(),
+                               Inet4Address.getByName("67.215.66.132").getAddress())) {
+                fail("UnknownHostException not thrown");
+            }
         } catch (UnknownHostException e) {
         }
         try {

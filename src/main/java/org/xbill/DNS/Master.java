@@ -20,20 +20,20 @@ import java.util.List;
 
 public class Master {
 
-    private Name      origin;
-    private File      file;
-    private Record    last     = null;
-    private long      defaultTTL;
-    private Master    included = null;
-    private Tokenizer st;
-    private int       currentType;
     private int       currentDClass;
     private long      currentTTL;
-    private boolean   needSOATTL;
-
+    private int       currentType;
+    private long      defaultTTL;
+    private File      file;
     private Generator generator;
     private List<Generator>      generators;
+    private Master    included = null;
+    private Record    last     = null;
+    private boolean   needSOATTL;
+
     private boolean   noExpandGenerate;
+    private Name      origin;
+    private Tokenizer st;
 
     /**
      * Initializes the master file reader.

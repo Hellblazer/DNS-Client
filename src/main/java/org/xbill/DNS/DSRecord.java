@@ -34,10 +34,10 @@ public class DSRecord extends Record {
 
     private static final long serialVersionUID = -9001819329700081493L;
 
-    private int               footprint;
     private int               alg;
-    private int               digestid;
     private byte[]            digest;
+    private int               digestid;
+    private int               footprint;
 
     /**
      * Creates a DS Record from the given data

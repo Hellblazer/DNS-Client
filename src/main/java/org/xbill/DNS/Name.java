@@ -15,11 +15,60 @@ import java.text.DecimalFormat;
 
 public class Name implements Comparable<Object>, Serializable {
 
-    private static final long serialVersionUID  = -7257019940971525644L;
+    /** The root name */
+    public static final Name           empty;
+
+    /** The root name */
+    public static final Name           root;
+    /* Used for printing non-printable characters */
+    private static final DecimalFormat byteFormat  = new DecimalFormat();
+    private static final byte[]        emptyLabel  = new byte[] { (byte) 0 };
+
+    private static final int  LABEL_COMPRESSION = 0xC0;
+
+    private static final int  LABEL_MASK        = 0xC0;
 
     private static final int  LABEL_NORMAL      = 0;
-    private static final int  LABEL_COMPRESSION = 0xC0;
-    private static final int  LABEL_MASK        = 0xC0;
+
+    /* Used to efficiently convert bytes to lowercase */
+    private static final byte          lowercase[] = new byte[256];
+
+    /** The maximum length of a label a Name */
+    private static final int           MAXLABEL    = 63;
+
+    /** The maximum number of labels in a Name */
+    private static final int           MAXLABELS   = 128;
+
+    /** The maximum length of a Name */
+    private static final int           MAXNAME     = 255;
+
+    /** The maximum number of cached offsets */
+    private static final int           MAXOFFSETS  = 7;
+
+    private static final long serialVersionUID  = -7257019940971525644L;
+
+    /* Used in wildcard names. */
+    private static final Name          wild;
+
+    private static final byte[]        wildLabel   = new byte[] { (byte) 1,
+            (byte) '*'                            };
+
+    static {
+        byteFormat.setMinimumIntegerDigits(3);
+        for (int i = 0; i < lowercase.length; i++) {
+            if (i < 'A' || i > 'Z') {
+                lowercase[i] = (byte) i;
+            } else {
+                lowercase[i] = (byte) (i - 'A' + 'a');
+            }
+        }
+        root = new Name();
+        root.appendSafe(emptyLabel, 0, 1);
+        empty = new Name();
+        empty.name = new byte[0];
+        wild = new Name();
+        wild.appendSafe(wildLabel, 0, 1);
+    }
 
     /**
      * Creates a new name by concatenating two existing names.
@@ -100,67 +149,6 @@ public class Name implements Comparable<Object>, Serializable {
         return new Name(s, origin);
     }
 
-    /* The name data */
-    private byte[]                     name;
-
-    /*
-     * Effectively an 8 byte array, where the low order byte stores the number
-     * of labels and the 7 higher order bytes store per-label offsets.
-     */
-    private long                       offsets;
-
-    /* Precomputed hashcode. */
-    private int                        hashcode;
-
-    private static final byte[]        emptyLabel  = new byte[] { (byte) 0 };
-
-    private static final byte[]        wildLabel   = new byte[] { (byte) 1,
-            (byte) '*'                            };
-
-    /** The root name */
-    public static final Name           root;
-
-    /** The root name */
-    public static final Name           empty;
-
-    /** The maximum length of a Name */
-    private static final int           MAXNAME     = 255;
-
-    /** The maximum length of a label a Name */
-    private static final int           MAXLABEL    = 63;
-
-    /** The maximum number of labels in a Name */
-    private static final int           MAXLABELS   = 128;
-
-    /** The maximum number of cached offsets */
-    private static final int           MAXOFFSETS  = 7;
-
-    /* Used for printing non-printable characters */
-    private static final DecimalFormat byteFormat  = new DecimalFormat();
-
-    /* Used to efficiently convert bytes to lowercase */
-    private static final byte          lowercase[] = new byte[256];
-
-    /* Used in wildcard names. */
-    private static final Name          wild;
-
-    static {
-        byteFormat.setMinimumIntegerDigits(3);
-        for (int i = 0; i < lowercase.length; i++) {
-            if (i < 'A' || i > 'Z') {
-                lowercase[i] = (byte) i;
-            } else {
-                lowercase[i] = (byte) (i - 'A' + 'a');
-            }
-        }
-        root = new Name();
-        root.appendSafe(emptyLabel, 0, 1);
-        empty = new Name();
-        empty.name = new byte[0];
-        wild = new Name();
-        wild.appendSafe(wildLabel, 0, 1);
-    }
-
     private static final void copy(Name src, Name dst) {
         if (src.offset(0) == 0) {
             dst.name = src.name;
@@ -181,6 +169,18 @@ public class Name implements Comparable<Object>, Serializable {
     private static TextParseException parseException(String str, String message) {
         return new TextParseException("'" + str + "': " + message);
     }
+
+    /* Precomputed hashcode. */
+    private int                        hashcode;
+
+    /* The name data */
+    private byte[]                     name;
+
+    /*
+     * Effectively an 8 byte array, where the low order byte stores the number
+     * of labels and the 7 higher order bytes store per-label offsets.
+     */
+    private long                       offsets;
 
     /**
      * Create a new name from DNS wire format

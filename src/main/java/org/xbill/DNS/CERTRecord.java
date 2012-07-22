@@ -18,14 +18,14 @@ import org.xbill.DNS.utils.base64;
 public class CERTRecord extends Record {
 
     public static class CertificateType {
-        /** PKIX (X.509v3) */
-        public static final int PKIX    = 1;
+        /** Attribute Certificate */
+        public static final int ACPKIX  = 7;
 
-        /** Simple Public Key Infrastructure */
-        public static final int SPKI    = 2;
+        /** URL of an Attribute Certificate */
+        public static final int IACPKIX = 8;
 
-        /** Pretty Good Privacy */
-        public static final int PGP     = 3;
+        /** Fingerprint and URL of an OpenPGP packet */
+        public static final int IPGP    = 6;
 
         /** URL of an X.509 data object */
         public static final int IPKIX   = 4;
@@ -33,20 +33,20 @@ public class CERTRecord extends Record {
         /** URL of an SPKI certificate */
         public static final int ISPKI   = 5;
 
-        /** Fingerprint and URL of an OpenPGP packet */
-        public static final int IPGP    = 6;
+        /** Certificate format defined by OID */
+        public static final int OID     = 254;
 
-        /** Attribute Certificate */
-        public static final int ACPKIX  = 7;
+        /** Pretty Good Privacy */
+        public static final int PGP     = 3;
 
-        /** URL of an Attribute Certificate */
-        public static final int IACPKIX = 8;
+        /** PKIX (X.509v3) */
+        public static final int PKIX    = 1;
+
+        /** Simple Public Key Infrastructure */
+        public static final int SPKI    = 2;
 
         /** Certificate format defined by URI */
         public static final int URI     = 253;
-
-        /** Certificate format defined by OID */
-        public static final int OID     = 254;
 
         private static Mnemonic types   = new Mnemonic("Certificate type",
                                                        Mnemonic.CASE_UPPER);
@@ -92,26 +92,26 @@ public class CERTRecord extends Record {
         }
     }
 
+    /** Certificate format defined by IOD */
+    public static final int   OID              = CertificateType.OID;
+
+    /** Pretty Good Privacy */
+    public static final int   PGP              = CertificateType.PGP;
+
     /** PKIX (X.509v3) */
     public static final int   PKIX             = CertificateType.PKIX;
 
     /** Simple Public Key Infrastructure */
     public static final int   SPKI             = CertificateType.SPKI;
 
-    /** Pretty Good Privacy */
-    public static final int   PGP              = CertificateType.PGP;
-
     /** Certificate format defined by URI */
     public static final int   URI              = CertificateType.URI;
 
-    /** Certificate format defined by IOD */
-    public static final int   OID              = CertificateType.OID;
-
     private static final long serialVersionUID = 4763014646517016835L;
 
-    private int               certType, keyTag;
     private int               alg;
     private byte[]            cert;
+    private int               certType, keyTag;
 
     /**
      * Creates a CERT Record from the given data

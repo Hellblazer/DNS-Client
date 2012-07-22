@@ -42,9 +42,9 @@ import junit.framework.TestSuite;
 
 public class GPOSRecordTest extends TestCase {
     public static class Test_Ctor_6arg_doubles extends TestCase {
+        private double m_lat, m_long, m_alt;
         private Name m_n;
         private long m_ttl;
-        private double m_lat, m_long, m_alt;
 
         public void test_basic() throws TextParseException {
             GPOSRecord gr = new GPOSRecord(m_n, DClass.IN, m_ttl, m_long,
@@ -114,9 +114,9 @@ public class GPOSRecordTest extends TestCase {
     }
 
     public static class Test_Ctor_6arg_Strings extends TestCase {
+        private double m_lat, m_long, m_alt;
         private Name m_n;
         private long m_ttl;
-        private double m_lat, m_long, m_alt;
 
         public void test_basic() throws TextParseException {
             GPOSRecord gr = new GPOSRecord(m_n, DClass.IN, m_ttl,

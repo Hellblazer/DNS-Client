@@ -18,83 +18,50 @@ import java.util.List;
 public class WKSRecord extends Record {
 
     public static class Protocol {
+        /** ARGUS */
+        public static final int ARGUS       = 13;
+
+        /** BBN RCC Monitoring */
+        public static final int BBN_RCC_MON = 10;
+
+        /** Backroom SATNET Monitoring */
+        public static final int BR_SAT_MON  = 76;
+
+        /** CFTP */
+        public static final int CFTP        = 62;
+
+        /** Chaos */
+        public static final int CHAOS       = 16;
+
+        /** DCN Measurement Subsystems */
+        public static final int DCN_MEAS    = 19;
+
+        /** Exterior Gateway Protocol */
+        public static final int EGP         = 8;
+
+        /** EMCON */
+        public static final int EMCON       = 14;
+
+        /** Gateway-to-Gateway */
+        public static final int GGP         = 3;
+
+        /** Host Monitoring */
+        public static final int HMP         = 20;
+
         /** Internet Control Message */
         public static final int ICMP        = 1;
 
         /** Internet Group Management */
         public static final int IGMP        = 2;
 
-        /** Gateway-to-Gateway */
-        public static final int GGP         = 3;
-
-        /** Stream */
-        public static final int ST          = 5;
-
-        /** Transmission Control */
-        public static final int TCP         = 6;
-
-        /** UCL */
-        public static final int UCL         = 7;
-
-        /** Exterior Gateway Protocol */
-        public static final int EGP         = 8;
-
         /** any private interior gateway */
         public static final int IGP         = 9;
 
-        /** BBN RCC Monitoring */
-        public static final int BBN_RCC_MON = 10;
+        /** Internet Packet Core Utility */
+        public static final int IPCV        = 71;
 
-        /** Network Voice Protocol */
-        public static final int NVP_II      = 11;
-
-        /** PUP */
-        public static final int PUP         = 12;
-
-        /** ARGUS */
-        public static final int ARGUS       = 13;
-
-        /** EMCON */
-        public static final int EMCON       = 14;
-
-        /** Cross Net Debugger */
-        public static final int XNET        = 15;
-
-        /** Chaos */
-        public static final int CHAOS       = 16;
-
-        /** User Datagram */
-        public static final int UDP         = 17;
-
-        /** Multiplexing */
-        public static final int MUX         = 18;
-
-        /** DCN Measurement Subsystems */
-        public static final int DCN_MEAS    = 19;
-
-        /** Host Monitoring */
-        public static final int HMP         = 20;
-
-        /** Packet Radio Measurement */
-        public static final int PRM         = 21;
-
-        /** XEROX NS IDP */
-        public static final int XNS_IDP     = 22;
-
-        /** Trunk-1 */
-        public static final int TRUNK_1     = 23;
-
-        /** Trunk-2 */
-        public static final int TRUNK_2     = 24;
-
-        /** Leaf-1 */
-        public static final int LEAF_1      = 25;
-
-        /** Leaf-2 */
-        public static final int LEAF_2      = 26;
-
-        /** Reliable Data Protocol */
-        public static final int RDP         = 27;
+        /** Internet Pluribus Packet Core */
+        public static final int IPPC        = 67;
 
         /** Internet Reliable Transaction */
         public static final int IRTP        = 28;
@@ -102,47 +69,80 @@ public class WKSRecord extends Record {
         /** ISO Transport Protocol Class 4 */
         public static final int ISO_TP4     = 29;
 
-        /** Bulk Data Transfer Protocol */
-        public static final int NETBLT      = 30;
+        /** Leaf-1 */
+        public static final int LEAF_1      = 25;
 
-        /** MFE Network Services Protocol */
-        public static final int MFE_NSP     = 31;
+        /** Leaf-2 */
+        public static final int LEAF_2      = 26;
 
         /** MERIT Internodal Protocol */
         public static final int MERIT_INP   = 32;
 
-        /** Sequential Exchange Protocol */
-        public static final int SEP         = 33;
-
-        /** CFTP */
-        public static final int CFTP        = 62;
-
-        /** SATNET and Backroom EXPAK */
-        public static final int SAT_EXPAK   = 64;
+        /** MFE Network Services Protocol */
+        public static final int MFE_NSP     = 31;
 
         /** MIT Subnet Support */
         public static final int MIT_SUBNET  = 65;
 
+        /** Multiplexing */
+        public static final int MUX         = 18;
+
+        /** Bulk Data Transfer Protocol */
+        public static final int NETBLT      = 30;
+
+        /** Network Voice Protocol */
+        public static final int NVP_II      = 11;
+
+        /** Packet Radio Measurement */
+        public static final int PRM         = 21;
+
+        /** PUP */
+        public static final int PUP         = 12;
+
+        /** Reliable Data Protocol */
+        public static final int RDP         = 27;
+
         /** MIT Remote Virtual Disk Protocol */
         public static final int RVD         = 66;
 
-        /** Internet Pluribus Packet Core */
-        public static final int IPPC        = 67;
+        /** SATNET and Backroom EXPAK */
+        public static final int SAT_EXPAK   = 64;
 
         /** SATNET Monitoring */
         public static final int SAT_MON     = 69;
 
-        /** Internet Packet Core Utility */
-        public static final int IPCV        = 71;
+        /** Sequential Exchange Protocol */
+        public static final int SEP         = 33;
 
-        /** Backroom SATNET Monitoring */
-        public static final int BR_SAT_MON  = 76;
+        /** Stream */
+        public static final int ST          = 5;
+
+        /** Transmission Control */
+        public static final int TCP         = 6;
+
+        /** Trunk-1 */
+        public static final int TRUNK_1     = 23;
+
+        /** Trunk-2 */
+        public static final int TRUNK_2     = 24;
+
+        /** UCL */
+        public static final int UCL         = 7;
+
+        /** User Datagram */
+        public static final int UDP         = 17;
+
+        /** WIDEBAND EXPAK */
+        public static final int WB_EXPAK    = 79;
 
         /** WIDEBAND Monitoring */
         public static final int WB_MON      = 78;
 
-        /** WIDEBAND EXPAK */
-        public static final int WB_EXPAK    = 79;
+        /** Cross Net Debugger */
+        public static final int XNET        = 15;
+
+        /** XEROX NS IDP */
+        public static final int XNS_IDP     = 22;
 
         private static Mnemonic protocols   = new Mnemonic("IP protocol",
                                                            Mnemonic.CASE_LOWER);
@@ -223,107 +223,137 @@ public class WKSRecord extends Record {
     }
 
     public static class Service {
-        /** Remote Job Entry */
-        public static final int RJE         = 5;
+        /** Authentication Service */
+        public static final int AUTH        = 113;
 
-        /** Echo */
-        public static final int ECHO        = 7;
-
-        /** Discard */
-        public static final int DISCARD     = 9;
-
-        /** Active Users */
-        public static final int USERS       = 11;
-
-        /** Daytime */
-        public static final int DAYTIME     = 13;
-
-        /** Quote of the Day */
-        public static final int QUOTE       = 17;
-
-        /** Character Generator */
-        public static final int CHARGEN     = 19;
-
-        /** File Transfer [Default Data] */
-        public static final int FTP_DATA    = 20;
-
-        /** File Transfer [Control] */
-        public static final int FTP         = 21;
-
-        /** Telnet */
-        public static final int TELNET      = 23;
-
-        /** Simple Mail Transfer */
-        public static final int SMTP        = 25;
-
-        /** NSW User System FE */
-        public static final int NSW_FE      = 27;
-
-        /** MSG ICP */
-        public static final int MSG_ICP     = 29;
-
-        /** MSG Authentication */
-        public static final int MSG_AUTH    = 31;
-
-        /** Display Support Protocol */
-        public static final int DSP         = 33;
-
-        /** Time */
-        public static final int TIME        = 37;
-
-        /** Resource Location Protocol */
-        public static final int RLP         = 39;
-
-        /** Graphics */
-        public static final int GRAPHICS    = 41;
-
-        /** Host Name Server */
-        public static final int NAMESERVER  = 42;
-
-        /** Who Is */
-        public static final int NICNAME     = 43;
-
-        /** MPM FLAGS Protocol */
-        public static final int MPM_FLAGS   = 44;
-
-        /** Message Processing Module [recv] */
-        public static final int MPM         = 45;
-
-        /** MPM [default send] */
-        public static final int MPM_SND     = 46;
-
-        /** NI FTP */
-        public static final int NI_FTP      = 47;
-
-        /** Login Host Protocol */
-        public static final int LOGIN       = 49;
-
-        /** IMP Logical Address Maintenance */
-        public static final int LA_MAINT    = 51;
-
-        /** Domain Name Server */
-        public static final int DOMAIN      = 53;
-
-        /** ISI Graphics Language */
-        public static final int ISI_GL      = 55;
-
-        /** NI MAIL */
-        public static final int NI_MAIL     = 61;
-
-        /** VIA Systems - FTP */
-        public static final int VIA_FTP     = 63;
-
-        /** TACACS-Database Service */
-        public static final int TACACS_DS   = 65;
-
-        /** Bootstrap Protocol Server */
-        public static final int BOOTPS      = 67;
+        /** Britton-Lee IDM */
+        public static final int BL_IDM      = 142;
 
         /** Bootstrap Protocol Client */
         public static final int BOOTPC      = 68;
 
-        /** Trivial File Transfer */
-        public static final int TFTP        = 69;
+        /** Bootstrap Protocol Server */
+        public static final int BOOTPS      = 67;
+
+        /** Character Generator */
+        public static final int CHARGEN     = 19;
+
+        /** CISCO FNATIVE */
+        public static final int CISCO_FNA   = 130;
+
+        /** CISCO SYSMAINT */
+        public static final int CISCO_SYS   = 132;
+
+        /** CISCO TNATIVE */
+        public static final int CISCO_TNA   = 131;
+
+        /** Mailbox Name Nameserver */
+        public static final int CSNET_NS    = 105;
+
+        /** Daytime */
+        public static final int DAYTIME     = 13;
+
+        /** Device Control Protocol */
+        public static final int DCP         = 93;
+
+        /** Discard */
+        public static final int DISCARD     = 9;
+
+        /** Domain Name Server */
+        public static final int DOMAIN      = 53;
+
+        /** Display Support Protocol */
+        public static final int DSP         = 33;
+
+        /** Echo */
+        public static final int ECHO        = 7;
+
+        /** EMFIS Control Service */
+        public static final int EMFIS_CNTL  = 141;
+
+        /** EMFIS Data Service */
+        public static final int EMFIS_DATA  = 140;
+
+        /** HYDRA Expedited Remote Procedure */
+        public static final int ERPC        = 121;
+
+        /** Finger */
+        public static final int FINGER      = 79;
+
+        /** File Transfer [Control] */
+        public static final int FTP         = 21;
+
+        /** File Transfer [Default Data] */
+        public static final int FTP_DATA    = 20;
+
+        /** Graphics */
+        public static final int GRAPHICS    = 41;
+
+        /** NIC Host Name Server */
+        public static final int HOSTNAME    = 101;
+
+        /** HOSTS2 Name Server */
+        public static final int HOSTS2_NS   = 81;
+
+        /** INGRES-NET Service */
+        public static final int INGRES_NET  = 134;
+
+        /** ISI Graphics Language */
+        public static final int ISI_GL      = 55;
+
+        /** ISO-TSAP */
+        public static final int ISO_TSAP    = 102;
+
+        /** IMP Logical Address Maintenance */
+        public static final int LA_MAINT    = 51;
+
+        /** LINK */
+        public static final int LINK        = 245;
+
+        /** Location Service */
+        public static final int LOC_SRV     = 135;
+
+        /** Locus PC-Interface Conn Server */
+        public static final int LOCUS_CON   = 127;
+
+        /** Locus PC-Interface Net Map Server */
+        public static final int LOCUS_MAP   = 125;
+
+        /** Login Host Protocol */
+        public static final int LOGIN       = 49;
+
+        /** Metagram Relay */
+        public static final int METAGRAM    = 99;
+
+        /** MIT Dover Spooler */
+        public static final int MIT_DOV     = 91;
+
+        /** Message Processing Module [recv] */
+        public static final int MPM         = 45;
+
+        /** MPM FLAGS Protocol */
+        public static final int MPM_FLAGS   = 44;
+
+        /** MPM [default send] */
+        public static final int MPM_SND     = 46;
+
+        /** MSG Authentication */
+        public static final int MSG_AUTH    = 31;
+
+        /** MSG ICP */
+        public static final int MSG_ICP     = 29;
+
+        /** Host Name Server */
+        public static final int NAMESERVER  = 42;
+
+        /** NETBIOS Datagram Service */
+        public static final int NETBIOS_DGM = 138;
+
+        /** NETBIOS Name Service */
+        public static final int NETBIOS_NS  = 137;
+
+        /** NETBIOS Session Service */
+        public static final int NETBIOS_SSN = 139;
 
         /** Remote Job Service */
         public static final int NETRJS_1    = 71;
@@ -337,128 +367,98 @@ public class WKSRecord extends Record {
         /** Remote Job Service */
         public static final int NETRJS_4    = 74;
 
-        /** Finger */
-        public static final int FINGER      = 79;
+        /** NI FTP */
+        public static final int NI_FTP      = 47;
 
-        /** HOSTS2 Name Server */
-        public static final int HOSTS2_NS   = 81;
+        /** NI MAIL */
+        public static final int NI_MAIL     = 61;
+
+        /** Who Is */
+        public static final int NICNAME     = 43;
+
+        /** Network News Transfer Protocol */
+        public static final int NNTP        = 119;
+
+        /** NSW User System FE */
+        public static final int NSW_FE      = 27;
+
+        /** Network Time Protocol */
+        public static final int NTP         = 123;
+
+        /** Post Office Protocol - Version 2 */
+        public static final int POP_2       = 109;
+
+        /** PROFILE Naming System */
+        public static final int PROFILE     = 136;
+
+        /** Password Generator Protocol */
+        public static final int PWDGEN      = 129;
+
+        /** Quote of the Day */
+        public static final int QUOTE       = 17;
+
+        /** Remote Job Entry */
+        public static final int RJE         = 5;
+
+        /** Resource Location Protocol */
+        public static final int RLP         = 39;
+
+        /** Remote Telnet Service */
+        public static final int RTELNET     = 107;
+
+        /** Simple File Transfer Protocol */
+        public static final int SFTP        = 115;
+
+        /** Simple Mail Transfer */
+        public static final int SMTP        = 25;
+
+        /** Statistics Service */
+        public static final int STATSRV     = 133;
 
         /** SU/MIT Telnet Gateway */
         public static final int SU_MIT_TG   = 89;
 
-        /** MIT Dover Spooler */
-        public static final int MIT_DOV     = 91;
-
-        /** Device Control Protocol */
-        public static final int DCP         = 93;
+        /** SUN Remote Procedure Call */
+        public static final int SUNRPC      = 111;
 
         /** SUPDUP */
         public static final int SUPDUP      = 95;
 
+        /** Survey Measurement */
+        public static final int SUR_MEAS    = 243;
+
         /** Swift Remote Virtual File Protocol */
         public static final int SWIFT_RVF   = 97;
+
+        /** TACACS-Database Service */
+        public static final int TACACS_DS   = 65;
 
         /** TAC News */
         public static final int TACNEWS     = 98;
 
-        /** Metagram Relay */
-        public static final int METAGRAM    = 99;
+        /** Telnet */
+        public static final int TELNET      = 23;
 
-        /** NIC Host Name Server */
-        public static final int HOSTNAME    = 101;
+        /** Trivial File Transfer */
+        public static final int TFTP        = 69;
 
-        /** ISO-TSAP */
-        public static final int ISO_TSAP    = 102;
+        /** Time */
+        public static final int TIME        = 37;
+
+        /** Active Users */
+        public static final int USERS       = 11;
+
+        /** UUCP Path Service */
+        public static final int UUCP_PATH   = 117;
+
+        /** VIA Systems - FTP */
+        public static final int VIA_FTP     = 63;
 
         /** X400 */
         public static final int X400        = 103;
 
         /** X400-SND */
         public static final int X400_SND    = 104;
-
-        /** Mailbox Name Nameserver */
-        public static final int CSNET_NS    = 105;
-
-        /** Remote Telnet Service */
-        public static final int RTELNET     = 107;
-
-        /** Post Office Protocol - Version 2 */
-        public static final int POP_2       = 109;
-
-        /** SUN Remote Procedure Call */
-        public static final int SUNRPC      = 111;
-
-        /** Authentication Service */
-        public static final int AUTH        = 113;
-
-        /** Simple File Transfer Protocol */
-        public static final int SFTP        = 115;
-
-        /** UUCP Path Service */
-        public static final int UUCP_PATH   = 117;
-
-        /** Network News Transfer Protocol */
-        public static final int NNTP        = 119;
-
-        /** HYDRA Expedited Remote Procedure */
-        public static final int ERPC        = 121;
-
-        /** Network Time Protocol */
-        public static final int NTP         = 123;
-
-        /** Locus PC-Interface Net Map Server */
-        public static final int LOCUS_MAP   = 125;
-
-        /** Locus PC-Interface Conn Server */
-        public static final int LOCUS_CON   = 127;
-
-        /** Password Generator Protocol */
-        public static final int PWDGEN      = 129;
-
-        /** CISCO FNATIVE */
-        public static final int CISCO_FNA   = 130;
-
-        /** CISCO TNATIVE */
-        public static final int CISCO_TNA   = 131;
-
-        /** CISCO SYSMAINT */
-        public static final int CISCO_SYS   = 132;
-
-        /** Statistics Service */
-        public static final int STATSRV     = 133;
-
-        /** INGRES-NET Service */
-        public static final int INGRES_NET  = 134;
-
-        /** Location Service */
-        public static final int LOC_SRV     = 135;
-
-        /** PROFILE Naming System */
-        public static final int PROFILE     = 136;
-
-        /** NETBIOS Name Service */
-        public static final int NETBIOS_NS  = 137;
-
-        /** NETBIOS Datagram Service */
-        public static final int NETBIOS_DGM = 138;
-
-        /** NETBIOS Session Service */
-        public static final int NETBIOS_SSN = 139;
-
-        /** EMFIS Data Service */
-        public static final int EMFIS_DATA  = 140;
-
-        /** EMFIS Control Service */
-        public static final int EMFIS_CNTL  = 141;
-
-        /** Britton-Lee IDM */
-        public static final int BL_IDM      = 142;
-
-        /** Survey Measurement */
-        public static final int SUR_MEAS    = 243;
-
-        /** LINK */
-        public static final int LINK        = 245;
 
         private static Mnemonic services    = new Mnemonic("TCP/UDP service",
                                                            Mnemonic.CASE_LOWER);

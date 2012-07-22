@@ -17,14 +17,14 @@ import java.security.PublicKey;
 public class DNSKEYRecord extends KEYBase {
 
     public static class Flags {
-        /** Key is a zone key */
-        public static final int ZONE_KEY = 0x100;
+        /** Key has been revoked */
+        public static final int REVOKE   = 0x80;
 
         /** Key is a secure entry point key */
         public static final int SEP_KEY  = 0x1;
 
-        /** Key has been revoked */
-        public static final int REVOKE   = 0x80;
+        /** Key is a zone key */
+        public static final int ZONE_KEY = 0x100;
 
         private Flags() {
         }

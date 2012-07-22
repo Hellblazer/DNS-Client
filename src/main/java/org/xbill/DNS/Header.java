@@ -15,6 +15,11 @@ import java.util.Random;
 
 public class Header implements Cloneable {
 
+    /** The length of a DNS Header in wire format. */
+    public static final int LENGTH = 12;
+
+    private static Random   random = new Random();
+
     static private void checkFlag(int bit) {
         if (!validFlag(bit)) {
             throw new IllegalArgumentException("invalid flag bit " + bit);
@@ -25,16 +30,11 @@ public class Header implements Cloneable {
         return bit >= 0 && bit <= 0xF && Flags.isFlag(bit);
     }
 
-    private int             id;
+    private int[]           counts;
 
     private int             flags;
 
-    private int[]           counts;
-
-    private static Random   random = new Random();
-
-    /** The length of a DNS Header in wire format. */
-    public static final int LENGTH = 12;
+    private int             id;
 
     /**
      * Create a new empty header with a random message id

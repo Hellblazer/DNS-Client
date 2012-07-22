@@ -78,9 +78,9 @@ public class jnamed {
 
     Map<Integer, Cache> caches;
 
-    Map<Name, Zone>     znames;
-
     Map<Name, TSIG>     TSIGs;
+
+    Map<Name, Zone>     znames;
 
     public jnamed(String conffile) throws IOException, ZoneTransferException {
         FileInputStream fs;

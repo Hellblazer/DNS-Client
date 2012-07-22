@@ -18,8 +18,8 @@ abstract class KEYBase extends Record {
     private static final long serialVersionUID = 3469321722693285454L;
 
     protected int             flags, proto, alg;
-    protected byte[]          key;
     protected int             footprint        = -1;
+    protected byte[]          key;
     protected PublicKey       publicKey        = null;
 
     public KEYBase(Name name, int type, int dclass, long ttl, int flags,

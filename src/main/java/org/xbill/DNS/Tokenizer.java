@@ -114,9 +114,8 @@ public class Tokenizer {
         }
     }
 
-    private static String       delim         = " \t\n;()\"";
-
-    private static String       quotes        = "\"";
+    /** A comment; only returned when wantComment is set */
+    public static final int     COMMENT       = 5;
 
     /** End of file */
     public static final int     EOF           = 0;
@@ -124,29 +123,30 @@ public class Tokenizer {
     /** End of line */
     public static final int     EOL           = 1;
 
-    /** Whitespace; only returned when wantWhitespace is set */
-    public static final int     WHITESPACE    = 2;
-
     /** An identifier (unquoted string) */
     public static final int     IDENTIFIER    = 3;
 
     /** A quoted string */
     public static final int     QUOTED_STRING = 4;
-    /** A comment; only returned when wantComment is set */
-    public static final int     COMMENT       = 5;
-    private PushbackInputStream is;
-    private boolean             ungottenToken;
-    private int                 multiline;
-    private boolean             quoting;
-    private String              delimiters;
+
+    /** Whitespace; only returned when wantWhitespace is set */
+    public static final int     WHITESPACE    = 2;
+
+    private static String       delim         = " \t\n;()\"";
+    private static String       quotes        = "\"";
     private Token               current;
-
-    private StringBuffer        sb;
-    private boolean             wantClose;
-
+    private String              delimiters;
     private String              filename;
-
+    private PushbackInputStream is;
     private int                 line;
+    private int                 multiline;
+
+    private boolean             quoting;
+    private StringBuffer        sb;
+
+    private boolean             ungottenToken;
+
+    private boolean             wantClose;
 
     /**
      * Creates a Tokenizer from a file.

@@ -21,10 +21,10 @@ import java.util.TreeMap;
 public class Zone implements Serializable {
 
     class ZoneIterator implements Iterator<Object> {
-        private Iterator<?> zentries;
-        private RRset[]     current;
         private int         count;
+        private RRset[]     current;
         private boolean     wantLastSOA;
+        private Iterator<?> zentries;
 
         ZoneIterator(boolean axfr) {
             synchronized (Zone.this) {
@@ -82,21 +82,21 @@ public class Zone implements Serializable {
         }
     }
 
-    private static final long       serialVersionUID = -9220510891189510942L;
-
     /** A primary zone */
     public static final int         PRIMARY          = 1;
 
     /** A secondary zone */
     public static final int         SECONDARY        = 2;
+
+    private static final long       serialVersionUID = -9220510891189510942L;
     private Map<Name, Serializable> data;
+    private int                     dclass           = DClass.IN;
+    private boolean                 hasWild;
+    private RRset                   NS;
     private Name                    origin;
     private Object                  originNode;
-    private int                     dclass           = DClass.IN;
-    private RRset                   NS;
-    private SOARecord               SOA;
 
-    private boolean                 hasWild;
+    private SOARecord               SOA;
 
     /**
      * Creates a Zone by performing a zone transfer to the specified host.

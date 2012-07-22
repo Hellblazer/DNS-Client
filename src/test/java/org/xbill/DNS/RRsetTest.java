@@ -43,10 +43,10 @@ import junit.framework.TestCase;
 
 public class RRsetTest extends TestCase {
     private RRset m_rs;
-    Name          m_name, m_name2;
-    long          m_ttl;
     ARecord       m_a1, m_a2;
+    Name          m_name, m_name2;
     RRSIGRecord   m_s1, m_s2;
+    long          m_ttl;
 
     @Override
     public void setUp() throws TextParseException, UnknownHostException {

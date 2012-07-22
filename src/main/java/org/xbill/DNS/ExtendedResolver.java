@@ -21,16 +21,16 @@ import java.util.List;
 public class ExtendedResolver implements Resolver {
 
     private static class Resolution implements ResolverListener {
-        Resolver[]       resolvers;
-        int[]            sent;
-        Object[]         inprogress;
-        int              retries;
-        int              outstanding;
         boolean          done;
-        Message          query;
-        Message          response;
-        Throwable        thrown;
+        Object[]         inprogress;
         ResolverListener listener;
+        int              outstanding;
+        Message          query;
+        Resolver[]       resolvers;
+        Message          response;
+        int              retries;
+        int[]            sent;
+        Throwable        thrown;
 
         public Resolution(ExtendedResolver eres, Message query) {
             List<Resolver> l = eres.resolvers;
@@ -244,9 +244,9 @@ public class ExtendedResolver implements Resolver {
 
     private static final int quantum     = 5;
 
-    private List<Resolver>   resolvers;
-    private boolean          loadBalance = false;
     private int              lbStart     = 0;
+    private boolean          loadBalance = false;
+    private List<Resolver>   resolvers;
     private int              retries     = 3;
 
     /**

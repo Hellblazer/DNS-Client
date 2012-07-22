@@ -11,10 +11,10 @@ package org.xbill.DNS;
 public class DNSInput {
 
     private byte[] array;
-    private int    pos;
     private int    end;
-    private int    saved_pos;
+    private int    pos;
     private int    saved_end;
+    private int    saved_pos;
 
     /**
      * Creates a new DNSInput

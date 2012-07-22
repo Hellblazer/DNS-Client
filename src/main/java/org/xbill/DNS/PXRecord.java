@@ -14,9 +14,9 @@ public class PXRecord extends Record {
 
     private static final long serialVersionUID = 1811540008806660667L;
 
-    private int               preference;
     private Name              map822;
     private Name              mapX400;
+    private int               preference;
 
     /**
      * Creates an PX Record from the given data

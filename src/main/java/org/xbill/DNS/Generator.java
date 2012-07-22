@@ -26,32 +26,32 @@ public class Generator {
                || type == Type.A || type == Type.AAAA || type == Type.NS;
     }
 
-    /** The start of the range. */
-    public long         start;
+    /** The class of the generated records. */
+    public final int    dclass;
 
     /** The end of the range. */
     public long         end;
 
-    /** The step value of the range. */
-    public long         step;
-
     /** The pattern to use for generating record names. */
     public final String namePattern;
 
-    /** The type of the generated records. */
-    public final int    type;
-
-    /** The class of the generated records. */
-    public final int    dclass;
-
-    /** The ttl of the generated records. */
-    public final long   ttl;
+    /** The origin to append to relative names. */
+    public final Name   origin;
 
     /** The pattern to use for generating record data. */
     public final String rdataPattern;
 
-    /** The origin to append to relative names. */
-    public final Name   origin;
+    /** The start of the range. */
+    public long         start;
+
+    /** The step value of the range. */
+    public long         step;
+
+    /** The ttl of the generated records. */
+    public final long   ttl;
+
+    /** The type of the generated records. */
+    public final int    type;
 
     private long        current;
 

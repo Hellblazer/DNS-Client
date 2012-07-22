@@ -18,8 +18,8 @@ public class NXTRecord extends Record {
 
     private static final long serialVersionUID = -8851454400765507520L;
 
-    private Name              next;
     private BitSet            bitmap;
+    private Name              next;
 
     /**
      * Creates an NXT Record from the given data

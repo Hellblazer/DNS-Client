@@ -158,15 +158,15 @@ public class update {
         }
     }
 
+    int         defaultClass = DClass.IN;
+    long        defaultTTL;
+    PrintStream log          = null;
     Message     query, response;
     Resolver    res;
+
     String      server       = null;
+
     Name        zone         = Name.root;
-    long        defaultTTL;
-
-    int         defaultClass = DClass.IN;
-
-    PrintStream log          = null;
 
     public update(InputStream in) throws IOException {
         List<BufferedReader> inputs = new LinkedList<BufferedReader>();

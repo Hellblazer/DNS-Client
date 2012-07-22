@@ -22,13 +22,13 @@ public class RRset implements Serializable {
 
     private static final long serialVersionUID = -3270249290171239695L;
 
+    private short             nsigs;
+    private short             position;
     /*
      * rrs contains both normal and RRSIG records, with the RRSIG records
      * at the end.
      */
     private List<Record>              rrs;
-    private short             nsigs;
-    private short             position;
 
     /** Creates an empty RRset */
     public RRset() {

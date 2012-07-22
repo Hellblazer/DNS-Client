@@ -17,9 +17,23 @@ import java.util.List;
 public class SetResponse {
 
     /**
-     * The Cache contains no information about the requested name/type
+     * The Cache/Zone found a CNAME when looking for the name.
+     * 
+     * @see CNAMERecord
      */
-    static final int                 UNKNOWN    = 0;
+    static final int                 CNAME      = 4;
+
+    /**
+     * A delegation enclosing the requested name was found.
+     */
+    static final int                 DELEGATION = 3;
+
+    /**
+     * The Cache/Zone found a DNAME when looking for the name.
+     * 
+     * @see DNAMERecord
+     */
+    static final int                 DNAME      = 5;
 
     /**
      * The Zone does not contain the requested name, or the Cache has determined
@@ -33,35 +47,21 @@ public class SetResponse {
      * requested type.
      */
     static final int                 NXRRSET    = 2;
-
-    /**
-     * A delegation enclosing the requested name was found.
-     */
-    static final int                 DELEGATION = 3;
-
-    /**
-     * The Cache/Zone found a CNAME when looking for the name.
-     * 
-     * @see CNAMERecord
-     */
-    static final int                 CNAME      = 4;
-
-    /**
-     * The Cache/Zone found a DNAME when looking for the name.
-     * 
-     * @see DNAMERecord
-     */
-    static final int                 DNAME      = 5;
-
     /**
      * The Cache/Zone has successfully answered the question for the requested
      * name/type/class.
      */
     static final int                 SUCCESSFUL = 6;
+    /**
+     * The Cache contains no information about the requested name/type
+     */
+    static final int                 UNKNOWN    = 0;
+    
+    private static final SetResponse nxdomain   = new SetResponse(NXDOMAIN);
+
+    private static final SetResponse nxrrset    = new SetResponse(NXRRSET);
 
     private static final SetResponse unknown    = new SetResponse(UNKNOWN);
-    private static final SetResponse nxdomain   = new SetResponse(NXDOMAIN);
-    private static final SetResponse nxrrset    = new SetResponse(NXRRSET);
 
     static SetResponse ofType(int type) {
         switch (type) {
@@ -84,9 +84,9 @@ public class SetResponse {
         }
     }
 
-    private int    type;
-
     private Object data;
+
+    private int    type;
 
     private SetResponse() {
     }

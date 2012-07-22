@@ -15,9 +15,9 @@ import org.xbill.DNS.utils.base16;
 public class SSHFPRecord extends Record {
 
     public static class Algorithm {
-        public static final int RSA = 1;
-
         public static final int DSS = 2;
+
+        public static final int RSA = 1;
 
         private Algorithm() {
         }

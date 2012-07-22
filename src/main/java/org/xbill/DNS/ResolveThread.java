@@ -11,9 +11,9 @@ package org.xbill.DNS;
 
 class ResolveThread extends Thread {
 
-    private Message          query;
     private Object           id;
     private ResolverListener listener;
+    private Message          query;
     private Resolver         res;
 
     /** Creates a new ResolveThread */

@@ -26,45 +26,23 @@ public class Message implements Cloneable {
     /** The maximum length of a message in wire format. */
     public static final int MAXLENGTH = 65535;
 
-    private static boolean sameSet(Record r1, Record r2) {
-        return r1.getRRsetType() == r2.getRRsetType()
-               && r1.getDClass() == r2.getDClass()
-               && r1.getName().equals(r2.getName());
-    }
+    private static Record[] emptyRecordArray  = new Record[0];
 
-    private Header          header;
-    private List<Record>[]  sections;
-    private int             size;
-    private TSIG            tsigkey;
-    private TSIGRecord      querytsig;
-
-    private int             tsigerror;
-    int                     tsigstart;
-    int                     tsigState;
-
-    int                     sig0start;
-
-    /* The message was not signed */
-    static final int        TSIG_UNSIGNED     = 0;
-
-    /* The message was signed and verification succeeded */
-    static final int        TSIG_VERIFIED     = 1;
-
-    /* The message was an unsigned message in multiple-message response */
-    static final int        TSIG_INTERMEDIATE = 2;
-
-    /* The message was signed and no verification was attempted.  */
-    static final int        TSIG_SIGNED       = 3;
-
+    private static RRset[]  emptyRRsetArray   = new RRset[0];
     /*
      * The message was signed and verification failed, or was not signed
      * when it should have been.
      */
     static final int        TSIG_FAILED       = 4;
-    private static Record[] emptyRecordArray  = new Record[0];
+    /* The message was an unsigned message in multiple-message response */
+    static final int        TSIG_INTERMEDIATE = 2;
+    /* The message was signed and no verification was attempted.  */
+    static final int        TSIG_SIGNED       = 3;
+    /* The message was not signed */
+    static final int        TSIG_UNSIGNED     = 0;
 
-    private static RRset[]  emptyRRsetArray   = new RRset[0];
-
+    /* The message was signed and verification succeeded */
+    static final int        TSIG_VERIFIED     = 1;
     /**
      * Creates a new Message with a random Message ID suitable for sending as a
      * query.
@@ -79,7 +57,6 @@ public class Message implements Cloneable {
         m.addRecord(r, Section.QUESTION);
         return m;
     }
-
     /**
      * Creates a new Message to contain a dynamic update. A random Message ID
      * and the zone are filled in.
@@ -90,6 +67,29 @@ public class Message implements Cloneable {
     public static Message newUpdate(Name zone) {
         return new Update(zone);
     }
+
+    private static boolean sameSet(Record r1, Record r2) {
+        return r1.getRRsetType() == r2.getRRsetType()
+               && r1.getDClass() == r2.getDClass()
+               && r1.getName().equals(r2.getName());
+    }
+
+    private Header          header;
+
+    private TSIGRecord      querytsig;
+
+    private List<Record>[]  sections;
+
+    private int             size;
+
+    private int             tsigerror;
+    private TSIG            tsigkey;
+
+    int                     sig0start;
+
+    int                     tsigstart;
+
+    int                     tsigState;
 
     /** Creates a new Message with a random Message ID */
     public Message() {

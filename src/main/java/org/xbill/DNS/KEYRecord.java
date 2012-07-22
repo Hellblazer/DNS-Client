@@ -18,50 +18,8 @@ import java.util.StringTokenizer;
 public class KEYRecord extends KEYBase {
 
     public static class Flags {
-        /** KEY cannot be used for confidentiality */
-        public static final int NOCONF     = 0x4000;
-
-        /** KEY cannot be used for authentication */
-        public static final int NOAUTH     = 0x8000;
-
-        /** No key present */
-        public static final int NOKEY      = 0xC000;
-
-        /** Bitmask of the use fields */
-        public static final int USE_MASK   = 0xC000;
-
-        /** Flag 2 (unused) */
-        public static final int FLAG2      = 0x2000;
-
         /** Flags extension */
         public static final int EXTEND     = 0x1000;
-
-        /** Flag 4 (unused) */
-        public static final int FLAG4      = 0x0800;
-
-        /** Flag 5 (unused) */
-        public static final int FLAG5      = 0x0400;
-
-        /** Key is owned by a user. */
-        public static final int USER       = 0x0000;
-
-        /** Key is owned by a zone. */
-        public static final int ZONE       = 0x0100;
-
-        /** Key is owned by a host. */
-        public static final int HOST       = 0x0200;
-
-        /** Key owner type 3 (reserved). */
-        public static final int NTYP3      = 0x0300;
-
-        /** Key owner bitmask. */
-        public static final int OWNER_MASK = 0x0300;
-
-        /** Flag 8 (unused) */
-        public static final int FLAG8      = 0x0080;
-
-        /** Flag 9 (unused) */
-        public static final int FLAG9      = 0x0040;
 
         /** Flag 10 (unused) */
         public static final int FLAG10     = 0x0020;
@@ -69,11 +27,62 @@ public class KEYRecord extends KEYBase {
         /** Flag 11 (unused) */
         public static final int FLAG11     = 0x0010;
 
+        /** Flag 2 (unused) */
+        public static final int FLAG2      = 0x2000;
+
+        /** Flag 4 (unused) */
+        public static final int FLAG4      = 0x0800;
+
+        /** Flag 5 (unused) */
+        public static final int FLAG5      = 0x0400;
+
+        /** Flag 8 (unused) */
+        public static final int FLAG8      = 0x0080;
+
+        /** Flag 9 (unused) */
+        public static final int FLAG9      = 0x0040;
+
+        /** Key is owned by a host. */
+        public static final int HOST       = 0x0200;
+
+        /** KEY cannot be used for authentication */
+        public static final int NOAUTH     = 0x8000;
+
+        /** KEY cannot be used for confidentiality */
+        public static final int NOCONF     = 0x4000;
+
+        /** No key present */
+        public static final int NOKEY      = 0xC000;
+
+        /** Key owner type 3 (reserved). */
+        public static final int NTYP3      = 0x0300;
+
+        /** Key owner bitmask. */
+        public static final int OWNER_MASK = 0x0300;
+
         /** Signatory value 0 */
         public static final int SIG0       = 0;
 
         /** Signatory value 1 */
         public static final int SIG1       = 1;
+
+        /** Signatory value 10 */
+        public static final int SIG10      = 10;
+
+        /** Signatory value 11 */
+        public static final int SIG11      = 11;
+
+        /** Signatory value 12 */
+        public static final int SIG12      = 12;
+
+        /** Signatory value 13 */
+        public static final int SIG13      = 13;
+
+        /** Signatory value 14 */
+        public static final int SIG14      = 14;
+
+        /** Signatory value 15 */
+        public static final int SIG15      = 15;
 
         /** Signatory value 2 */
         public static final int SIG2       = 2;
@@ -99,23 +108,14 @@ public class KEYRecord extends KEYBase {
         /** Signatory value 9 */
         public static final int SIG9       = 9;
 
-        /** Signatory value 10 */
-        public static final int SIG10      = 10;
+        /** Bitmask of the use fields */
+        public static final int USE_MASK   = 0xC000;
 
-        /** Signatory value 11 */
-        public static final int SIG11      = 11;
+        /** Key is owned by a user. */
+        public static final int USER       = 0x0000;
 
-        /** Signatory value 12 */
-        public static final int SIG12      = 12;
-
-        /** Signatory value 13 */
-        public static final int SIG13      = 13;
-
-        /** Signatory value 14 */
-        public static final int SIG14      = 14;
-
-        /** Signatory value 15 */
-        public static final int SIG15      = 15;
+        /** Key is owned by a zone. */
+        public static final int ZONE       = 0x0100;
 
         private static Mnemonic flags      = new Mnemonic("KEY flags",
                                                           Mnemonic.CASE_UPPER);
@@ -196,23 +196,23 @@ public class KEYRecord extends KEYBase {
     }
 
     public static class Protocol {
+        /** Any protocol */
+        public static final int ANY       = 255;
+
+        /** DNSSEC */
+        public static final int DNSSEC    = 3;
+
+        /** Email */
+        public static final int EMAIL     = 2;
+
+        /** IPSEC Control */
+        public static final int IPSEC     = 4;
+
         /** No defined protocol. */
         public static final int NONE      = 0;
 
         /** Transaction Level Security */
         public static final int TLS       = 1;
-
-        /** Email */
-        public static final int EMAIL     = 2;
-
-        /** DNSSEC */
-        public static final int DNSSEC    = 3;
-
-        /** IPSEC Control */
-        public static final int IPSEC     = 4;
-
-        /** Any protocol */
-        public static final int ANY       = 255;
 
         private static Mnemonic protocols = new Mnemonic("KEY protocol",
                                                          Mnemonic.CASE_UPPER);
@@ -256,20 +256,15 @@ public class KEYRecord extends KEYBase {
         }
     }
 
-    private static final long serialVersionUID = 6385613447571488906L;
+    /** This key cannot be used for authentication */
+    public static final int   FLAG_NOAUTH      = Flags.NOAUTH;
 
     /* flags */
     /** This key cannot be used for confidentiality (encryption) */
     public static final int   FLAG_NOCONF      = Flags.NOCONF;
 
-    /** This key cannot be used for authentication */
-    public static final int   FLAG_NOAUTH      = Flags.NOAUTH;
-
     /** This key cannot be used for authentication or confidentiality */
     public static final int   FLAG_NOKEY       = Flags.NOKEY;
-
-    /** A zone key */
-    public static final int   OWNER_ZONE       = Flags.ZONE;
 
     /** A host/end entity key */
     public static final int   OWNER_HOST       = Flags.HOST;
@@ -277,21 +272,26 @@ public class KEYRecord extends KEYBase {
     /** A user key */
     public static final int   OWNER_USER       = Flags.USER;
 
-    /* protocols */
-    /** Key was created for use with transaction level security */
-    public static final int   PROTOCOL_TLS     = Protocol.TLS;
+    /** A zone key */
+    public static final int   OWNER_ZONE       = Flags.ZONE;
 
-    /** Key was created for use with email */
-    public static final int   PROTOCOL_EMAIL   = Protocol.EMAIL;
+    /** Key was created for use with any protocol */
+    public static final int   PROTOCOL_ANY     = Protocol.ANY;
 
     /** Key was created for use with DNSSEC */
     public static final int   PROTOCOL_DNSSEC  = Protocol.DNSSEC;
 
+    /** Key was created for use with email */
+    public static final int   PROTOCOL_EMAIL   = Protocol.EMAIL;
+
     /** Key was created for use with IPSEC */
     public static final int   PROTOCOL_IPSEC   = Protocol.IPSEC;
 
-    /** Key was created for use with any protocol */
-    public static final int   PROTOCOL_ANY     = Protocol.ANY;
+    /* protocols */
+    /** Key was created for use with transaction level security */
+    public static final int   PROTOCOL_TLS     = Protocol.TLS;
+
+    private static final long serialVersionUID = 6385613447571488906L;
 
     /**
      * Creates a KEY Record from the given data

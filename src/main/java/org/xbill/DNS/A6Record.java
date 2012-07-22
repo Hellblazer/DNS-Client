@@ -16,9 +16,9 @@ public class A6Record extends Record {
 
     private static final long serialVersionUID = -8815026887337346789L;
 
+    private Name              prefix;
     private int               prefixBits;
     private InetAddress       suffix;
-    private Name              prefix;
 
     /**
      * Creates an A6 Record from the given data

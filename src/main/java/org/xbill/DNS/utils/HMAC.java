@@ -14,13 +14,13 @@ import java.util.Arrays;
 
 public class HMAC {
 
-    private MessageDigest     digest;
-    private int               blockLength;
-
-    private byte[]            ipad, opad;
-
     private static final byte IPAD = 0x36;
     private static final byte OPAD = 0x5c;
+
+    private int               blockLength;
+
+    private MessageDigest     digest;
+    private byte[]            ipad, opad;
 
     /**
      * Creates a new HMAC instance

@@ -15,11 +15,8 @@ class Mnemonic {
 
     private static Integer cachedInts[]   = new Integer[64];
 
-    static {
-        for (int i = 0; i < cachedInts.length; i++) {
-            cachedInts[i] = new Integer(i);
-        }
-    }
+    /* Strings will be stored/searched for in lowercase. */
+    static final int       CASE_LOWER     = 3;
 
     /* Strings are case-sensitive. */
     static final int       CASE_SENSITIVE = 1;
@@ -27,8 +24,11 @@ class Mnemonic {
     /* Strings will be stored/searched for in uppercase. */
     static final int       CASE_UPPER     = 2;
 
-    /* Strings will be stored/searched for in lowercase. */
-    static final int       CASE_LOWER     = 3;
+    static {
+        for (int i = 0; i < cachedInts.length; i++) {
+            cachedInts[i] = new Integer(i);
+        }
+    }
 
     /**
      * Converts an int into a possibly cached Integer.
@@ -40,14 +40,14 @@ class Mnemonic {
         return new Integer(val);
     }
 
+    private String  description;
+    private int     max;
+    private boolean numericok;
+    private String  prefix;
     private HashMap<String, Integer> strings;
     private HashMap<Integer, String> values;
-    private String  description;
-    private int     wordcase;
-    private String  prefix;
-    private int     max;
 
-    private boolean numericok;
+    private int     wordcase;
 
     /**
      * Creates a new Mnemonic table.

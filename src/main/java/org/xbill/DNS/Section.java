@@ -10,8 +10,8 @@ package org.xbill.DNS;
 
 public final class Section {
 
-    /** The question (first) section */
-    public static final int QUESTION       = 0;
+    /** The additional (fourth) section */
+    public static final int ADDITIONAL     = 3;
 
     /** The answer (second) section */
     public static final int ANSWER         = 1;
@@ -19,22 +19,22 @@ public final class Section {
     /** The authority (third) section */
     public static final int AUTHORITY      = 2;
 
-    /** The additional (fourth) section */
-    public static final int ADDITIONAL     = 3;
+    /** The prerequisite (second) section of a dynamic update message */
+    public static final int PREREQ         = 1;
+
+    /** The question (first) section */
+    public static final int QUESTION       = 0;
+
+    /** The update (third) section of a dynamic update message */
+    public static final int UPDATE         = 2;
 
     /* Aliases for dynamic update */
     /** The zone (first) section of a dynamic update message */
     public static final int ZONE           = 0;
 
-    /** The prerequisite (second) section of a dynamic update message */
-    public static final int PREREQ         = 1;
-
-    /** The update (third) section of a dynamic update message */
-    public static final int UPDATE         = 2;
-
+    private static String[] longSections   = new String[4];
     private static Mnemonic sections       = new Mnemonic("Message Section",
                                                           Mnemonic.CASE_LOWER);
-    private static String[] longSections   = new String[4];
     private static String[] updateSections = new String[4];
 
     static {

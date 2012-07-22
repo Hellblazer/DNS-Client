@@ -24,10 +24,10 @@ public class TSIG {
          */
 
         private TSIG       key;
-        private HMAC       verifier;
-        private int        nresponses;
         private int        lastsigned;
         private TSIGRecord lastTSIG;
+        private int        nresponses;
+        private HMAC       verifier;
 
         /** Creates an object to verify a multiple message response */
         public StreamVerifier(TSIG tsig, TSIGRecord old) {
@@ -137,23 +137,29 @@ public class TSIG {
         }
     }
 
-    private static final String HMAC_MD5_STR    = "HMAC-MD5.SIG-ALG.REG.INT.";
+    /**
+     * The default fudge value for outgoing packets. Can be overriden by the
+     * tsigfudge option.
+     */
+    public static final short   FUDGE           = 300;
+
     private static final String HMAC_SHA1_STR   = "hmac-sha1.";
+
     private static final String HMAC_SHA224_STR = "hmac-sha224.";
+
     private static final String HMAC_SHA256_STR = "hmac-sha256.";
+
     private static final String HMAC_SHA384_STR = "hmac-sha384.";
 
     private static final String HMAC_SHA512_STR = "hmac-sha512.";
 
+    private static final String HMAC_MD5_STR    = "HMAC-MD5.SIG-ALG.REG.INT.";
     /** The domain name representing the HMAC-MD5 algorithm. */
     public static final Name    HMAC_MD5        = Name.fromConstantString(HMAC_MD5_STR);
-
-    /** The domain name representing the HMAC-MD5 algorithm (deprecated). */
-    public static final Name    HMAC            = HMAC_MD5;
-
     /** The domain name representing the HMAC-SHA1 algorithm. */
     public static final Name    HMAC_SHA1       = Name.fromConstantString(HMAC_SHA1_STR);
-
+    /** The domain name representing the HMAC-MD5 algorithm (deprecated). */
+    public static final Name    HMAC            = HMAC_MD5;
     /**
      * The domain name representing the HMAC-SHA224 algorithm. Note that SHA224
      * is not supported by Java out-of-the-box, this requires use of a third
@@ -169,12 +175,6 @@ public class TSIG {
 
     /** The domain name representing the HMAC-SHA512 algorithm. */
     public static final Name    HMAC_SHA512     = Name.fromConstantString(HMAC_SHA512_STR);
-
-    /**
-     * The default fudge value for outgoing packets. Can be overriden by the
-     * tsigfudge option.
-     */
-    public static final short   FUDGE           = 300;
 
     /**
      * Creates a new TSIG object, which can be used to sign or verify a message.
@@ -207,12 +207,12 @@ public class TSIG {
         return new TSIG(HMAC_MD5, parts[0], parts[1]);
     }
 
-    private Name   name, alg;
     private String digest;
-
     private int    digestBlockLength;
 
     private byte[] key;
+
+    private Name   name, alg;
 
     /**
      * Creates a new TSIG key with the hmac-md5 algorithm, which can be used to

@@ -42,10 +42,10 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 public class ARecordTest extends TestCase {
-    Name        m_an, m_rn;
     InetAddress m_addr;
-    String      m_addr_string;
     byte[]      m_addr_bytes;
+    String      m_addr_string;
+    Name        m_an, m_rn;
     long        m_ttl;
 
     public void test_ctor_0arg() throws UnknownHostException {

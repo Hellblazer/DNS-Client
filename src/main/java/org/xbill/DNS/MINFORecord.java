@@ -16,8 +16,8 @@ public class MINFORecord extends Record {
 
     private static final long serialVersionUID = -3962147172340353796L;
 
-    private Name              responsibleAddress;
     private Name              errorAddress;
+    private Name              responsibleAddress;
 
     /**
      * Creates an MINFO Record from the given data

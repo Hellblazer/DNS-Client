@@ -36,8 +36,8 @@ import org.xbill.DNS.Type;
 
 public class DNSJavaNameService implements InvocationHandler {
 
-    private static final String nsProperty     = "sun.net.spi.nameservice.nameservers";
     private static final String domainProperty = "sun.net.spi.nameservice.domain";
+    private static final String nsProperty     = "sun.net.spi.nameservice.nameservers";
     private static final String v6Property     = "java.net.preferIPv6Addresses";
 
     private boolean             preferV6       = false;

@@ -31,63 +31,31 @@ import java.util.Map;
 
 public final class Lookup {
 
-    private static Resolver            defaultResolver;
-    private static Name[]              defaultSearchPath;
-    private static Map<Integer, Cache> defaultCaches;
-    private static int                 defaultNdots;
-
-    private Resolver                   resolver;
-    private Name[]                     searchPath;
-    private Cache                      cache;
-    private boolean                    temporary_cache;
-    private int                        credibility;
-    private Name                       name;
-    private int                        type;
-    private int                        dclass;
-    private boolean                    verbose;
-    private int                        iterations;
-    private boolean                    foundAlias;
-    private boolean                    done;
-    private boolean                    doneCurrent;
-    private List<Name>                 aliases;
-    private Record[]                   answers;
-    private int                        result;
-    private String                     error;
-    private boolean                    nxdomain;
-    private boolean                    badresponse;
-    private String                     badresponse_error;
-    private boolean                    networkerror;
-    private boolean                    timedout;
-    private boolean                    nametoolong;
-    private boolean                    referral;
-
-    private static final Name[]        noAliases      = new Name[0];
-
+    /** The host does not exist. */
+    public static final int            HOST_NOT_FOUND = 3;
     /** The lookup was successful. */
     public static final int            SUCCESSFUL     = 0;
+    /**
+     * The lookup failed due to a network error. Repeating the lookup may be
+     * helpful.
+     */
+    public static final int            TRY_AGAIN      = 2;
+    /** The host exists, but has no records associated with the queried type. */
+    public static final int            TYPE_NOT_FOUND = 4;
 
     /**
      * The lookup failed due to a data or server error. Repeating the lookup
      * would not be helpful.
      */
     public static final int            UNRECOVERABLE  = 1;
-
-    /**
-     * The lookup failed due to a network error. Repeating the lookup may be
-     * helpful.
-     */
-    public static final int            TRY_AGAIN      = 2;
-
-    /** The host does not exist. */
-    public static final int            HOST_NOT_FOUND = 3;
-
-    /** The host exists, but has no records associated with the queried type. */
-    public static final int            TYPE_NOT_FOUND = 4;
-
+    private static Map<Integer, Cache> defaultCaches;
+    private static int                 defaultNdots;
+    private static Resolver            defaultResolver;
+    private static Name[]              defaultSearchPath;
+    private static final Name[]        noAliases      = new Name[0];
     static {
         refreshDefault();
     }
-
     /**
      * Gets the Cache that will be used as the default for the specified class
      * by future Lookups.
@@ -105,7 +73,6 @@ public final class Lookup {
         }
         return c;
     }
-
     /**
      * Gets the Resolver that will be used as the default by future Lookups.
      * 
@@ -114,7 +81,6 @@ public final class Lookup {
     public static synchronized Resolver getDefaultResolver() {
         return defaultResolver;
     }
-
     /**
      * Gets the search path that will be used as the default by future Lookups.
      * 
@@ -123,7 +89,6 @@ public final class Lookup {
     public static synchronized Name[] getDefaultSearchPath() {
         return defaultSearchPath;
     }
-
     public static synchronized void refreshDefault() {
 
         try {
@@ -135,7 +100,6 @@ public final class Lookup {
         defaultCaches = new HashMap<Integer, Cache>();
         defaultNdots = ResolverConfig.getCurrentConfig().ndots();
     }
-
     /**
      * Sets the Cache to be used as the default for the specified class by
      * future Lookups.
@@ -149,7 +113,6 @@ public final class Lookup {
         DClass.check(dclass);
         defaultCaches.put(Mnemonic.toInteger(dclass), cache);
     }
-
     /**
      * Sets the default Resolver to be used as the default by future Lookups.
      * 
@@ -159,7 +122,6 @@ public final class Lookup {
     public static synchronized void setDefaultResolver(Resolver resolver) {
         defaultResolver = resolver;
     }
-
     /**
      * Sets the search path to be used as the default by future Lookups.
      * 
@@ -169,7 +131,6 @@ public final class Lookup {
     public static synchronized void setDefaultSearchPath(Name[] domains) {
         defaultSearchPath = domains;
     }
-
     /**
      * Sets the search path that will be used as the default by future Lookups.
      * 
@@ -190,6 +151,45 @@ public final class Lookup {
         }
         defaultSearchPath = newdomains;
     }
+    private List<Name>                 aliases;
+    private Record[]                   answers;
+    private boolean                    badresponse;
+    private String                     badresponse_error;
+    private Cache                      cache;
+    private int                        credibility;
+    private int                        dclass;
+    private boolean                    done;
+    private boolean                    doneCurrent;
+
+    private String                     error;
+
+    private boolean                    foundAlias;
+
+    private int                        iterations;
+
+    private Name                       name;
+
+    private boolean                    nametoolong;
+
+    private boolean                    networkerror;
+
+    private boolean                    nxdomain;
+
+    private boolean                    referral;
+
+    private Resolver                   resolver;
+
+    private int                        result;
+
+    private Name[]                     searchPath;
+
+    private boolean                    temporary_cache;
+
+    private boolean                    timedout;
+
+    private int                        type;
+
+    private boolean                    verbose;
 
     /**
      * Create a Lookup object that will find records of type A at the given name

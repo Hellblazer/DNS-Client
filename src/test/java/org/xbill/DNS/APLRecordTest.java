@@ -92,15 +92,15 @@ public class APLRecordTest {
     }
 
     public static class Test_init extends TestCase {
-        Name              m_an, m_rn;
-        long              m_ttl;
-        ArrayList<Object> m_elements;
         InetAddress       m_addr4;
-        String            m_addr4_string;
         byte[]            m_addr4_bytes;
+        String            m_addr4_string;
         InetAddress       m_addr6;
-        String            m_addr6_string;
         byte[]            m_addr6_bytes;
+        String            m_addr6_string;
+        Name              m_an, m_rn;
+        ArrayList<Object> m_elements;
+        long              m_ttl;
 
         public void test_0arg() throws UnknownHostException {
             APLRecord ar = new APLRecord();
@@ -174,11 +174,11 @@ public class APLRecordTest {
 
     public static class Test_rdataFromString extends TestCase {
         InetAddress m_addr4;
-        String      m_addr4_string;
         byte[]      m_addr4_bytes;
+        String      m_addr4_string;
         InetAddress m_addr6;
-        String      m_addr6_string;
         byte[]      m_addr6_bytes;
+        String      m_addr6_string;
 
         public void test_colon_and_slash_swapped() throws IOException {
             Tokenizer t = new Tokenizer("!1/192.68.0.1:20");
@@ -467,15 +467,15 @@ public class APLRecordTest {
     }
 
     public static class Test_rrToString extends TestCase {
-        Name              m_an, m_rn;
-        long              m_ttl;
-        ArrayList<Object> m_elements;
         InetAddress       m_addr4;
-        String            m_addr4_string;
         byte[]            m_addr4_bytes;
+        String            m_addr4_string;
         InetAddress       m_addr6;
-        String            m_addr6_string;
         byte[]            m_addr6_bytes;
+        String            m_addr6_string;
+        Name              m_an, m_rn;
+        ArrayList<Object> m_elements;
+        long              m_ttl;
 
         public void test() {
             APLRecord ar = new APLRecord(m_an, DClass.IN, m_ttl, m_elements);
@@ -506,15 +506,15 @@ public class APLRecordTest {
     }
 
     public static class Test_rrToWire extends TestCase {
-        Name              m_an, m_rn;
-        long              m_ttl;
-        ArrayList<Object> m_elements;
         InetAddress       m_addr4;
-        String            m_addr4_string;
         byte[]            m_addr4_bytes;
+        String            m_addr4_string;
         InetAddress       m_addr6;
-        String            m_addr6_string;
         byte[]            m_addr6_bytes;
+        String            m_addr6_string;
+        Name              m_an, m_rn;
+        ArrayList<Object> m_elements;
+        long              m_ttl;
 
         public void test_address_with_embedded_zero()
                                                      throws UnknownHostException {

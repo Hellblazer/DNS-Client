@@ -41,9 +41,9 @@ import junit.framework.TestCase;
 
 public class HMACTest extends TestCase {
     private static class test_data {
-        public byte[] key;
         public byte[] data;
         public byte[] digest;
+        public byte[] key;
     }
 
     private static test_data[] tests;

@@ -42,10 +42,10 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 public class A6RecordTest extends TestCase {
-    Name        m_an, m_an2, m_rn;
     InetAddress m_addr;
-    String      m_addr_string, m_addr_string_canonical;
     byte[]      m_addr_bytes;
+    String      m_addr_string, m_addr_string_canonical;
+    Name        m_an, m_an2, m_rn;
     int         m_prefix_bits;
     long        m_ttl;
 

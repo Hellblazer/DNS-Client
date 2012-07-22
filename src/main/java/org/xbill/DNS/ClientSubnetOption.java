@@ -44,11 +44,11 @@ public class ClientSubnetOption extends EDNSOption {
         return val;
     }
 
+    private InetAddress address;
     private int         family;
-    private int         sourceNetmask;
     private int         scopeNetmask;
 
-    private InetAddress address;
+    private int         sourceNetmask;
 
     /**
      * Construct a Client Subnet option with scope netmask set to 0.

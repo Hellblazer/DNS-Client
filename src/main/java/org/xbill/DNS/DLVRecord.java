@@ -24,10 +24,10 @@ public class DLVRecord extends Record {
 
     private static final long serialVersionUID = 1960742375677534148L;
 
-    private int               footprint;
     private int               alg;
-    private int               digestid;
     private byte[]            digest;
+    private int               digestid;
+    private int               footprint;
 
     /**
      * Creates a DLV Record from the given data

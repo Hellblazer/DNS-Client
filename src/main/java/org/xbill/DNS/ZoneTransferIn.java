@@ -44,17 +44,17 @@ public class ZoneTransferIn {
          * All changes between two versions of a zone in an IXFR response.
          */
 
-        /** The starting serial number of this delta. */
-        public long start;
-
-        /** The ending serial number of this delta. */
-        public long end;
-
         /** A list of records added between the start and end versions */
         public List<Object> adds;
 
         /** A list of records deleted between the start and end versions */
         public List<Object> deletes;
+
+        /** The ending serial number of this delta. */
+        public long end;
+
+        /** The starting serial number of this delta. */
+        public long start;
 
         private Delta() {
             adds = new ArrayList<Object>();
@@ -143,15 +143,15 @@ public class ZoneTransferIn {
         }
     }
 
-    private static final int INITIALSOA  = 0;
-    private static final int FIRSTDATA   = 1;
-    private static final int IXFR_DELSOA = 2;
-    private static final int IXFR_DEL    = 3;
-    private static final int IXFR_ADDSOA = 4;
-
-    private static final int IXFR_ADD    = 5;
     private static final int AXFR        = 6;
     private static final int END         = 7;
+    private static final int FIRSTDATA   = 1;
+    private static final int INITIALSOA  = 0;
+    private static final int IXFR_ADD    = 5;
+
+    private static final int IXFR_ADDSOA = 4;
+    private static final int IXFR_DEL    = 3;
+    private static final int IXFR_DELSOA = 2;
 
     /**
      * Instantiates a ZoneTransferIn object to do an AXFR (full zone transfer).
@@ -297,35 +297,35 @@ public class ZoneTransferIn {
         return soa.getSerial();
     }
 
-    private Name                zname;
-    private int                 qtype;
-
-    private int                 dclass;
-    private long                ixfr_serial;
-    private boolean             want_fallback;
-    private ZoneTransferHandler handler;
-
-    private SocketAddress       localAddress;
-
     private SocketAddress       address;
-
-    private TCPClient           client;               ;
-
-    private TSIG                tsig;                 ;
-
-    private TSIG.StreamVerifier verifier;
-
-    private long                timeout = 900 * 1000;
-
-    private int                 state;
-
-    private long                end_serial;
+    private TCPClient           client;
 
     private long                current_serial;
+    private int                 dclass;
+    private long                end_serial;
+    private ZoneTransferHandler handler;
 
     private Record              initialsoa;
 
+    private long                ixfr_serial;
+
+    private SocketAddress       localAddress;               ;
+
+    private int                 qtype;                 ;
+
     private int                 rtype;
+
+    private int                 state;
+
+    private long                timeout = 900 * 1000;
+
+    private TSIG                tsig;
+
+    private TSIG.StreamVerifier verifier;
+
+    private boolean             want_fallback;
+
+    private Name                zname;
 
     private ZoneTransferIn() {
     }

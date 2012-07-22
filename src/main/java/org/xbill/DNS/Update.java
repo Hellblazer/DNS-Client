@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 public class Update extends Message {
 
-    private Name origin;
     private int  dclass;
+    private Name origin;
 
     /**
      * Creates an update message. The class is assumed to be IN.

@@ -45,6 +45,12 @@ import java.util.StringTokenizer;
 
 public class ResolverConfig {
 
+    private static ResolverConfig currentConfig;
+
+    static {
+        refresh();
+    }
+
     /** Gets the current configuration */
     public static synchronized ResolverConfig getCurrentConfig() {
         return currentConfig;
@@ -58,17 +64,11 @@ public class ResolverConfig {
         }
     }
 
-    private String[]              servers    = null;
+    private int                   ndots      = -1;
 
     private Name[]                searchlist = null;
 
-    private int                   ndots      = -1;
-
-    private static ResolverConfig currentConfig;
-
-    static {
-        refresh();
-    }
+    private String[]              servers    = null;
 
     public ResolverConfig() {
         if (findProperty()) {

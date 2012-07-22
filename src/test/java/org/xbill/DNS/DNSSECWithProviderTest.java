@@ -10,8 +10,8 @@ import org.xbill.DNS.DNSSEC.Algorithm;
 
 public class DNSSECWithProviderTest extends TestCase {
 
-    private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
     private static final String KEY_ALGORITHM       = "RSA";
+    private static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
     int                         algorithm           = Algorithm.RSASHA1;
     byte[]                      toSign              = "The quick brown fox jumped over the lazy dog.".getBytes();
 

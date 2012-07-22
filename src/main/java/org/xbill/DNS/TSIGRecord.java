@@ -23,12 +23,12 @@ public class TSIGRecord extends Record {
     private static final long serialVersionUID = -88820909016649306L;
 
     private Name              alg;
-    private Date              timeSigned;
-    private int               fudge;
-    private byte[]            signature;
-    private int               originalID;
     private int               error;
+    private int               fudge;
+    private int               originalID;
     private byte[]            other;
+    private byte[]            signature;
+    private Date              timeSigned;
 
     /**
      * Creates a TSIG Record from the given data. This is normally called by the

@@ -274,7 +274,6 @@ public class jnamed {
 
     public void serveTCP(InetAddress addr, int port) {
         try {
-            @SuppressWarnings("resource")
             ServerSocket sock = new ServerSocket(port, 128, addr);
             while (true) {
                 final Socket s = sock.accept();
@@ -293,7 +292,6 @@ public class jnamed {
 
     public void serveUDP(InetAddress addr, int port) {
         try {
-            @SuppressWarnings("resource")
             DatagramSocket sock = new DatagramSocket(port, addr);
             final short udpLength = 512;
             byte[] in = new byte[udpLength];

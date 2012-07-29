@@ -37,6 +37,11 @@ public class update {
 
     public static void main(String args[]) throws IOException {
 
+        /*
+        Options.set("verbose");
+        Options.set("verbosemsg");
+        Options.set("verbosecache");
+        */
         InputStream in = null;
         if (args.length >= 1) {
             try {

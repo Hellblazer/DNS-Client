@@ -4,6 +4,7 @@ package org.xbill.DNS;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -302,6 +303,23 @@ public class ExtendedResolver implements Resolver {
     public ExtendedResolver(String[] servers) throws UnknownHostException {
         init();
         for (String server : servers) {
+            Resolver r = new SimpleResolver(server);
+            r.setTimeout(quantum);
+            resolvers.add(r);
+        }
+    }
+
+    /**
+     * Creates a new Extended Resolver
+     * 
+     * @param servers
+     *            An array of server names for which SimpleResolver contexts
+     *            should be initialized.
+     * @see SimpleResolver
+     */
+    public ExtendedResolver(InetSocketAddress[] servers) {
+        init();
+        for (InetSocketAddress server : servers) {
             Resolver r = new SimpleResolver(server);
             r.setTimeout(quantum);
             resolvers.add(r);

@@ -31,19 +31,21 @@ public class SimpleResolver implements Resolver {
     private static final short DEFAULT_UDPSIZE          = 512;
     private static String      defaultResolver          = "localhost";
     private static int         uniqueID                 = 0;
+
     /** Sets the default host (initially localhost) to query */
     public static void setDefaultResolver(String hostname) {
         defaultResolver = hostname;
     }
-    private InetSocketAddress  address;
-    private InetSocketAddress  localAddress;
 
-    private OPTRecord          queryOPT;
+    private InetSocketAddress address;
+    private InetSocketAddress localAddress;
 
-    private long               timeoutValue             = 10 * 1000;
-    private TSIG               tsig;
+    private OPTRecord         queryOPT;
 
-    private boolean            useTCP, ignoreTruncation;
+    private long              timeoutValue = 10 * 1000;
+    private TSIG              tsig;
+
+    private boolean           useTCP, ignoreTruncation;
 
     /**
      * Creates a SimpleResolver. The host to query is either found by using
@@ -54,7 +56,18 @@ public class SimpleResolver implements Resolver {
      *                Failure occurred while finding the host
      */
     public SimpleResolver() throws UnknownHostException {
-        this(null);
+        address = new InetSocketAddress(defaultResolver, DEFAULT_PORT);
+    }
+
+    /**
+     * Creates a SimpleResolver that will query the specified host
+     * 
+     * @exception UnknownHostException
+     *                Failure occurred while finding the host
+     */
+    public SimpleResolver(InetSocketAddress host) {
+        assert host != null : "Host cannot be null";
+        address = host;
     }
 
     /**
@@ -89,6 +102,7 @@ public class SimpleResolver implements Resolver {
      * @throws IOException
      *             An error occurred while sending or receiving.
      */
+    @Override
     public Message send(Message query) throws IOException {
         if (Options.check("verbose")) {
             System.err.println("Sending to "
@@ -176,6 +190,7 @@ public class SimpleResolver implements Resolver {
      *            The object containing the callbacks.
      * @return An identifier, which is also a parameter in the callback
      */
+    @Override
     public Object sendAsync(final Message query, final ResolverListener listener) {
         final Object id;
         synchronized (this) {
@@ -217,11 +232,14 @@ public class SimpleResolver implements Resolver {
         address = addr;
     }
 
+    @Override
     public void setEDNS(int level) {
         setEDNS(level, 0, 0, null);
     }
 
-    public void setEDNS(int level, int payloadSize, int flags, List<EDNSOption> options) {
+    @Override
+    public void setEDNS(int level, int payloadSize, int flags,
+                        List<EDNSOption> options) {
         if (level != 0 && level != -1) {
             throw new IllegalArgumentException("invalid EDNS level - "
                                                + "must be 0 or -1");
@@ -232,6 +250,7 @@ public class SimpleResolver implements Resolver {
         queryOPT = new OPTRecord(payloadSize, 0, level, flags, options);
     }
 
+    @Override
     public void setIgnoreTruncation(boolean flag) {
         ignoreTruncation = flag;
     }
@@ -257,22 +276,27 @@ public class SimpleResolver implements Resolver {
         localAddress = addr;
     }
 
+    @Override
     public void setPort(int port) {
         address = new InetSocketAddress(address.getAddress(), port);
     }
 
+    @Override
     public void setTCP(boolean flag) {
         useTCP = flag;
     }
 
+    @Override
     public void setTimeout(int secs) {
         setTimeout(secs, 0);
     }
 
+    @Override
     public void setTimeout(int secs, int msecs) {
         timeoutValue = (long) secs * 1000 + msecs;
     }
 
+    @Override
     public void setTSIGKey(TSIG key) {
         tsig = key;
     }

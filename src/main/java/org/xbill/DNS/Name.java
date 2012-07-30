@@ -21,37 +21,37 @@ public class Name implements Comparable<Object>, Serializable {
     /** The root name */
     public static final Name           root;
     /* Used for printing non-printable characters */
-    private static final DecimalFormat byteFormat  = new DecimalFormat();
-    private static final byte[]        emptyLabel  = new byte[] { (byte) 0 };
+    private static final DecimalFormat byteFormat        = new DecimalFormat();
+    private static final byte[]        emptyLabel        = new byte[] { (byte) 0 };
 
-    private static final int  LABEL_COMPRESSION = 0xC0;
+    private static final int           LABEL_COMPRESSION = 0xC0;
 
-    private static final int  LABEL_MASK        = 0xC0;
+    private static final int           LABEL_MASK        = 0xC0;
 
-    private static final int  LABEL_NORMAL      = 0;
+    private static final int           LABEL_NORMAL      = 0;
 
     /* Used to efficiently convert bytes to lowercase */
-    private static final byte          lowercase[] = new byte[256];
+    private static final byte          lowercase[]       = new byte[256];
 
     /** The maximum length of a label a Name */
-    private static final int           MAXLABEL    = 63;
+    private static final int           MAXLABEL          = 63;
 
     /** The maximum number of labels in a Name */
-    private static final int           MAXLABELS   = 128;
+    private static final int           MAXLABELS         = 128;
 
     /** The maximum length of a Name */
-    private static final int           MAXNAME     = 255;
+    private static final int           MAXNAME           = 255;
 
     /** The maximum number of cached offsets */
-    private static final int           MAXOFFSETS  = 7;
+    private static final int           MAXOFFSETS        = 7;
 
-    private static final long serialVersionUID  = -7257019940971525644L;
+    private static final long          serialVersionUID  = -7257019940971525644L;
 
     /* Used in wildcard names. */
     private static final Name          wild;
 
-    private static final byte[]        wildLabel   = new byte[] { (byte) 1,
-            (byte) '*'                            };
+    private static final byte[]        wildLabel         = new byte[] {
+            (byte) 1, (byte) '*'                        };
 
     static {
         byteFormat.setMinimumIntegerDigits(3);
@@ -68,6 +68,37 @@ public class Name implements Comparable<Object>, Serializable {
         empty.name = new byte[0];
         wild = new Name();
         wild.appendSafe(wildLabel, 0, 1);
+    }
+
+    /**
+     * Creates a new name by concatenating a list of existing names.
+     * 
+     * @param names
+     *            the list o' names
+     * @return The concatenated name.
+     * @throws NameTooLongException
+     *             The name is too long.
+     */
+    public static Name concatenate(Name... names) throws NameTooLongException {
+        if (names == null) {
+            throw new IllegalArgumentException("Names cannot be null");
+        }
+        if (names.length == 0) {
+            throw new IllegalArgumentException("Names cannot be empty");
+        }
+        if (names[0].isAbsolute()) {
+            return names[0];
+        }
+        Name newname = new Name();
+        copy(names[0], newname);
+        for (int i = 1; i < names.length; i++) {
+            newname.append(names[i].name, names[i].offset(0),
+                           names[i].getlabels());
+            if (names[i].isAbsolute()) {
+                break;
+            }
+        }
+        return newname;
     }
 
     /**
@@ -171,16 +202,16 @@ public class Name implements Comparable<Object>, Serializable {
     }
 
     /* Precomputed hashcode. */
-    private int                        hashcode;
+    private int    hashcode;
 
     /* The name data */
-    private byte[]                     name;
+    private byte[] name;
 
     /*
      * Effectively an 8 byte array, where the low order byte stores the number
      * of labels and the 7 higher order bytes store per-label offsets.
      */
-    private long                       offsets;
+    private long   offsets;
 
     /**
      * Create a new name from DNS wire format

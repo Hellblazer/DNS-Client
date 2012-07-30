@@ -8,7 +8,7 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 
-import org.xbill.DNS.utils.hexdump;
+import org.xbill.DNS.utils.HexDump;
 
 class Client {
 
@@ -28,7 +28,7 @@ class Client {
 
     static protected void verboseLog(String prefix, byte[] data) {
         if (Options.check("verbosemsg")) {
-            System.err.println(hexdump.dump(prefix, data));
+            System.err.println(HexDump.dump(prefix, data));
         }
     }
 

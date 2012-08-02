@@ -17,11 +17,12 @@ import org.xbill.DNS.utils.base16;
  * @author Brian Wellington
  */
 
-public abstract class Record implements Cloneable, Comparable<Object>, Serializable {
+public abstract class Record implements Cloneable, Comparable<Record>,
+        Serializable {
 
-    private static final DecimalFormat byteFormat = new DecimalFormat();
+    private static final DecimalFormat byteFormat       = new DecimalFormat();
 
-    private static final long serialVersionUID = 2694906050116005466L;
+    private static final long          serialVersionUID = 2694906050116005466L;
 
     static {
         byteFormat.setMinimumIntegerDigits(3);
@@ -436,11 +437,11 @@ public abstract class Record implements Cloneable, Comparable<Object>, Serializa
         return rec;
     }
 
-    protected Name                     name;
+    protected Name name;
 
-    protected long                     ttl;
+    protected long ttl;
 
-    protected int                      type, dclass;
+    protected int  type, dclass;
 
     protected Record() {
     }
@@ -459,9 +460,9 @@ public abstract class Record implements Cloneable, Comparable<Object>, Serializa
     }
 
     /**
-     * Compares this Record to another Object.
+     * Compares this Record to another record.
      * 
-     * @param o
+     * @param arg
      *            The Object to be compared.
      * @return The value 0 if the argument is a record equivalent to this
      *         record; a value less than 0 if the argument is less than this
@@ -469,12 +470,8 @@ public abstract class Record implements Cloneable, Comparable<Object>, Serializa
      *         the argument is greater than this record in the canonical
      *         ordering. The canonical ordering is defined to compare by name,
      *         class, type, and rdata.
-     * @throws ClassCastException
-     *             if the argument is not a Record.
      */
-    public int compareTo(Object o) {
-        Record arg = (Record) o;
-
+    public int compareTo(Record arg) {
         if (this == arg) {
             return 0;
         }

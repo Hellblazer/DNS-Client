@@ -83,15 +83,6 @@ public class NameTest extends TestCase {
             assertTrue(n2.compareTo(n1) > 0);
         }
 
-        public void test_notName() throws TextParseException {
-            Name n = new Name("A.Name");
-            try {
-                n.compareTo(new Object());
-                fail("ClassCastException not thrown");
-            } catch (ClassCastException e) {
-            }
-        }
-
         public void test_same() throws TextParseException {
             Name n = new Name("A.Name");
             assertEquals(0, n.compareTo(n));

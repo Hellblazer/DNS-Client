@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
  * @author Brian Wellington
  */
 
-public class Name implements Comparable<Object>, Serializable {
+public class Name implements Comparable<Name>, Serializable {
 
     /** The root name */
     public static final Name           empty;
@@ -419,8 +419,8 @@ public class Name implements Comparable<Object>, Serializable {
     /**
      * Compares this Name to another Object.
      * 
-     * @param o
-     *            The Object to be compared.
+     * @param arg
+     *            The Name to be compared.
      * @return The value 0 if the argument is a name equivalent to this name; a
      *         value less than 0 if the argument is less than this name in the
      *         canonical ordering, and a value greater than 0 if the argument is
@@ -428,8 +428,7 @@ public class Name implements Comparable<Object>, Serializable {
      * @throws ClassCastException
      *             if the argument is not a Name.
      */
-    public int compareTo(Object o) {
-        Name arg = (Name) o;
+    public int compareTo(Name arg) {
 
         if (this == arg) {
             return 0;

@@ -41,7 +41,7 @@ abstract class TXTBase extends Record {
                 this.strings.add(byteArrayFromString(s));
             }
         } catch (TextParseException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
 

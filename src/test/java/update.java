@@ -190,8 +190,8 @@ public class update {
                 String line = null;
                 do {
                     InputStream is;
-                    is = (InputStream) istreams.get(0);
-                    br = (BufferedReader) inputs.get(0);
+                    is = istreams.get(0);
+                    br = inputs.get(0);
 
                     if (is == System.in) {
                         System.out.print("> ");
@@ -327,7 +327,7 @@ public class update {
                     Iterator<BufferedReader> it = inputs.iterator();
                     while (it.hasNext()) {
                         BufferedReader tbr;
-                        tbr = (BufferedReader) it.next();
+                        tbr = it.next();
                         tbr.close();
                     }
                     System.exit(0);
@@ -485,7 +485,8 @@ public class update {
         print(record);
     }
 
-    void doFile(Tokenizer st, List<BufferedReader> inputs, List<InputStream> istreams) throws IOException {
+    void doFile(Tokenizer st, List<BufferedReader> inputs,
+                List<InputStream> istreams) throws IOException {
         String s = st.getString();
         InputStream is;
         try {

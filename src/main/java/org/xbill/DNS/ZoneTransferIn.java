@@ -51,10 +51,10 @@ public class ZoneTransferIn {
         public List<Object> deletes;
 
         /** The ending serial number of this delta. */
-        public long end;
+        public long         end;
 
         /** The starting serial number of this delta. */
-        public long start;
+        public long         start;
 
         private Delta() {
             adds = new ArrayList<Object>();
@@ -106,6 +106,7 @@ public class ZoneTransferIn {
         private List<Object> axfr;
         private List<Object> ixfr;
 
+        @Override
         public void handleRecord(Record r) {
             List<Object> list;
             if (ixfr != null) {
@@ -121,20 +122,24 @@ public class ZoneTransferIn {
             list.add(r);
         }
 
+        @Override
         public void startAXFR() {
             axfr = new ArrayList<Object>();
         }
 
+        @Override
         public void startIXFR() {
             ixfr = new ArrayList<Object>();
         }
 
+        @Override
         public void startIXFRAdds(Record soa) {
             Delta delta = (Delta) ixfr.get(ixfr.size() - 1);
             delta.adds.add(soa);
             delta.end = getSOASerial(soa);
         }
 
+        @Override
         public void startIXFRDeletes(Record soa) {
             Delta delta = new Delta();
             delta.deletes.add(soa);
@@ -309,9 +314,9 @@ public class ZoneTransferIn {
 
     private long                ixfr_serial;
 
-    private SocketAddress       localAddress;               ;
+    private SocketAddress       localAddress;         ;
 
-    private int                 qtype;                 ;
+    private int                 qtype;                ;
 
     private int                 rtype;
 

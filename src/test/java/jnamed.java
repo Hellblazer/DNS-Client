@@ -152,10 +152,10 @@ public class jnamed {
 
             Iterator<InetAddress> iaddr = addresses.iterator();
             while (iaddr.hasNext()) {
-                InetAddress addr = (InetAddress) iaddr.next();
+                InetAddress addr = iaddr.next();
                 Iterator<Integer> iport = ports.iterator();
                 while (iport.hasNext()) {
-                    int port = ((Integer) iport.next()).intValue();
+                    int port = iport.next().intValue();
                     addUDP(addr, port);
                     addTCP(addr, port);
                     System.out.println("jnamed: listening on "
@@ -189,6 +189,7 @@ public class jnamed {
     public void addTCP(final InetAddress addr, final int port) {
         Thread t;
         t = new Thread(new Runnable() {
+            @Override
             public void run() {
                 serveTCP(addr, port);
             }
@@ -205,6 +206,7 @@ public class jnamed {
     public void addUDP(final InetAddress addr, final int port) {
         Thread t;
         t = new Thread(new Runnable() {
+            @Override
             public void run() {
                 serveUDP(addr, port);
             }
@@ -218,14 +220,14 @@ public class jnamed {
 
     public Zone findBestZone(Name name) {
         Zone foundzone = null;
-        foundzone = (Zone) znames.get(name);
+        foundzone = znames.get(name);
         if (foundzone != null) {
             return foundzone;
         }
         int labels = name.labels();
         for (int i = 1; i < labels; i++) {
             Name tname = new Name(name, i);
-            foundzone = (Zone) znames.get(tname);
+            foundzone = znames.get(tname);
             if (foundzone != null) {
                 return foundzone;
             }
@@ -264,7 +266,7 @@ public class jnamed {
     }
 
     public Cache getCache(int dclass) {
-        Cache c = (Cache) caches.get(new Integer(dclass));
+        Cache c = caches.get(new Integer(dclass));
         if (c == null) {
             c = new Cache(dclass);
             caches.put(new Integer(dclass), c);
@@ -280,6 +282,7 @@ public class jnamed {
                 final Socket s = sock.accept();
                 Thread t;
                 t = new Thread(new Runnable() {
+                    @Override
                     public void run() {
                         TCPclient(s);
                     }
@@ -551,7 +554,7 @@ public class jnamed {
 
     byte[] doAXFR(Name name, Message query, TSIG tsig, TSIGRecord qtsig,
                   Socket s) {
-        Zone zone = (Zone) znames.get(name);
+        Zone zone = znames.get(name);
         boolean first = true;
         if (zone == null) {
             return errorMessage(query, Rcode.REFUSED);
@@ -615,7 +618,7 @@ public class jnamed {
         TSIGRecord queryTSIG = query.getTSIG();
         TSIG tsig = null;
         if (queryTSIG != null) {
-            tsig = (TSIG) TSIGs.get(queryTSIG.getName());
+            tsig = TSIGs.get(queryTSIG.getName());
             if (tsig == null
                 || tsig.verify(query, in, length, null) != Rcode.NOERROR) {
                 return formerrMessage(in);

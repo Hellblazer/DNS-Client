@@ -40,14 +40,14 @@ class Mnemonic {
         return new Integer(val);
     }
 
-    private String  description;
-    private int     max;
-    private boolean numericok;
-    private String  prefix;
+    private String                   description;
+    private int                      max;
+    private boolean                  numericok;
+    private String                   prefix;
     private HashMap<String, Integer> strings;
     private HashMap<Integer, String> values;
 
-    private int     wordcase;
+    private int                      wordcase;
 
     /**
      * Creates a new Mnemonic table.
@@ -136,7 +136,7 @@ class Mnemonic {
      */
     public String getText(int val) {
         check(val);
-        String str = (String) values.get(toInteger(val));
+        String str = values.get(toInteger(val));
         if (str != null) {
             return str;
         }
@@ -156,7 +156,7 @@ class Mnemonic {
      */
     public int getValue(String str) {
         str = sanitize(str);
-        Integer value = (Integer) strings.get(str);
+        Integer value = strings.get(str);
         if (value != null) {
             return value.intValue();
         }

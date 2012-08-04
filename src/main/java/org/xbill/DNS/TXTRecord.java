@@ -2,6 +2,7 @@
 
 package org.xbill.DNS;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,6 +40,27 @@ public class TXTRecord extends TXTBase {
     }
 
     TXTRecord() {
+    }
+
+    /**
+     * Answer true if the receiver shares identical strings with the supplied
+     * txt record
+     * 
+     * @param txt
+     *            the record to compare
+     * @return true if the receiver shares identical strings with the supplied
+     *         txt record
+     */
+    public boolean sameTxt(TXTRecord txt) {
+        if (strings.size() != txt.strings.size()) {
+            return false;
+        }
+        for (int i = 0; i < strings.size(); i++) {
+            if (!Arrays.equals(strings.get(i), txt.strings.get(i))) {
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override

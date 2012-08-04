@@ -123,7 +123,7 @@ public class Generator {
             String rdata = substitute(rdataPattern, current);
             list.add(Record.fromString(name, type, dclass, ttl, rdata, origin));
         }
-        return (Record[]) list.toArray(new Record[list.size()]);
+        return list.toArray(new Record[list.size()]);
     }
 
     /**

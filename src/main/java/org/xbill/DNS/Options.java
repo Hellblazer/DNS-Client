@@ -112,7 +112,7 @@ public final class Options {
         if (table == null) {
             return null;
         }
-        return (String) table.get(option.toLowerCase());
+        return table.get(option.toLowerCase());
     }
 
     private Options() {

@@ -71,6 +71,19 @@ public class SRVRecord extends Record {
         return weight;
     }
 
+    /**
+     * Answer true if the reciver represents the same SRV record as the srv,
+     * ignoring the weight and priority
+     * 
+     * @param srv
+     *            the record to compare to
+     * @return true if the reciver represents the same SRV record as the srv
+     */
+    public boolean sameSRV(SRVRecord srv) {
+        return port == srv.port && name.equals(srv.name)
+               && target.equals(target);
+    }
+
     @Override
     Record getObject() {
         return new SRVRecord();

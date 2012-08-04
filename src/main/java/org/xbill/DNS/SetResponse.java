@@ -56,7 +56,7 @@ public class SetResponse {
      * The Cache contains no information about the requested name/type
      */
     static final int                 UNKNOWN    = 0;
-    
+
     private static final SetResponse nxdomain   = new SetResponse(NXDOMAIN);
 
     private static final SetResponse nxrrset    = new SetResponse(NXRRSET);
@@ -113,7 +113,7 @@ public class SetResponse {
             return null;
         }
         List<?> l = (List<?>) data;
-        return (RRset[]) l.toArray(new RRset[l.size()]);
+        return l.toArray(new RRset[l.size()]);
     }
 
     /**

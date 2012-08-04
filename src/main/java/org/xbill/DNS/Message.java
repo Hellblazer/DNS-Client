@@ -24,7 +24,7 @@ import java.util.Set;
 public class Message implements Cloneable {
 
     /** The maximum length of a message in wire format. */
-    public static final int MAXLENGTH = 65535;
+    public static final int MAXLENGTH         = 65535;
 
     private static Record[] emptyRecordArray  = new Record[0];
 
@@ -43,6 +43,7 @@ public class Message implements Cloneable {
 
     /* The message was signed and verification succeeded */
     static final int        TSIG_VERIFIED     = 1;
+
     /**
      * Creates a new Message with a random Message ID suitable for sending as a
      * query.
@@ -57,6 +58,7 @@ public class Message implements Cloneable {
         m.addRecord(r, Section.QUESTION);
         return m;
     }
+
     /**
      * Creates a new Message to contain a dynamic update. A random Message ID
      * and the zone are filled in.
@@ -74,22 +76,22 @@ public class Message implements Cloneable {
                && r1.getName().equals(r2.getName());
     }
 
-    private Header          header;
+    private Header         header;
 
-    private TSIGRecord      querytsig;
+    private TSIGRecord     querytsig;
 
-    private List<Record>[]  sections;
+    private List<Record>[] sections;
 
-    private int             size;
+    private int            size;
 
-    private int             tsigerror;
-    private TSIG            tsigkey;
+    private int            tsigerror;
+    private TSIG           tsigkey;
 
-    int                     sig0start;
+    int                    sig0start;
 
-    int                     tsigstart;
+    int                    tsigstart;
 
-    int                     tsigState;
+    int                    tsigState;
 
     /** Creates a new Message with a random Message ID */
     public Message() {
@@ -233,7 +235,7 @@ public class Message implements Cloneable {
             return false;
         }
         for (int i = 0; i < sections[section].size(); i++) {
-            Record r = (Record) sections[section].get(i);
+            Record r = sections[section].get(i);
             if (r.getType() == type && name.equals(r.getName())) {
                 return true;
             }
@@ -305,7 +307,7 @@ public class Message implements Cloneable {
             return emptyRecordArray;
         }
         List<?> l = sections[section];
-        return (Record[]) l.toArray(new Record[l.size()]);
+        return l.toArray(new Record[l.size()]);
     }
 
     /**
@@ -327,7 +329,7 @@ public class Message implements Cloneable {
             boolean newset = true;
             if (hash.contains(name)) {
                 for (int j = sets.size() - 1; j >= 0; j--) {
-                    RRset set = (RRset) sets.get(j);
+                    RRset set = sets.get(j);
                     if (set.getType() == rec.getRRsetType()
                         && set.getDClass() == rec.getDClass()
                         && set.getName().equals(name)) {
@@ -343,7 +345,7 @@ public class Message implements Cloneable {
                 hash.add(name);
             }
         }
-        return (RRset[]) sets.toArray(new RRset[sets.size()]);
+        return sets.toArray(new RRset[sets.size()]);
     }
 
     /**
@@ -546,7 +548,7 @@ public class Message implements Cloneable {
         Record lastrec = null;
 
         for (int i = 0; i < n; i++) {
-            Record rec = (Record) sections[section].get(i);
+            Record rec = sections[section].get(i);
             if (lastrec != null && !sameSet(rec, lastrec)) {
                 pos = out.current();
                 rendered = i;
@@ -631,7 +633,7 @@ public class Message implements Cloneable {
                 continue;
             }
             for (int j = 0; j < sections[i].size(); j++) {
-                Record rec = (Record) sections[i].get(j);
+                Record rec = sections[i].get(j);
                 rec.toWire(out, i, c);
             }
         }

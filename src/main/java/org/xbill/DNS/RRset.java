@@ -28,7 +28,7 @@ public class RRset implements Serializable {
      * rrs contains both normal and RRSIG records, with the RRSIG records
      * at the end.
      */
-    private List<Record>              rrs;
+    private List<Record>      rrs;
 
     /** Creates an empty RRset */
     public RRset() {
@@ -205,7 +205,7 @@ public class RRset implements Serializable {
             size = nsigs;
         }
         if (size == 0) {
-            return (Iterator<Record>) Collections.EMPTY_LIST.iterator();
+            return Collections.EMPTY_LIST.iterator();
         }
 
         if (data) {

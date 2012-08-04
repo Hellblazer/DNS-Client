@@ -76,10 +76,12 @@ public class Cache {
             expire = limitExpire(rrset.getTTL(), maxttl);
         }
 
+        @Override
         public final int compareCredibility(int cred) {
             return credibility - cred;
         }
 
+        @Override
         public final boolean expired() {
             int now = (int) (System.currentTimeMillis() / 1000);
             return now >= expire;
@@ -121,15 +123,18 @@ public class Cache {
             expire = limitExpire(cttl, maxttl);
         }
 
+        @Override
         public final int compareCredibility(int cred) {
             return credibility - cred;
         }
 
+        @Override
         public final boolean expired() {
             int now = (int) (System.currentTimeMillis() / 1000);
             return now >= expire;
         }
 
+        @Override
         public int getType() {
             return type;
         }
@@ -176,12 +181,13 @@ public class Cache {
             }
         }
     }
-    private CacheMap         data;
-    private int              dclass;
 
-    private int              maxcache          = -1;
+    private CacheMap data;
+    private int      dclass;
 
-    private int              maxncache         = -1;
+    private int      maxcache  = -1;
+
+    private int      maxncache = -1;
 
     /**
      * Creates an empty Cache for class IN.

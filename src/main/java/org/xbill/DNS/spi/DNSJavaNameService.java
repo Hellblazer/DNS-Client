@@ -99,6 +99,7 @@ public class DNSJavaNameService implements InvocationHandler {
         return ((PTRRecord) records[0]).getTarget().toString();
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args)
                                                                     throws Throwable {
         try {

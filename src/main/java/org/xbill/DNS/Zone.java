@@ -45,10 +45,12 @@ public class Zone implements Serializable {
             }
         }
 
+        @Override
         public boolean hasNext() {
             return current != null || wantLastSOA;
         }
 
+        @Override
         public Object next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
@@ -77,6 +79,7 @@ public class Zone implements Serializable {
             return set;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -378,8 +381,8 @@ public class Zone implements Serializable {
 
         origin = xfrin.getName();
         List<?> records = xfrin.run();
-        for (Iterator<?> it = records.iterator(); it.hasNext();) {
-            Record record = (Record) it.next();
+        for (Object name : records) {
+            Record record = (Record) name;
             maybeAddRecord(record);
         }
         if (!xfrin.isAXFR()) {

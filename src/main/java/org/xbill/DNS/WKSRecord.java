@@ -671,7 +671,7 @@ public class WKSRecord extends Record {
         st.unget();
         services = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            services[i] = ((Integer) list.get(i)).intValue();
+            services[i] = list.get(i).intValue();
         }
     }
 
@@ -691,7 +691,7 @@ public class WKSRecord extends Record {
         }
         services = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            services[i] = ((Integer) list.get(i)).intValue();
+            services[i] = list.get(i).intValue();
         }
     }
 

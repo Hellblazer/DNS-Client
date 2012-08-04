@@ -37,6 +37,15 @@ public class HexDump {
             '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
     /**
+     * @param prefix
+     * @param data
+     * @return
+     */
+    public static String dump(String prefix, byte[] data) {
+        return hexdump(prefix, data, 0, data.length);
+    }
+
+    /**
      * Generate "hexdump" output of the buffer at src like the following:
      * 
      * <p>
@@ -169,14 +178,5 @@ public class HexDump {
         char[] c = new char[size];
         toHexChars(val, c, 0, size);
         return new String(c);
-    }
-
-    /**
-     * @param prefix
-     * @param data
-     * @return
-     */
-    public static String dump(String prefix, byte[] data) {
-        return hexdump(prefix, data, 0, data.length);
     }
 }

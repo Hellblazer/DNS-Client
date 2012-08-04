@@ -428,6 +428,7 @@ public class Name implements Comparable<Name>, Serializable {
      * @throws ClassCastException
      *             if the argument is not a Name.
      */
+    @Override
     public int compareTo(Name arg) {
 
         if (this == arg) {

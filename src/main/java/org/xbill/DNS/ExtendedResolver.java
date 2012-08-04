@@ -35,7 +35,7 @@ public class ExtendedResolver implements Resolver {
 
         public Resolution(ExtendedResolver eres, Message query) {
             List<Resolver> l = eres.resolvers;
-            resolvers = (Resolver[]) l.toArray(new Resolver[l.size()]);
+            resolvers = l.toArray(new Resolver[l.size()]);
             if (eres.loadBalance) {
                 int nresolvers = resolvers.length;
                 /*
@@ -66,6 +66,7 @@ public class ExtendedResolver implements Resolver {
          * Receive an exception.  If the resolution has been completed,
          * do nothing.  Otherwise make progress.
          */
+        @Override
         public void handleException(Object id, Exception e) {
             if (Options.check("verbose")) {
                 System.err.println("ExtendedResolver: got " + e);
@@ -152,6 +153,7 @@ public class ExtendedResolver implements Resolver {
          * Receive a response.  If the resolution hasn't been completed,
          * either wake up the blocking thread or call the callback.
          */
+        @Override
         public void receiveMessage(Object id, Message m) {
             if (Options.check("verbose")) {
                 System.err.println("ExtendedResolver: " + "received message");
@@ -277,6 +279,23 @@ public class ExtendedResolver implements Resolver {
     /**
      * Creates a new Extended Resolver
      * 
+     * @param servers
+     *            An array of server names for which SimpleResolver contexts
+     *            should be initialized.
+     * @see SimpleResolver
+     */
+    public ExtendedResolver(InetSocketAddress[] servers) {
+        init();
+        for (InetSocketAddress server : servers) {
+            Resolver r = new SimpleResolver(server);
+            r.setTimeout(quantum);
+            resolvers.add(r);
+        }
+    }
+
+    /**
+     * Creates a new Extended Resolver
+     * 
      * @param res
      *            An array of pre-initialized Resolvers is provided.
      * @see SimpleResolver
@@ -309,23 +328,6 @@ public class ExtendedResolver implements Resolver {
         }
     }
 
-    /**
-     * Creates a new Extended Resolver
-     * 
-     * @param servers
-     *            An array of server names for which SimpleResolver contexts
-     *            should be initialized.
-     * @see SimpleResolver
-     */
-    public ExtendedResolver(InetSocketAddress[] servers) {
-        init();
-        for (InetSocketAddress server : servers) {
-            Resolver r = new SimpleResolver(server);
-            r.setTimeout(quantum);
-            resolvers.add(r);
-        }
-    }
-
     /** Adds a new resolver to be used by this ExtendedResolver */
     public void addResolver(Resolver r) {
         resolvers.add(r);
@@ -339,14 +341,14 @@ public class ExtendedResolver implements Resolver {
     /** Returns the nth resolver used by this ExtendedResolver */
     public Resolver getResolver(int n) {
         if (n < resolvers.size()) {
-            return (Resolver) resolvers.get(n);
+            return resolvers.get(n);
         }
         return null;
     }
 
     /** Returns all resolvers used by this ExtendedResolver */
     public Resolver[] getResolvers() {
-        return (Resolver[]) resolvers.toArray(new Resolver[resolvers.size()]);
+        return resolvers.toArray(new Resolver[resolvers.size()]);
     }
 
     /**
@@ -360,6 +362,7 @@ public class ExtendedResolver implements Resolver {
      * @throws IOException
      *             An error occurred while sending or receiving.
      */
+    @Override
     public Message send(Message query) throws IOException {
         Resolution res = new Resolution(this, query);
         return res.start();
@@ -378,29 +381,32 @@ public class ExtendedResolver implements Resolver {
      *            The object containing the callbacks.
      * @return An identifier, which is also a parameter in the callback
      */
+    @Override
     public Object sendAsync(final Message query, final ResolverListener listener) {
         Resolution res = new Resolution(this, query);
         res.startAsync(listener);
         return res;
     }
 
+    @Override
     public void setEDNS(int level) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setEDNS(level);
+            resolvers.get(i).setEDNS(level);
         }
     }
 
+    @Override
     public void setEDNS(int level, int payloadSize, int flags,
                         List<EDNSOption> options) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setEDNS(level, payloadSize, flags,
-                                                  options);
+            resolvers.get(i).setEDNS(level, payloadSize, flags, options);
         }
     }
 
+    @Override
     public void setIgnoreTruncation(boolean flag) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setIgnoreTruncation(flag);
+            resolvers.get(i).setIgnoreTruncation(flag);
         }
     }
 
@@ -415,9 +421,10 @@ public class ExtendedResolver implements Resolver {
         loadBalance = flag;
     }
 
+    @Override
     public void setPort(int port) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setPort(port);
+            resolvers.get(i).setPort(port);
         }
     }
 
@@ -426,25 +433,29 @@ public class ExtendedResolver implements Resolver {
         this.retries = retries;
     }
 
+    @Override
     public void setTCP(boolean flag) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setTCP(flag);
+            resolvers.get(i).setTCP(flag);
         }
     }
 
+    @Override
     public void setTimeout(int secs) {
         setTimeout(secs, 0);
     }
 
+    @Override
     public void setTimeout(int secs, int msecs) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setTimeout(secs, msecs);
+            resolvers.get(i).setTimeout(secs, msecs);
         }
     }
 
+    @Override
     public void setTSIGKey(TSIG key) {
         for (int i = 0; i < resolvers.size(); i++) {
-            ((Resolver) resolvers.get(i)).setTSIGKey(key);
+            resolvers.get(i).setTSIGKey(key);
         }
     }
 

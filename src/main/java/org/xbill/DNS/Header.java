@@ -30,11 +30,11 @@ public class Header implements Cloneable {
         return bit >= 0 && bit <= 0xF && Flags.isFlag(bit);
     }
 
-    private int[]           counts;
+    private int[] counts;
 
-    private int             flags;
+    private int   flags;
 
-    private int             id;
+    private int   id;
 
     /**
      * Create a new empty header with a random message id

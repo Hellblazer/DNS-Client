@@ -33,7 +33,7 @@ public final class Type {
 
         public Record getProto(int val) {
             check(val);
-            return (Record) objects.get(toInteger(val));
+            return objects.get(toInteger(val));
         }
     }
 

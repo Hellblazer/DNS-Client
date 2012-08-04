@@ -471,6 +471,7 @@ public abstract class Record implements Cloneable, Comparable<Record>,
      *         ordering. The canonical ordering is defined to compare by name,
      *         class, type, and rdata.
      */
+    @Override
     public int compareTo(Record arg) {
         if (this == arg) {
             return 0;

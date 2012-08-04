@@ -155,6 +155,7 @@ public class DNSSEC {
      * 
      */
         private static final long serialVersionUID = 1L;
+
         KeyMismatchException(KEYBase key, SIGBase sig) {
             super("key " + key.getName() + "/"
                   + DNSSEC.Algorithm.string(key.getAlgorithm()) + "/"

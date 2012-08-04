@@ -114,7 +114,7 @@ public class OPTRecord extends Record {
     @SuppressWarnings("unchecked")
     public List<EDNSOption> getOptions() {
         if (options == null) {
-            return (List<EDNSOption>) Collections.EMPTY_LIST;
+            return Collections.EMPTY_LIST;
         }
         return Collections.unmodifiableList(options);
     }
@@ -126,11 +126,11 @@ public class OPTRecord extends Record {
     @SuppressWarnings("unchecked")
     public List<EDNSOption> getOptions(int code) {
         if (options == null) {
-            return (List<EDNSOption>) Collections.EMPTY_LIST;
+            return Collections.EMPTY_LIST;
         }
-        List<EDNSOption> list = (List<EDNSOption>) Collections.EMPTY_LIST;
-        for (Iterator<EDNSOption> it = options.iterator(); it.hasNext();) {
-            EDNSOption opt = (EDNSOption) it.next();
+        List<EDNSOption> list = Collections.EMPTY_LIST;
+        for (EDNSOption ednsOption : options) {
+            EDNSOption opt = ednsOption;
             if (opt.getCode() == code) {
                 if (list == Collections.EMPTY_LIST) {
                     list = new ArrayList<EDNSOption>();
@@ -198,7 +198,7 @@ public class OPTRecord extends Record {
         }
         Iterator<EDNSOption> it = options.iterator();
         while (it.hasNext()) {
-            EDNSOption option = (EDNSOption) it.next();
+            EDNSOption option = it.next();
             option.toWire(out);
         }
     }

@@ -57,7 +57,7 @@ abstract class TXTBase extends Record {
     public List<String> getStrings() {
         List<String> list = new ArrayList<String>(strings.size());
         for (int i = 0; i < strings.size(); i++) {
-            list.add(byteArrayToString((byte[]) strings.get(i), false));
+            list.add(byteArrayToString(strings.get(i), false));
         }
         return list;
     }
@@ -104,7 +104,7 @@ abstract class TXTBase extends Record {
         StringBuffer sb = new StringBuffer();
         Iterator<byte[]> it = strings.iterator();
         while (it.hasNext()) {
-            byte[] array = (byte[]) it.next();
+            byte[] array = it.next();
             sb.append(byteArrayToString(array, true));
             if (it.hasNext()) {
                 sb.append(" ");
@@ -117,7 +117,7 @@ abstract class TXTBase extends Record {
     void rrToWire(DNSOutput out, Compression c, boolean canonical) {
         Iterator<byte[]> it = strings.iterator();
         while (it.hasNext()) {
-            byte[] b = (byte[]) it.next();
+            byte[] b = it.next();
             out.writeCountedString(b);
         }
     }

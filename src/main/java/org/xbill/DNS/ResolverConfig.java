@@ -64,11 +64,11 @@ public class ResolverConfig {
         }
     }
 
-    private int                   ndots      = -1;
+    private int      ndots      = -1;
 
-    private Name[]                searchlist = null;
+    private Name[]   searchlist = null;
 
-    private String[]              servers    = null;
+    private String[] servers    = null;
 
     public ResolverConfig() {
         if (findProperty()) {
@@ -156,10 +156,10 @@ public class ResolverConfig {
 
     private void configureFromLists(List<String> lserver, List<Name> lsearch) {
         if (servers == null && lserver.size() > 0) {
-            servers = (String[]) lserver.toArray(new String[0]);
+            servers = lserver.toArray(new String[0]);
         }
         if (searchlist == null && lsearch.size() > 0) {
-            searchlist = (Name[]) lsearch.toArray(new Name[0]);
+            searchlist = lsearch.toArray(new Name[0]);
         }
     }
 

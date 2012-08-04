@@ -17,14 +17,15 @@ final class TypeBitmap implements Serializable {
 
     private static final long serialVersionUID = -125354057735389003L;
 
-    private static void mapToWire(DNSOutput out, TreeSet<Integer> map, int mapbase) {
-        int arraymax = ((Integer) map.last()).intValue() & 0xFF;
+    private static void mapToWire(DNSOutput out, TreeSet<Integer> map,
+                                  int mapbase) {
+        int arraymax = map.last().intValue() & 0xFF;
         int arraylength = arraymax / 8 + 1;
         int[] array = new int[arraylength];
         out.writeU8(mapbase);
         out.writeU8(arraylength);
-        for (Iterator<Integer> it = map.iterator(); it.hasNext();) {
-            int typecode = ((Integer) it.next()).intValue();
+        for (Integer integer : map) {
+            int typecode = integer.intValue();
             array[(typecode & 0xFF) / 8] |= 1 << 7 - typecode % 8;
         }
         for (int j = 0; j < arraylength; j++) {
@@ -104,8 +105,8 @@ final class TypeBitmap implements Serializable {
     public int[] toArray() {
         int[] array = new int[types.size()];
         int n = 0;
-        for (Iterator<Integer> it = types.iterator(); it.hasNext();) {
-            array[n++] = ((Integer) it.next()).intValue();
+        for (Integer integer : types) {
+            array[n++] = integer.intValue();
         }
         return array;
     }
@@ -114,7 +115,7 @@ final class TypeBitmap implements Serializable {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         for (Iterator<Integer> it = types.iterator(); it.hasNext();) {
-            int t = ((Integer) it.next()).intValue();
+            int t = it.next().intValue();
             sb.append(Type.string(t));
             if (it.hasNext()) {
                 sb.append(' ');
@@ -131,8 +132,8 @@ final class TypeBitmap implements Serializable {
         int mapbase = -1;
         TreeSet<Integer> map = new TreeSet<Integer>();
 
-        for (Iterator<Integer> it = types.iterator(); it.hasNext();) {
-            int t = ((Integer) it.next()).intValue();
+        for (Integer integer : types) {
+            int t = integer.intValue();
             int base = t >> 8;
             if (base != mapbase) {
                 if (map.size() > 0) {

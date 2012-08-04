@@ -137,8 +137,7 @@ public class APLRecord extends Record {
     public APLRecord(Name name, int dclass, long ttl, List<?> elements) {
         super(name, Type.APL, dclass, ttl);
         this.elements = new ArrayList<Element>(elements.size());
-        for (Iterator<?> it = elements.iterator(); it.hasNext();) {
-            Object o = it.next();
+        for (Object o : elements) {
             if (!(o instanceof Element)) {
                 throw new IllegalArgumentException("illegal element");
             }
@@ -259,7 +258,7 @@ public class APLRecord extends Record {
     String rrToString() {
         StringBuffer sb = new StringBuffer();
         for (Iterator<Element> it = elements.iterator(); it.hasNext();) {
-            Element element = (Element) it.next();
+            Element element = it.next();
             sb.append(element);
             if (it.hasNext()) {
                 sb.append(" ");
@@ -270,8 +269,8 @@ public class APLRecord extends Record {
 
     @Override
     void rrToWire(DNSOutput out, Compression c, boolean canonical) {
-        for (Iterator<Element> it = elements.iterator(); it.hasNext();) {
-            Element element = (Element) it.next();
+        for (Element element2 : elements) {
+            Element element = element2;
             int length = 0;
             byte[] data;
             if (element.family == Address.IPv4

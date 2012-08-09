@@ -104,6 +104,23 @@ public class SimpleResolver implements Resolver {
      */
     @Override
     public Message send(Message query) throws IOException {
+        return send(query, tsig);
+    }
+
+    /**
+     * Sends a message to a single server and waits for a response. No checking
+     * is done to ensure that the response is associated with the query.
+     * 
+     * @param query
+     *            The query to send.
+     * @param tsig
+     *            the TSIG to use to sign the query
+     * @return The response.
+     * @throws IOException
+     *             An error occurred while sending or receiving.
+     */
+    @Override
+    public Message send(Message query, TSIG tsig) throws IOException {
         if (Options.check("verbose")) {
             System.err.println("Sending to "
                                + address.getAddress().getHostAddress() + ":"
@@ -148,10 +165,9 @@ public class SimpleResolver implements Resolver {
                                              + "too short");
             }
             /*
-             * Check that the response ID matches the query ID.  We want
-             * to check this before actually parsing the message, so that
-             * if there's a malformed response that's not ours, it
-             * doesn't confuse us.
+             * Check that the response ID matches the query ID. We want to check
+             * this before actually parsing the message, so that if there's a
+             * malformed response that's not ours, it doesn't confuse us.
              */
             int id = ((in[0] & 0xFF) << 8) + (in[1] & 0xFF);
             int qid = query.getHeader().getID();

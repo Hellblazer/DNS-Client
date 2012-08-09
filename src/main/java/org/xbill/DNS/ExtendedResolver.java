@@ -463,4 +463,10 @@ public class ExtendedResolver implements Resolver {
         resolvers = new ArrayList<Resolver>();
     }
 
+    @Override
+    public Message send(Message query, TSIG tsig) throws IOException {
+        throw new UnsupportedOperationException(
+                                                "Currently unsupported for extended resolvers");
+    }
+
 }

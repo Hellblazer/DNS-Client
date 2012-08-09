@@ -25,6 +25,20 @@ public interface Resolver {
     Message send(Message query) throws IOException;
 
     /**
+     * Sends a message to a single server and waits for a response. No checking
+     * is done to ensure that the response is associated with the query.
+     * 
+     * @param query
+     *            The query to send.
+     * @param tsig
+     *            the TSIG to use to sign the query
+     * @return The response.
+     * @throws IOException
+     *             An error occurred while sending or receiving.
+     */
+    Message send(Message query, TSIG tsig) throws IOException;
+
+    /**
      * Asynchronously sends a message registering a listener to receive a
      * callback on success or exception. Multiple asynchronous lookups can be
      * performed in parallel. Since the callback may be invoked before the

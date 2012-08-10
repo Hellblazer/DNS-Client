@@ -1,3 +1,5 @@
+package org.xbill.DNS.utils;
+
 // Copyright (c) 1999-2004 Brian Wellington (bwelling@xbill.org)
 
 import java.io.BufferedReader;
@@ -52,7 +54,7 @@ import org.xbill.DNS.ZoneTransferException;
 
 /** @author Brian Wellington &lt;bwelling@xbill.org&gt; */
 
-public class jnamed {
+public class Jnamed {
 
     private static List<InetAddress> addresses;
     static final int                 FLAG_DNSSECOK = 1;
@@ -71,7 +73,7 @@ public class jnamed {
             } else {
                 conf = "jnamed.conf";
             }
-            new jnamed(conf);
+            new Jnamed(conf).start();
         } catch (IOException e) {
             System.out.println(e);
         } catch (ZoneTransferException e) {
@@ -83,27 +85,26 @@ public class jnamed {
         return addr.getHostAddress() + "#" + port;
     }
 
-    private final ExecutorService executor = Executors.newCachedThreadPool(new ThreadFactory() {
-                                               int count = 0;
+    private final ExecutorService     executor = Executors.newCachedThreadPool(new ThreadFactory() {
+                                                   int count = 0;
 
-                                               @Override
-                                               public Thread newThread(Runnable command) {
-                                                   Thread daemon = new Thread(
-                                                                              command,
-                                                                              String.format("jnamed[%s]",
-                                                                                            count++));
-                                                   return daemon;
-                                               }
-                                           });
+                                                   @Override
+                                                   public Thread newThread(Runnable command) {
+                                                       Thread daemon = new Thread(
+                                                                                  command,
+                                                                                  String.format("jnamed[%s]",
+                                                                                                count++));
+                                                       return daemon;
+                                                   }
+                                               });
 
-    private final List<Integer>   ports;
+    private final List<Integer>       ports;
+    private final AtomicBoolean       running  = new AtomicBoolean(true);
+    private final Map<Integer, Cache> caches   = new HashMap<Integer, Cache>();
+    private final Map<Name, TSIG>     TSIGs    = new HashMap<Name, TSIG>();
+    private final Map<Name, Zone>     znames   = new HashMap<Name, Zone>();
 
-    private final AtomicBoolean   running  = new AtomicBoolean(true);
-    Map<Integer, Cache>           caches;
-    Map<Name, TSIG>               TSIGs;
-    Map<Name, Zone>               znames;
-
-    public jnamed(String conffile) throws IOException, ZoneTransferException {
+    public Jnamed(String conffile) throws IOException, ZoneTransferException {
         FileInputStream fs;
         InputStreamReader isr;
         BufferedReader br;
@@ -119,10 +120,6 @@ public class jnamed {
         }
 
         try {
-            caches = new HashMap<Integer, Cache>();
-            znames = new HashMap<Name, Zone>();
-            TSIGs = new HashMap<Name, TSIG>();
-
             String line = null;
             while ((line = br.readLine()) != null) {
                 StringTokenizer st = new StringTokenizer(line);

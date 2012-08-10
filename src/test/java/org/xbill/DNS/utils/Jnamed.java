@@ -105,17 +105,20 @@ public class Jnamed {
     private final Map<Name, Zone>     znames   = new HashMap<Name, Zone>();
 
     public Jnamed(String conffile) throws IOException, ZoneTransferException {
-        FileInputStream fs;
+        this(new FileInputStream(conffile));
+
+    }
+
+    public Jnamed(InputStream is) throws IOException, ZoneTransferException {
         InputStreamReader isr;
         BufferedReader br;
         ports = new ArrayList<Integer>();
         addresses = new ArrayList<InetAddress>();
         try {
-            fs = new FileInputStream(conffile);
-            isr = new InputStreamReader(fs);
+            isr = new InputStreamReader(is);
             br = new BufferedReader(isr);
         } catch (Exception e) {
-            System.out.println("Cannot open " + conffile);
+            System.out.println("Cannot read configuration stream ");
             return;
         }
 
@@ -168,7 +171,7 @@ public class Jnamed {
                 addresses.add(Address.getByAddress("0.0.0.0"));
             }
         } finally {
-            fs.close();
+            is.close();
         }
     }
 

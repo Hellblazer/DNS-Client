@@ -99,7 +99,7 @@ public class Jnamed {
                                                });
 
     private final List<Integer>       ports;
-    private final AtomicBoolean       running  = new AtomicBoolean(true);
+    private final AtomicBoolean       running  = new AtomicBoolean(false);
     private final Map<Integer, Cache> caches   = new HashMap<Integer, Cache>();
     private final Map<Name, TSIG>     TSIGs    = new HashMap<Name, TSIG>();
     private final Map<Name, Zone>     znames   = new HashMap<Name, Zone>();
@@ -356,7 +356,10 @@ public class Jnamed {
 
     public void stop() throws InterruptedException {
         if (running.compareAndSet(true, false)) {
-            executor.awaitTermination(10, TimeUnit.SECONDS);
+            executor.shutdownNow();
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("Unable to shut down jnamed");
+            }
         }
     }
 
@@ -697,6 +700,13 @@ public class Jnamed {
 
         response.setTSIG(tsig, Rcode.NOERROR, queryTSIG);
         return response.toWire(maxLength);
+    }
+
+    /**
+     * @param tsigs
+     */
+    public void addTSIG(Map<Name, TSIG> tsigs) {
+        TSIGs.putAll(tsigs);
     }
 
 }

@@ -568,6 +568,13 @@ public class Name implements Comparable<Name>, Serializable {
         return hashcode;
     }
 
+    public Name head() {
+        if (labels() == 0) {
+            return null; //ftw
+        }
+        return Name.fromConstantString(getLabelString(0));
+    }
+
     /**
      * Is this name absolute?
      */
@@ -593,6 +600,13 @@ public class Name implements Comparable<Name>, Serializable {
      */
     public int labels() {
         return getlabels();
+    }
+
+    public Name last() {
+        if (labels() == 0) {
+            return null; // ftw
+        }
+        return Name.fromConstantString(getLabelString(labels() - 1));
     }
 
     /**
@@ -640,6 +654,25 @@ public class Name implements Comparable<Name>, Serializable {
             return equals(domain);
         }
         return domain.equals(name, offset(labels - dlabels));
+    }
+
+    public Name tail() {
+        if (labels() <= 1) {
+            return null;
+        }
+        Name tail = Name.fromConstantString(getLabelString(1));
+        for (int i = 2; i < labels(); i++) {
+            try {
+                tail = Name.concatenate(tail,
+                                        Name.fromConstantString(getLabelString(i)));
+            } catch (NameTooLongException e) {
+                // This should never happen
+                throw new IllegalStateException(
+                                                String.format("tail(%s) is too long!",
+                                                              this));
+            }
+        }
+        return tail;
     }
 
     /**
@@ -802,32 +835,6 @@ public class Name implements Comparable<Name>, Serializable {
         } catch (NameTooLongException e) {
             throw new IllegalStateException("Name.wild: concatenate failed");
         }
-    }
-
-    public Name head() {
-        if (labels() == 0) {
-            return null; //ftw
-        }
-        return Name.fromConstantString(getLabelString(0));
-    }
-
-    public Name tail() {
-        if (labels() <= 1) {
-            return null;
-        }
-        Name tail = Name.fromConstantString(getLabelString(1));
-        for (int i = 2; i < labels(); i++) {
-            try {
-                tail = Name.concatenate(tail,
-                                        Name.fromConstantString(getLabelString(i)));
-            } catch (NameTooLongException e) {
-                // This should never happen
-                throw new IllegalStateException(
-                                                String.format("tail(%s) is too long!",
-                                                              this));
-            }
-        }
-        return tail;
     }
 
     private final void append(byte[] array, int start, int n)

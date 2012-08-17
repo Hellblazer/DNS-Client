@@ -1221,4 +1221,26 @@ public class NameTest extends TestCase {
         } catch (IllegalArgumentException e) {
         }
     }
+
+    public void testHead() throws Exception {
+        Name test = Name.fromConstantString("foo.bar.baz");
+        Name foo = Name.fromConstantString("foo");
+        assertEquals(foo, test.head());
+        test = Name.fromConstantString("foo");
+        assertEquals(foo, test.head());
+    }
+
+    public void testTail() throws Exception {
+        Name test = Name.fromConstantString("foo.bar.baz");
+        Name barBaz = Name.fromConstantString("bar.baz");
+        assertEquals(barBaz, test.tail());
+        Name baz = Name.fromConstantString("baz");
+        assertEquals(baz, barBaz.tail());
+    }
+
+    public void testLast() throws Exception {
+        Name test = Name.fromConstantString("foo.bar.baz");
+        Name baz = Name.fromConstantString("baz"); 
+        assertEquals(baz, test.last());
+    }
 }

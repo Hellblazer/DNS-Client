@@ -804,6 +804,32 @@ public class Name implements Comparable<Name>, Serializable {
         }
     }
 
+    public Name head() {
+        if (labels() == 0) {
+            return null; //ftw
+        }
+        return Name.fromConstantString(getLabelString(0));
+    }
+
+    public Name tail() {
+        if (labels() <= 1) {
+            return null;
+        }
+        Name tail = Name.fromConstantString(getLabelString(1));
+        for (int i = 2; i < labels(); i++) {
+            try {
+                tail = Name.concatenate(tail,
+                                        Name.fromConstantString(getLabelString(i)));
+            } catch (NameTooLongException e) {
+                // This should never happen
+                throw new IllegalStateException(
+                                                String.format("tail(%s) is too long!",
+                                                              this));
+            }
+        }
+        return tail;
+    }
+
     private final void append(byte[] array, int start, int n)
                                                              throws NameTooLongException {
         int length = name == null ? 0 : name.length - offset(0);

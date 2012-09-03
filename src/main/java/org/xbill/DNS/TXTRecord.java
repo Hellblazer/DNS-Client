@@ -60,7 +60,7 @@ public class TXTRecord extends TXTBase {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override

@@ -2,6 +2,7 @@
 
 package org.xbill.DNS;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.xbill.DNS.utils.HMAC;
@@ -402,6 +403,48 @@ public class TSIG {
         m.tsigState = Message.TSIG_SIGNED;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        TSIG other = (TSIG) obj;
+        if (alg == null) {
+            if (other.alg != null) {
+                return false;
+            }
+        } else if (!alg.equals(other.alg)) {
+            return false;
+        }
+        if (digest == null) {
+            if (other.digest != null) {
+                return false;
+            }
+        } else if (!digest.equals(other.digest)) {
+            return false;
+        }
+        if (digestBlockLength != other.digestBlockLength) {
+            return false;
+        }
+        if (!Arrays.equals(key, other.key)) {
+            return false;
+        }
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Generates a TSIG record with a specific error for a message that has been
      * rendered.
@@ -487,6 +530,18 @@ public class TSIG {
 
         return new TSIGRecord(name, DClass.ANY, 0, alg, timeSigned, fudge,
                               signature, m.getHeader().getID(), error, other);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (alg == null ? 0 : alg.hashCode());
+        result = prime * result + (digest == null ? 0 : digest.hashCode());
+        result = prime * result + digestBlockLength;
+        result = prime * result + Arrays.hashCode(key);
+        result = prime * result + (name == null ? 0 : name.hashCode());
+        return result;
     }
 
     /**
@@ -651,4 +706,9 @@ public class TSIG {
         }
     }
 
+    @Override
+    public String toString() {
+        return "TSIG [digest=" + digest + ", digestBlockLength="
+               + digestBlockLength + ", name=" + name + ", alg=" + alg + "]";
+    }
 }

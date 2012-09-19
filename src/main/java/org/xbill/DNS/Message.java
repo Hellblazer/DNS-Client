@@ -3,7 +3,9 @@
 package org.xbill.DNS;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,6 +110,16 @@ public class Message implements Cloneable {
         this(new DNSInput(b));
     }
 
+    /**
+     * Creates a new Message from its DNS wire format representation
+     * 
+     * @param b
+     *            A Byte Buffer containing the DNS Message.
+     */
+    public Message(ByteBuffer b) throws IOException {
+        this(new DNSInput(b));
+    }
+
     /** Creates a new Message with the specified Message ID */
     public Message(int id) {
         this(new Header(id));
@@ -180,7 +192,7 @@ public class Message implements Cloneable {
                 m.sections[i] = new LinkedList<Record>(sections[i]);
             }
         }
-        m.header = (Header) header.clone();
+        m.header = header.clone();
         m.size = size;
         return m;
     }
@@ -308,6 +320,20 @@ public class Message implements Cloneable {
         }
         List<?> l = sections[section];
         return l.toArray(new Record[l.size()]);
+    }
+
+    /**
+     * Returns a list containing all records in the given section, or an empty
+     * list if the section is empty.
+     * 
+     * @see Record
+     * @see Section
+     */
+    public List<Record> getSectionList(int section) {
+        if (sections[section] == null) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(sections[section]);
     }
 
     /**
@@ -587,7 +613,7 @@ public class Message implements Cloneable {
             skipped = sectionToWire(out, i, c, tempMaxLength);
             if (skipped != 0) {
                 if (newheader == null) {
-                    newheader = (Header) header.clone();
+                    newheader = header.clone();
                 }
                 if (i != Section.ADDITIONAL) {
                     newheader.setFlag(Flags.TC);
@@ -611,7 +637,7 @@ public class Message implements Cloneable {
                                                   tsigerror, querytsig);
 
             if (newheader == null) {
-                newheader = (Header) header.clone();
+                newheader = header.clone();
             }
             tsigrec.toWire(out, Section.ADDITIONAL, c);
             newheader.incCount(Section.ADDITIONAL);

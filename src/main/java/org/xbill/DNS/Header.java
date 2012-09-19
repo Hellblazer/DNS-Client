@@ -77,7 +77,7 @@ public class Header implements Cloneable {
 
     /* Creates a new Header identical to the current one */
     @Override
-    public Object clone() {
+    public Header clone() {
         Header h = new Header();
         h.id = id;
         h.flags = flags;

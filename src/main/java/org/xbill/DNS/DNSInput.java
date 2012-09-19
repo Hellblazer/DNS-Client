@@ -2,6 +2,8 @@
 
 package org.xbill.DNS;
 
+import java.nio.ByteBuffer;
+
 /**
  * An class for parsing DNS messages.
  * 
@@ -15,6 +17,20 @@ public class DNSInput {
     private int    pos;
     private int    saved_end;
     private int    saved_pos;
+
+    public DNSInput(ByteBuffer buffer) {
+        this(getBytes(buffer));
+    }
+
+    /**
+     * @param buffer
+     * @return
+     */
+    private static byte[] getBytes(ByteBuffer buffer) {
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
+    }
 
     /**
      * Creates a new DNSInput

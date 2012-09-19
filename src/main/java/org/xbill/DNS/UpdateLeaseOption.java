@@ -25,6 +25,10 @@ import java.io.IOException;
 public class UpdateLeaseOption extends EDNSOption {
     private long lease;
 
+    public UpdateLeaseOption() {
+        super(Code.UPDATE_LEASE);
+    }
+
     public UpdateLeaseOption(long lease) {
         super(Code.UPDATE_LEASE);
         this.lease = lease;

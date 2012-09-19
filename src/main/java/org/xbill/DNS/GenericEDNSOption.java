@@ -45,4 +45,8 @@ public class GenericEDNSOption extends EDNSOption {
         out.writeByteArray(data);
     }
 
+    void setData(byte[] data) {
+        this.data = data;
+    }
+
 }

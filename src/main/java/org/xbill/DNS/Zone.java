@@ -18,9 +18,9 @@ import java.util.TreeMap;
  * @author Brian Wellington
  */
 
-public class Zone implements Serializable {
+public class Zone implements Serializable, Iterable<RRset> {
 
-    class ZoneIterator implements Iterator<Object> {
+    class ZoneIterator implements Iterator<RRset> {
         private int         count;
         private RRset[]     current;
         private boolean     wantLastSOA;
@@ -51,7 +51,7 @@ public class Zone implements Serializable {
         }
 
         @Override
-        public Object next() {
+        public RRset next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -59,7 +59,7 @@ public class Zone implements Serializable {
                 wantLastSOA = false;
                 return oneRRset(originNode, Type.SOA);
             }
-            Object set = current[count++];
+            RRset set = current[count++];
             if (count == current.length) {
                 current = null;
                 while (zentries.hasNext()) {
@@ -268,7 +268,7 @@ public class Zone implements Serializable {
     /**
      * Returns an Iterator over the RRsets in the zone.
      */
-    public Iterator<?> iterator() {
+    public Iterator<RRset> iterator() {
         return new ZoneIterator(false);
     }
 

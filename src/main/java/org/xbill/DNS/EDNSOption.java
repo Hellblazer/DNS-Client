@@ -19,6 +19,7 @@ public abstract class EDNSOption {
 
         /** Name Server Identifier, RFC 5001 */
         public final static int NSID          = 3;
+        public final static int UPDATE_LEASE  = 2;
 
         private static Mnemonic codes         = new Mnemonic(
                                                              "EDNS Option Codes",
@@ -29,6 +30,7 @@ public abstract class EDNSOption {
             codes.setPrefix("CODE");
             codes.setNumericAllowed(true);
 
+            codes.add(UPDATE_LEASE, "UPDATE_LEASE");
             codes.add(NSID, "NSID");
             codes.add(CLIENT_SUBNET, "CLIENT_SUBNET");
         }

@@ -9,6 +9,7 @@ import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.rmi.ConnectException;
 
 final class TCPClient extends Client {
 
@@ -70,17 +71,28 @@ final class TCPClient extends Client {
         channel.socket().bind(addr);
     }
 
-    void connect(SocketAddress addr) throws IOException {
+    void connect(SocketAddress addr) throws ConnectException {
         SocketChannel channel = (SocketChannel) key.channel();
-        if (channel.connect(addr)) {
-            return;
+        try {
+            if (channel.connect(addr)) {
+                return;
+            }
+        } catch (IOException e) {
+            throw new ConnectException(String.format("Cannot connect to %s",
+                                                     addr), e);
         }
         key.interestOps(SelectionKey.OP_CONNECT);
         try {
-            while (!channel.finishConnect()) {
-                if (!key.isConnectable()) {
-                    blockUntil(key, endTime);
+            try {
+                while (!channel.finishConnect()) {
+                    if (!key.isConnectable()) {
+                        blockUntil(key, endTime);
+                    }
                 }
+            } catch (IOException e) {
+                throw new ConnectException(
+                                           String.format("Cannot connect to %s",
+                                                         addr), e);
             }
         } finally {
             if (key.isValid()) {
